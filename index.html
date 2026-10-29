@@ -330,6 +330,8 @@
 
 <script>
 const WA_NUMBER = "13259565160";
+// Chave do Web3Forms (formulário da versão em inglês). Cole a chave entre as aspas.
+const WEB3FORMS_KEY = "ea8ccef1-9c21-4c7d-9a87-8e5c876378e6";
 const dict = {
   pt: {
     nav_about:"Sobre a Aurea", nav_services:"Nossos serviços", nav_contact:"Fale conosco",
@@ -380,8 +382,8 @@ const dict = {
     creds_title:"Credentials", creds_sub:"Badges and Certifications",
     contact_t1:"Ready to take control of your finances?",
     contact_t2:"Let's talk about your business and how Aurea can help you move forward with confidence.",
-    contact_side:"Fill out the form and your message goes straight to our WhatsApp. If you prefer, email us. We reply within 1 business day.",
-    form_title:"Contact us", f_first:"First name *", f_last:"Last name", f_email:"Email *", f_phone:"Phone *", f_msg:"Write a message *", f_send:"Send via WhatsApp",
+    contact_side:"Fill out the form and we'll get back to you within 1 business day. You can also reach us on WhatsApp or by email.",
+    form_title:"Contact us", f_first:"First name *", f_last:"Last name", f_email:"Email *", f_phone:"Phone *", f_msg:"Write a message *", f_send:"Submit",
     copy:"© 2026 Aurea Financial LLC. All rights reserved.",
     wa_text:"Hi! I found Aurea through the website and would like to learn more about bookkeeping."
   }
@@ -421,16 +423,44 @@ menu.querySelectorAll("a").forEach(a => a.addEventListener("click", () => menu.c
 const msgs = {
   pt: { missing:"Preencha nome, e-mail, telefone e mensagem.", ok:"Abrimos o WhatsApp com a sua mensagem. É só tocar em enviar.",
         intro:"Olá! Vim pelo site da Aurea.", name:"Nome", email:"E-mail", phone:"Telefone", msg:"Mensagem" },
-  en: { missing:"Please fill in name, email, phone and message.", ok:"We opened WhatsApp with your message. Just tap send.",
-        intro:"Hi! I found Aurea through the website.", name:"Name", email:"Email", phone:"Phone", msg:"Message" }
+  en: { missing:"Please fill in name, email, phone and message.", sending:"Sending...",
+        sent:"Thank you! Your message was sent. We'll get back to you within 1 business day.",
+        error:"Something went wrong. Please try again or email us at info@aureafi.com." }
 };
-document.getElementById("contact-form").addEventListener("submit", e => {
+const form = document.getElementById("contact-form");
+form.addEventListener("submit", async e => {
   e.preventDefault();
   const m = msgs[currentLang] || msgs.pt;
   const v = id => document.getElementById(id).value.trim();
   const status = document.getElementById("form-status");
   const first = v("fn"), last = v("ln"), email = v("em"), phone = v("ph"), msg = v("msg");
   if (!first || !email || !phone || !msg) { status.textContent = m.missing; return; }
+
+  // Versão em inglês: envia por e-mail (Web3Forms)
+  if (currentLang === "en") {
+    if (!WEB3FORMS_KEY) { status.textContent = m.error; return; }
+    const btn = form.querySelector('button[type="submit"]');
+    btn.disabled = true; status.textContent = m.sending;
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_KEY,
+          subject: "New contact from the Aurea website (English)",
+          from_name: "Aurea website",
+          name: (first + " " + last).trim(), email: email, phone: phone, message: msg
+        })
+      });
+      const data = await res.json();
+      if (data.success) { form.reset(); status.textContent = m.sent; }
+      else status.textContent = m.error;
+    } catch (err) { status.textContent = m.error; }
+    btn.disabled = false;
+    return;
+  }
+
+  // Versão em português: abre o WhatsApp
   const text = m.intro + "\n\n" +
     m.name + ": " + (first + " " + last).trim() + "\n" +
     m.email + ": " + email + "\n" +
