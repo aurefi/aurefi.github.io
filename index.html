@@ -44,7 +44,9 @@
   .menu a:hover::after{width:100%}
   .right{display:flex;align-items:center;gap:16px}
   .lang{display:flex;border:1px solid var(--ink);border-radius:999px;overflow:hidden}
-  .lang button{background:none;border:0;padding:6px 12px;font:600 12px var(--sans);letter-spacing:.08em;cursor:pointer;color:var(--ink)}
+  .lang button{background:none;border:0;padding:6px 12px;font:600 12px var(--sans);letter-spacing:.08em;cursor:pointer;color:var(--ink);display:flex;align-items:center;gap:6px}
+  .lang .flag{width:18px;height:12px;border-radius:2px;box-shadow:0 0 0 1px rgba(0,0,0,.15);flex:none}
+  .form-status{margin-top:14px;font-size:14px;color:var(--brown);min-height:1em}
   .lang button.on{background:var(--ink);color:var(--cream)}
   .burger{display:none;background:none;border:0;cursor:pointer;padding:8px}
   .burger span{display:block;width:24px;height:2px;background:var(--ink);margin:5px 0}
@@ -166,8 +168,12 @@
     </ul>
     <div class="right">
       <div class="lang" role="group" aria-label="Idioma">
-        <button type="button" data-lang="pt" class="on">PT</button>
-        <button type="button" data-lang="en">EN</button>
+        <button type="button" data-lang="pt" class="on" aria-label="Português">
+          <svg class="flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#009C3B"/><polygon points="12,1.6 22.4,8 12,14.4 1.6,8" fill="#FFDF00"/><circle cx="12" cy="8" r="3.6" fill="#002776"/></svg>PT
+        </button>
+        <button type="button" data-lang="en" aria-label="English">
+          <svg class="flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#fff"/><g fill="#B22234"><rect y="0" width="24" height="1.23"/><rect y="2.46" width="24" height="1.23"/><rect y="4.92" width="24" height="1.23"/><rect y="7.38" width="24" height="1.23"/><rect y="9.85" width="24" height="1.23"/><rect y="12.31" width="24" height="1.23"/><rect y="14.77" width="24" height="1.23"/></g><rect width="10" height="8.62" fill="#3C3B6E"/></svg>EN
+        </button>
       </div>
       <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
     </div>
@@ -285,10 +291,7 @@
           <a class="line wa-link" href="https://wa.me/13259565160" target="_blank" rel="noopener">WhatsApp · (325) 956-5160</a>
           <a class="line" href="mailto:info@aureafi.com">info@aureafi.com</a>
         </div>
-        <form action="https://formsubmit.co/info@aureafi.com" method="POST">
-          <input type="hidden" name="_subject" value="Novo contato pelo site Aurea">
-          <input type="hidden" name="_template" value="table">
-          <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+        <form id="contact-form" novalidate>
           <h3 data-i18n="form_title">Fale com a gente</h3>
           <div class="row">
             <div><label for="fn" data-i18n="f_first">Nome *</label><input id="fn" name="Nome" required></div>
@@ -298,6 +301,7 @@
           <label for="ph" data-i18n="f_phone">Telefone *</label><input id="ph" type="tel" name="Telefone" required>
           <label for="msg" data-i18n="f_msg">Escreva sua mensagem *</label><textarea id="msg" name="Mensagem" required></textarea>
           <button class="btn btn-gold" type="submit" data-i18n="f_send">Enviar</button>
+          <p class="form-status" id="form-status" role="status"></p>
         </form>
       </div>
     </div>
@@ -349,8 +353,8 @@ const dict = {
     creds_title:"Credenciais", creds_sub:"Selos e certificações",
     contact_t1:"Pronto para assumir o controle das suas finanças?",
     contact_t2:"Vamos conversar sobre a sua empresa e sobre como a Aurea pode ajudar você a seguir em frente com confiança.",
-    contact_side:"Mande uma mensagem pelo formulário ou fale direto com a gente pelo WhatsApp. Respondemos em até 1 dia útil.",
-    form_title:"Fale com a gente", f_first:"Nome *", f_last:"Sobrenome", f_email:"E-mail *", f_phone:"Telefone *", f_msg:"Escreva sua mensagem *", f_send:"Enviar",
+    contact_side:"Preencha o formulário e a sua mensagem chega direto no nosso WhatsApp. Se preferir, escreva para o nosso e-mail. Respondemos em até 1 dia útil.",
+    form_title:"Fale com a gente", f_first:"Nome *", f_last:"Sobrenome", f_email:"E-mail *", f_phone:"Telefone *", f_msg:"Escreva sua mensagem *", f_send:"Enviar pelo WhatsApp",
     copy:"© 2026 Aurea Financial LLC. Todos os direitos reservados.",
     wa_text:"Olá! Vim pelo site da Aurea e gostaria de saber mais sobre o bookkeeping."
   },
@@ -376,13 +380,14 @@ const dict = {
     creds_title:"Credentials", creds_sub:"Badges and Certifications",
     contact_t1:"Ready to take control of your finances?",
     contact_t2:"Let's talk about your business and how Aurea can help you move forward with confidence.",
-    contact_side:"Send us a message through the form or reach us directly on WhatsApp. We reply within 1 business day.",
-    form_title:"Contact us", f_first:"First name *", f_last:"Last name", f_email:"Email *", f_phone:"Phone *", f_msg:"Write a message *", f_send:"Submit",
+    contact_side:"Fill out the form and your message goes straight to our WhatsApp. If you prefer, email us. We reply within 1 business day.",
+    form_title:"Contact us", f_first:"First name *", f_last:"Last name", f_email:"Email *", f_phone:"Phone *", f_msg:"Write a message *", f_send:"Send via WhatsApp",
     copy:"© 2026 Aurea Financial LLC. All rights reserved.",
     wa_text:"Hi! I found Aurea through the website and would like to learn more about bookkeeping."
   }
 };
 
+let currentLang = "pt";
 function setLang(lang){
   const d = dict[lang] || dict.pt;
   document.documentElement.lang = lang === "en" ? "en" : "pt-BR";
@@ -392,8 +397,7 @@ function setLang(lang){
   });
   document.querySelectorAll(".lang button").forEach(b => b.classList.toggle("on", b.dataset.lang === lang));
   document.querySelectorAll(".wa-link").forEach(a => a.href = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(d.wa_text));
-  const subj = document.querySelector('input[name="_subject"]');
-  if (subj) subj.value = lang === "en" ? "New contact from the Aurea website" : "Novo contato pelo site Aurea";
+  currentLang = lang;
   try { localStorage.setItem("aurea_lang", lang); } catch(e) {}
 }
 
@@ -412,6 +416,29 @@ document.querySelectorAll(".lang button").forEach(b => b.addEventListener("click
 const burger = document.getElementById("burger"), menu = document.getElementById("menu");
 burger.addEventListener("click", () => menu.classList.toggle("open"));
 menu.querySelectorAll("a").forEach(a => a.addEventListener("click", () => menu.classList.remove("open")));
+
+// Formulário: abre o WhatsApp com a mensagem já preenchida
+const msgs = {
+  pt: { missing:"Preencha nome, e-mail, telefone e mensagem.", ok:"Abrimos o WhatsApp com a sua mensagem. É só tocar em enviar.",
+        intro:"Olá! Vim pelo site da Aurea.", name:"Nome", email:"E-mail", phone:"Telefone", msg:"Mensagem" },
+  en: { missing:"Please fill in name, email, phone and message.", ok:"We opened WhatsApp with your message. Just tap send.",
+        intro:"Hi! I found Aurea through the website.", name:"Name", email:"Email", phone:"Phone", msg:"Message" }
+};
+document.getElementById("contact-form").addEventListener("submit", e => {
+  e.preventDefault();
+  const m = msgs[currentLang] || msgs.pt;
+  const v = id => document.getElementById(id).value.trim();
+  const status = document.getElementById("form-status");
+  const first = v("fn"), last = v("ln"), email = v("em"), phone = v("ph"), msg = v("msg");
+  if (!first || !email || !phone || !msg) { status.textContent = m.missing; return; }
+  const text = m.intro + "\n\n" +
+    m.name + ": " + (first + " " + last).trim() + "\n" +
+    m.email + ": " + email + "\n" +
+    m.phone + ": " + phone + "\n\n" +
+    m.msg + ": " + msg;
+  window.open("https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(text), "_blank", "noopener");
+  status.textContent = m.ok;
+});
 
 const header = document.querySelector("header");
 window.addEventListener("scroll", () => header.classList.toggle("scrolled", window.scrollY > 10));
