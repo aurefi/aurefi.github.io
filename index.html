@@ -5,209 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Aurea Financial · Bookkeeping</title>
 <meta name="description" content="Bookkeeping para pequenas empresas nos EUA. Atendimento em português, inglês e espanhol.">
+<meta property="og:title" content="Aurea Financial · Bookkeeping">
+<meta property="og:description" content="Suas finanças em perfeita ordem. Bookkeeping em QuickBooks, com atendimento em português, inglês e espanhol.">
+<meta property="og:image" content="https://aureafi.com/logo.png">
+<meta property="og:url" content="https://aureafi.com/">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;0,6..96,700;0,6..96,800;1,6..96,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --cream:#F6ECE0;
-    --cream-2:#FBF3E8;
-    --ink:#131F1C;
-    --ink-2:#1B2A26;
-    --brown:#7A5A2E;
-    --gold:#B8924F;
-    --muted:#5E5A52;
-    --line:#E9DCC9;
-    --serif:"Bodoni Moda", Georgia, "Times New Roman", serif;
-    --sans:"Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
-    --max:1200px;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  body{background:var(--cream);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
-  img{max-width:100%;display:block}
-  a{color:inherit}
-  .wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
-
-  /* Header */
-  header{position:sticky;top:0;z-index:50;background:rgba(246,236,224,.92);backdrop-filter:blur(8px);border-bottom:1px solid transparent;transition:border-color .2s}
-  header.scrolled{border-color:var(--line)}
-  .nav{display:flex;align-items:center;justify-content:space-between;gap:24px;height:150px;transition:height .25s}
-  .brand{display:flex;align-items:center;text-decoration:none}
-  .brand img{height:130px;width:auto;transition:height .25s}
-  header.scrolled .nav{height:104px}
-  header.scrolled .brand img{height:84px}
-  .wordmark{font-family:var(--serif);font-weight:700;font-size:30px;letter-spacing:.06em;line-height:1}
-  .wordmark small{display:block;font-family:var(--sans);font-weight:500;font-size:9px;letter-spacing:.32em;color:var(--brown);margin-top:4px}
-  .menu{display:flex;align-items:center;gap:36px;list-style:none}
-  .menu a{font-family:var(--serif);font-weight:600;font-size:19px;text-decoration:none;position:relative}
-  .menu a::after{content:"";position:absolute;left:0;bottom:-4px;width:0;height:1px;background:var(--ink);transition:width .25s}
-  .menu a:hover::after{width:100%}
-  .right{display:flex;align-items:center;gap:16px}
-  .lang{display:flex;border:1px solid var(--ink);border-radius:999px;overflow:hidden}
-  .lang button{background:none;border:0;padding:6px 12px;font:600 12px var(--sans);letter-spacing:.08em;cursor:pointer;color:var(--ink);display:flex;align-items:center;gap:6px}
-  .lang .flag{width:18px;height:12px;border-radius:2px;box-shadow:0 0 0 1px rgba(0,0,0,.15);flex:none}
-  .form-status{margin-top:14px;font-size:14px;color:var(--brown);min-height:1em}
-  .lang button.on{background:var(--ink);color:var(--cream)}
-  .burger{display:none;background:none;border:0;cursor:pointer;padding:8px}
-  .burger span{display:block;width:24px;height:2px;background:var(--ink);margin:5px 0}
-
-  /* Buttons */
-  .btn{display:inline-flex;align-items:center;gap:10px;padding:16px 28px;font:600 14px var(--sans);letter-spacing:.1em;text-transform:uppercase;text-decoration:none;border:1px solid var(--ink);transition:all .2s;cursor:pointer}
-  .btn-dark{background:var(--ink);color:var(--cream)}
-  .btn-dark:hover{background:var(--brown);border-color:var(--brown)}
-  .btn-line{background:transparent;color:var(--ink)}
-  .btn-line:hover{background:var(--ink);color:var(--cream)}
-  .btn-gold{background:var(--brown);border-color:var(--brown);color:var(--cream)}
-  .btn-gold:hover{background:var(--gold);border-color:var(--gold)}
-  .btn svg{width:18px;height:18px}
-
-  /* Hero */
-  .hero{padding:72px 0 96px}
-  .hero h1{font-family:var(--serif);font-weight:700;font-size:clamp(3.2rem,10vw,9rem);line-height:.98;letter-spacing:-.02em}
-  .hero p{margin-top:40px;font-family:var(--serif);font-weight:700;font-size:clamp(1.05rem,2.2vw,1.9rem);text-transform:uppercase;letter-spacing:.02em;color:#3E453F;max-width:1000px}
-  .hero .ctas{margin-top:44px;display:flex;flex-wrap:wrap;gap:14px}
-
-  .fade{height:180px;background:linear-gradient(to bottom,var(--cream),var(--ink))}
-  .fade.up{background:linear-gradient(to bottom,var(--ink),var(--cream))}
-
-  /* Sections */
-  section{padding:96px 0}
-  .dark{background:var(--ink);color:var(--cream-2)}
-  .eyebrow{font-family:var(--serif);font-weight:700;font-size:24px;margin-bottom:48px}
-  .dark .eyebrow{color:var(--cream-2)}
-  .light .eyebrow{color:var(--brown)}
-
-  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-  .card{border-top:3px solid var(--cream-2);padding-top:18px}
-  .card h3{font-family:var(--serif);font-size:22px;font-weight:700;color:#CFC6B8;margin-bottom:22px}
-  .icon{position:relative;overflow:hidden;aspect-ratio:1/1;background:var(--ink-2);border:1px solid rgba(251,243,232,.08);display:grid;place-items:center;margin-bottom:20px}
-  .icon img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-  .icon svg{width:34%;height:auto;stroke:var(--gold);fill:none;stroke-width:1.2}
-  .card p{font-family:var(--serif);font-weight:700;font-size:17px;line-height:1.45}
-
-  /* About */
-  .about h2{font-family:var(--serif);font-weight:600;font-size:clamp(2.2rem,5.4vw,4.6rem);line-height:1.08;color:var(--brown);letter-spacing:-.01em}
-  .about .tag{display:inline;background:var(--brown);color:var(--cream-2);font-family:var(--serif);font-weight:700;font-size:clamp(1rem,1.7vw,1.3rem);padding:2px 6px;box-decoration-break:clone;-webkit-box-decoration-break:clone;line-height:1.7}
-  .about .lead{margin-top:36px}
-  .about .meaning{margin-top:28px;font-family:var(--serif);font-weight:700;font-size:clamp(1rem,1.6vw,1.25rem);color:var(--brown)}
-
-  /* Services */
-  .svc .card h3{color:#CFC6B8}
-  .status{display:inline-block;margin-top:4px;font:600 12px var(--sans);letter-spacing:.14em;text-transform:uppercase;padding:6px 12px;border:1px solid rgba(251,243,232,.35)}
-  .status.open{background:var(--gold);border-color:var(--gold);color:var(--ink)}
-  .svc .card p.desc{font-family:var(--sans);font-weight:400;font-size:15px;color:#BDB5A8;margin:14px 0 16px}
-
-  /* Credentials */
-  .creds-sub{font-family:var(--serif);font-weight:700;color:#A79F92;margin:-36px 0 40px}
-  .badges{display:flex;flex-wrap:wrap;justify-content:space-between;gap:24px}
-  .badge-slot{width:150px;min-height:270px;display:flex;justify-content:center}
-  .badge-slot iframe{border:0;max-width:100%}
-  @media (max-width:900px){.badges{justify-content:center}}
-
-  /* Contact */
-  .contact h2{font-family:var(--serif);font-size:clamp(2.2rem,5.4vw,4.4rem);line-height:1.05;font-weight:600}
-  .contact h2 span{display:block;margin-top:10px}
-  .contact h2 b{font-weight:800;display:block}
-  .contact-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:56px;margin-top:56px;align-items:start}
-  .side p{color:#BDB5A8;margin-bottom:24px}
-  .side a.line{display:block;font-family:var(--serif);font-size:20px;text-decoration:none;margin-bottom:10px}
-  .side a.line:hover{color:var(--gold)}
-  form{background:var(--cream-2);color:var(--ink);padding:36px}
-  form h3{font-family:var(--serif);font-weight:700;font-size:30px;margin-bottom:24px}
-  .row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-  label{display:block;font-size:13px;margin-bottom:6px;color:var(--muted)}
-  input,textarea{width:100%;padding:12px;border:1px solid #A9A296;background:transparent;font:15px var(--sans);color:var(--ink);margin-bottom:18px}
-  input:focus,textarea:focus{outline:2px solid var(--gold);outline-offset:-1px;border-color:var(--gold)}
-  textarea{min-height:120px;resize:vertical}
-
-  /* Footer */
-  footer{background:var(--cream-2);padding:56px 0}
-  .foot{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:24px}
-  .foot .contacts a{display:block;font-family:var(--serif);font-weight:700;color:var(--brown);text-decoration:none;margin-bottom:8px}
-  .foot .center{text-align:center}
-  .foot .center img{height:110px;margin:0 auto 14px}
-  .foot .copy{font-family:var(--serif);font-weight:700;color:var(--brown);font-size:15px}
-
-  /* WhatsApp float */
-  .wa{position:fixed;right:20px;bottom:20px;width:58px;height:58px;border-radius:50%;background:#25D366;display:grid;place-items:center;box-shadow:0 8px 24px rgba(0,0,0,.25);z-index:60}
-  .wa svg{width:30px;height:30px;fill:#fff}
-
-  /* Responsive */
-  @media (max-width:900px){
-    .menu{position:absolute;top:100%;left:0;right:0;flex-direction:column;gap:0;background:var(--cream);border-bottom:1px solid var(--line);display:none}
-    .menu.open{display:flex}
-    .menu li{width:100%}
-    .menu a{display:block;padding:16px 24px}
-    .burger{display:block}
-    .grid3{grid-template-columns:1fr}
-    .badges{grid-template-columns:repeat(2,1fr)}
-    .contact-grid{grid-template-columns:1fr}
-    .foot{grid-template-columns:1fr;text-align:center}
-  }
-  @media (max-width:520px){
-    body{font-size:17px}
-    .wrap{padding:0 20px}
-    .hero{padding:48px 0 72px}
-    .hero h1{font-size:3.4rem;line-height:1.02}
-    .hero p{font-size:1.2rem;line-height:1.4}
-    .btn{font-size:15px;padding:18px 24px}
-    .eyebrow{font-size:26px;margin-bottom:32px}
-    .card h3{font-size:24px}
-    .card p{font-size:19px;line-height:1.5}
-    .svc .card p.desc{font-size:17px}
-    .status{font-size:13px}
-    .about h2{font-size:2.3rem;line-height:1.15}
-    .about .tag{font-size:1.15rem}
-    .about .meaning{font-size:1.15rem}
-    .creds-sub{margin:-20px 0 32px}
-    .contact h2{font-size:2.3rem;line-height:1.12}
-    .side p{font-size:17px}
-    label{font-size:15px}
-    input,textarea{font-size:16px}
-    .menu a{font-size:21px}
-    .lang button{padding:8px 12px;font-size:13px}
-    .foot .copy{font-size:15px}
-    .nav{height:116px}
-    .brand img{height:96px}
-    header.scrolled .nav{height:84px}
-    header.scrolled .brand img{height:64px}
-    section{padding:72px 0}
-    .row{grid-template-columns:1fr}
-    form{padding:24px}
-    .badges{grid-template-columns:1fr}
-    .hero .ctas .btn{width:100%;justify-content:center}
-  }
-</style>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,600;6..96,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body data-page="home">
 
-<header id="top">
-  <div class="wrap nav">
-    <a class="brand" href="#top" aria-label="Aurea Financial">
-      <img src="logo.png" alt="Aurea Bookkeeping Services" onerror="this.outerHTML='<span class=&quot;wordmark&quot;>AUREA<small>BOOKKEEPING SERVICES</small></span>'">
-    </a>
-    <ul class="menu" id="menu">
-      <li><a href="#sobre" data-i18n="nav_about">Sobre a Aurea</a></li>
-      <li><a href="#servicos" data-i18n="nav_services">Nossos serviços</a></li>
-      <li><a href="#contato" data-i18n="nav_contact">Fale conosco</a></li>
-    </ul>
-    <div class="right">
-      <div class="lang" role="group" aria-label="Idioma">
-        <button type="button" data-lang="pt" class="on" aria-label="Português">
-          <svg class="flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#009C3B"/><polygon points="12,1.6 22.4,8 12,14.4 1.6,8" fill="#FFDF00"/><circle cx="12" cy="8" r="3.6" fill="#002776"/></svg>PT
-        </button>
-        <button type="button" data-lang="en" aria-label="English">
-          <svg class="flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#fff"/><g fill="#B22234"><rect y="0" width="24" height="1.23"/><rect y="2.46" width="24" height="1.23"/><rect y="4.92" width="24" height="1.23"/><rect y="7.38" width="24" height="1.23"/><rect y="9.85" width="24" height="1.23"/><rect y="12.31" width="24" height="1.23"/><rect y="14.77" width="24" height="1.23"/></g><rect width="10" height="8.62" fill="#3C3B6E"/></svg>EN
-        </button>
-      </div>
-      <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
-    </div>
-  </div>
-</header>
+<div id="site-header"></div>
 
 <main>
   <!-- HERO -->
@@ -215,7 +27,7 @@
     <h1 data-i18n="hero_title">Suas finanças em perfeita ordem.</h1>
     <p data-i18n="hero_sub">Nós cuidamos dos números para você se concentrar em fazer sua empresa crescer.</p>
     <div class="ctas">
-      <a class="btn btn-dark" href="#contato" data-i18n="cta_consult">Agende uma consulta gratuita</a>
+      <a class="btn btn-dark" href="contact.html" data-i18n="cta_consult">Agende uma ligação gratuita</a>
       <a class="btn btn-line wa-link" href="https://wa.me/13259565160" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.5-.3z"/></svg>
         <span data-i18n="cta_whatsapp">Fale no WhatsApp</span>
@@ -255,38 +67,40 @@
   <section class="light about" id="sobre">
     <div class="wrap">
       <h2 class="eyebrow" data-i18n="about_eyebrow">Sobre a Aurea</h2>
-      <h2 data-i18n="about_title">A Aurea Financial nasceu de uma ideia simples: toda empresa merece registros financeiros precisos e confiáveis, e a tranquilidade que vem junto com eles.</h2>
-      <p class="lead"><span class="tag" data-i18n="about_p1">Trabalhamos lado a lado com pequenas empresas e empreendedores em todos os Estados Unidos, cuidando das finanças com atenção, precisão e total transparência.</span></p>
+      <p class="title" data-i18n="about_title">A Aurea Financial nasceu de uma ideia simples: toda empresa merece registros financeiros precisos e confiáveis, e a tranquilidade que vem junto com eles.</p>
+      <p class="lead" data-i18n="about_p1">Trabalhamos lado a lado com pequenas empresas e empreendedores em todos os Estados Unidos, cuidando das finanças com atenção, precisão e total transparência.</p>
       <p class="meaning" data-i18n="about_p2">"Aurea" significa "dourada", um reflexo do padrão que exigimos de nós mesmos todos os dias.</p>
+      <p style="margin-top:32px"><a class="btn btn-line" href="team.html" data-i18n="about_team">Conheça o time</a></p>
     </div>
   </section>
 
   <div class="fade"></div>
 
   <!-- SERVIÇOS -->
-  <section class="dark svc" id="servicos">
+  <section class="dark" id="servicos">
     <div class="wrap">
       <h2 class="eyebrow" data-i18n="svc_title">Nossos serviços</h2>
       <div class="grid3">
         <div class="card">
           <h3>Bookkeeping</h3>
           <div class="icon"><img src="img/svc1.jpg" alt="" loading="lazy" onerror="this.remove()"><svg viewBox="0 0 48 48"><path d="M8 40V8M8 40h32"/><path d="M14 32l8-9 6 5 10-12"/><path d="M33 16h5v5"/></svg></div>
-          <p class="desc" data-i18n="svc1_d">QuickBooks em dia, conciliação mensal das contas e cartões, e relatórios em português e inglês.</p>
+          <p data-i18n="svc1_d">QuickBooks em dia, conciliação mensal das contas e cartões, e relatórios em português e inglês.</p>
           <span class="status open" data-i18n="svc_open">Estamos aceitando novos clientes</span>
         </div>
         <div class="card">
           <h3 data-i18n="svc2_t">Impostos</h3>
           <div class="icon"><img src="img/svc2.jpg" alt="" loading="lazy" onerror="this.remove()"><svg viewBox="0 0 48 48"><path d="M12 6h18l8 8v28H12z"/><path d="M30 6v8h8M18 22h14M18 28h14M18 34h9"/></svg></div>
-          <p class="desc" data-i18n="svc2_d">Declarações de imposto para empresas e pessoas físicas.</p>
+          <p data-i18n="svc2_d">Declarações de imposto para empresas e pessoas físicas.</p>
           <span class="status" data-i18n="soon">Em breve</span>
         </div>
         <div class="card">
           <h3 data-i18n="svc3_t">Seguros</h3>
           <div class="icon"><img src="img/svc3.jpg" alt="" loading="lazy" onerror="this.remove()"><svg viewBox="0 0 48 48"><path d="M24 5l15 6v11c0 10-6.5 17-15 21C15.5 39 9 32 9 22V11z"/><path d="M18 24l4 4 8-9"/></svg></div>
-          <p class="desc" data-i18n="svc3_d">Proteção para a sua empresa, com o mesmo atendimento em português.</p>
+          <p data-i18n="svc3_d">Proteção para a sua empresa, com o mesmo atendimento em português.</p>
           <span class="status" data-i18n="soon">Em breve</span>
         </div>
       </div>
+      <p class="more-link"><a class="btn btn-cream" href="services.html" data-i18n="svc_all">Ver todos os serviços</a></p>
     </div>
   </section>
 
@@ -303,7 +117,41 @@
         <div class="badge-slot"><div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="2989db9d-552a-4fe4-beca-7c43a26e0776" data-share-badge-host="https://www.credly.com"></div></div>
         <div class="badge-slot"><div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="93c4ae66-d838-4bbf-ba34-0506c5fe52d4" data-share-badge-host="https://www.credly.com"></div></div>
       </div>
-      <script type="text/javascript" async src="https://cdn.credly.com/assets/utilities/embed.js"></script>
+    </div>
+  </section>
+
+  <!-- DEPOIMENTOS (aparece quando houver depoimentos em window.TESTIMONIALS) -->
+  <section class="light" id="testimonials" hidden style="padding-top:0">
+    <div class="wrap">
+      <h2 class="eyebrow" data-i18n="t_title">O que dizem os clientes</h2>
+      <div class="t-list"></div>
+    </div>
+  </section>
+
+  <!-- PERGUNTAS FREQUENTES -->
+  <section class="light" id="faq" style="padding-top:0">
+    <div class="wrap">
+      <h2 class="eyebrow" data-i18n="faq_title">Perguntas frequentes</h2>
+      <div class="faq" data-show="pt">
+        <details><summary>Como funciona o primeiro contato?</summary><p>Começa com uma ligação gratuita, em que entendemos como a sua empresa funciona e do que ela precisa. Depois disso, você recebe o contrato com os serviços certos para o seu caso.</p></details>
+        <details><summary>Quanto custa o bookkeeping?</summary><p>O valor depende do volume de transações da empresa e dos serviços que você escolher. Por isso, definimos o preço depois da ligação gratuita, com base na realidade do seu negócio.</p></details>
+        <details><summary>Vocês atendem empresas de qualquer estado?</summary><p>Sim. O atendimento é 100% remoto e atendemos empresas em todos os Estados Unidos.</p></details>
+        <details><summary>Como eu envio os meus recibos?</summary><p>Do jeito mais prático para você: por WhatsApp, por e-mail ou dando acesso direto aos seus fornecedores. A organização dos recibos não tem custo extra.</p></details>
+        <details><summary>Em que idioma eu recebo os relatórios?</summary><p>Em português e em inglês. Todo mês você recebe a Demonstração de Resultado (P&amp;L), o Balanço (Balance Sheet) e o fluxo de caixa.</p></details>
+        <details><summary>A Aurea movimenta o dinheiro da minha empresa?</summary><p>Não. Pagamentos, folha e impostos saem direto da conta da sua empresa. A Aurea organiza e registra, mas não guarda nem movimenta o seu dinheiro.</p></details>
+        <details><summary>A Aurea é um escritório de CPA?</summary><p>Não. A Aurea presta serviços de bookkeeping e serviços financeiros para pequenas empresas. Quando o seu caso precisa de um CPA ou de um advogado, indicamos parceiros.</p></details>
+        <details><summary>Vocês fazem a declaração de imposto?</summary><p>A preparação de impostos chega em breve. Enquanto isso, o bookkeeping deixa os seus números organizados e prontos para a declaração.</p></details>
+      </div>
+      <div class="faq" data-show="en">
+        <details><summary>How does the first contact work?</summary><p>It starts with a free call where we learn how your business works and what it needs. After that, you receive a contract with the right services for your situation.</p></details>
+        <details><summary>How much does bookkeeping cost?</summary><p>The price depends on your monthly transaction volume and the services you choose. That's why we set the price after the free call, based on your actual business.</p></details>
+        <details><summary>Do you work with businesses in any state?</summary><p>Yes. Our service is 100% remote and we work with businesses anywhere in the United States.</p></details>
+        <details><summary>How do I send my receipts?</summary><p>Whatever is easiest for you: WhatsApp, email or direct access to your vendors. Receipt organization comes at no extra cost.</p></details>
+        <details><summary>What language are the reports in?</summary><p>English and Portuguese. Every month you receive a Profit &amp; Loss, a Balance Sheet and a cash flow report.</p></details>
+        <details><summary>Does Aurea handle my business's money?</summary><p>No. Payments, payroll and taxes are paid directly from your business account. Aurea organizes and records everything, but never holds or moves your money.</p></details>
+        <details><summary>Is Aurea a CPA firm?</summary><p>No. Aurea provides bookkeeping and financial services for small businesses. When your situation calls for a CPA or an attorney, we refer you to trusted partners.</p></details>
+        <details><summary>Do you prepare tax returns?</summary><p>Tax preparation is coming soon. In the meantime, bookkeeping keeps your numbers organized and ready for tax time.</p></details>
+      </div>
     </div>
   </section>
 
@@ -313,60 +161,50 @@
   <section class="dark contact" id="contato">
     <div class="wrap">
       <h2 class="eyebrow" data-i18n="nav_contact">Fale conosco</h2>
-      <h2><b data-i18n="contact_t1">Pronto para assumir o controle das suas finanças?</b><span data-i18n="contact_t2">Vamos conversar sobre a sua empresa e sobre como a Aurea pode ajudar você a seguir em frente com confiança.</span></h2>
+      <p class="title"><b data-i18n="contact_t1">Pronto para assumir o controle das suas finanças?</b><span data-i18n="contact_t2">Vamos conversar sobre a sua empresa e sobre como a Aurea pode ajudar você a seguir em frente com confiança.</span></p>
       <div class="contact-grid">
         <div class="side">
-          <p data-i18n="contact_side">Mande uma mensagem pelo formulário ou fale direto com a gente pelo WhatsApp. Respondemos em até 1 dia útil.</p>
+          <p data-i18n="contact_side">Preencha o formulário e a sua mensagem chega direto no nosso WhatsApp. Se preferir, escreva para o nosso e-mail. Respondemos em até 1 dia útil.</p>
           <a class="line wa-link" href="https://wa.me/13259565160" target="_blank" rel="noopener">WhatsApp · (325) 956-5160</a>
           <a class="line" href="mailto:info@aureafi.com">info@aureafi.com</a>
         </div>
-        <form id="contact-form" novalidate>
-          <h3 data-i18n="form_title">Fale com a gente</h3>
-          <div class="row">
-            <div><label for="fn" data-i18n="f_first">Nome *</label><input id="fn" name="Nome" required></div>
-            <div><label for="ln" data-i18n="f_last">Sobrenome</label><input id="ln" name="Sobrenome"></div>
-          </div>
-          <label for="em" data-i18n="f_email">E-mail *</label><input id="em" type="email" name="email" required>
-          <label for="ph" data-i18n="f_phone">Telefone *</label><input id="ph" type="tel" name="Telefone" required>
-          <label for="msg" data-i18n="f_msg">Escreva sua mensagem *</label><textarea id="msg" name="Mensagem" required></textarea>
-          <button class="btn btn-gold" type="submit" data-i18n="f_send">Enviar</button>
-          <p class="form-status" id="form-status" role="status"></p>
-        </form>
+        <div class="form-slot"></div>
       </div>
     </div>
   </section>
 
   <div class="fade up"></div>
+
+  <!-- INSTAGRAM -->
+  <section class="light" id="instagram">
+    <div class="wrap">
+      <div class="insta-head">
+        <div>
+          <h2 class="eyebrow">Instagram</h2>
+          <p class="title" data-i18n="insta_title">Acompanhe a Aurea</p>
+        </div>
+        <a class="btn btn-line" href="https://www.instagram.com/aureafinancial/" target="_blank" rel="noopener">@aureafinancial</a>
+      </div>
+      <div id="insta-feed">
+        <div class="insta-fallback">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r=".6"/></svg>
+          <p data-i18n="insta_fallback">Dicas de finanças para o seu negócio, bastidores e novidades da Aurea.</p>
+          <a class="btn btn-dark" href="https://www.instagram.com/aureafinancial/" target="_blank" rel="noopener" data-i18n="insta_follow">Seguir no Instagram</a>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
 
-<footer>
-  <div class="wrap foot">
-    <div class="contacts">
-      <a href="mailto:info@aureafi.com">info@aureafi.com</a>
-      <a href="tel:+13259565160">(325) 956-5160</a>
-    </div>
-    <div class="center">
-      <img src="logo.png" alt="Aurea Bookkeeping Services" onerror="this.outerHTML='<div class=&quot;wordmark&quot; style=&quot;margin-bottom:14px&quot;>AUREA<small>BOOKKEEPING SERVICES</small></div>'">
-      <p class="copy" data-i18n="copy">© 2026 Aurea Financial LLC. Todos os direitos reservados.</p>
-    </div>
-    <div></div>
-  </div>
-</footer>
-
-<a class="wa wa-link" href="https://wa.me/13259565160" target="_blank" rel="noopener" aria-label="WhatsApp">
-  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.5-.3z"/></svg>
-</a>
+<div id="site-footer"></div>
 
 <script>
-const WA_NUMBER = "13259565160";
-// Chave do Web3Forms (formulário da versão em inglês). Cole a chave entre as aspas.
-const WEB3FORMS_KEY = "ea8ccef1-9c21-4c7d-9a87-8e5c876378e6";
-const dict = {
+window.PAGE_DICT = {
   pt: {
-    nav_about:"Sobre a Aurea", nav_services:"Nossos serviços", nav_contact:"Fale conosco",
+    page_title:"Aurea Financial · Bookkeeping",
     hero_title:"Suas finanças em perfeita ordem.",
     hero_sub:"Nós cuidamos dos números para você se concentrar em fazer sua empresa crescer.",
-    cta_consult:"Agende uma consulta gratuita", cta_whatsapp:"Fale no WhatsApp",
+    cta_consult:"Agende uma ligação gratuita", cta_whatsapp:"Fale no WhatsApp",
     why_title:"Por que escolher a Aurea?",
     why1_t:"Precisão em que você pode confiar", why1_p:"Cada transação registrada, cada conta conciliada. Sem achismo, sem surpresas.",
     why2_t:"Sempre no prazo", why2_p:"Relatórios mensais entregues com regularidade, para você saber sempre como está a sua empresa.",
@@ -375,25 +213,26 @@ const dict = {
     about_title:"A Aurea Financial nasceu de uma ideia simples: toda empresa merece registros financeiros precisos e confiáveis, e a tranquilidade que vem junto com eles.",
     about_p1:"Trabalhamos lado a lado com pequenas empresas e empreendedores em todos os Estados Unidos, cuidando das finanças com atenção, precisão e total transparência.",
     about_p2:"\"Aurea\" significa \"dourada\", um reflexo do padrão que exigimos de nós mesmos todos os dias.",
+    about_team:"Conheça o time",
     svc_title:"Nossos serviços",
     svc1_d:"QuickBooks em dia, conciliação mensal das contas e cartões, e relatórios em português e inglês.",
     svc_open:"Estamos aceitando novos clientes",
     svc2_t:"Impostos", svc2_d:"Declarações de imposto para empresas e pessoas físicas.",
     svc3_t:"Seguros", svc3_d:"Proteção para a sua empresa, com o mesmo atendimento em português.",
-    soon:"Em breve",
+    soon:"Em breve", svc_all:"Ver todos os serviços", t_title:"O que dizem os clientes", faq_title:"Perguntas frequentes",
     creds_title:"Credenciais", creds_sub:"Selos e certificações",
     contact_t1:"Pronto para assumir o controle das suas finanças?",
     contact_t2:"Vamos conversar sobre a sua empresa e sobre como a Aurea pode ajudar você a seguir em frente com confiança.",
     contact_side:"Preencha o formulário e a sua mensagem chega direto no nosso WhatsApp. Se preferir, escreva para o nosso e-mail. Respondemos em até 1 dia útil.",
-    form_title:"Fale com a gente", f_first:"Nome *", f_last:"Sobrenome", f_email:"E-mail *", f_phone:"Telefone *", f_msg:"Escreva sua mensagem *", f_send:"Enviar pelo WhatsApp",
-    copy:"© 2026 Aurea Financial LLC. Todos os direitos reservados.",
-    wa_text:"Olá! Vim pelo site da Aurea e gostaria de saber mais sobre o bookkeeping."
+    insta_title:"Acompanhe a Aurea",
+    insta_fallback:"Dicas de finanças para o seu negócio, bastidores e novidades da Aurea.",
+    insta_follow:"Seguir no Instagram"
   },
   en: {
-    nav_about:"About Aurea", nav_services:"Our Services", nav_contact:"Get In Touch",
+    page_title:"Aurea Financial · Bookkeeping",
     hero_title:"Your finances, perfectly kept.",
     hero_sub:"We handle the numbers so you can focus on growing your business.",
-    cta_consult:"Schedule a free consultation", cta_whatsapp:"Chat on WhatsApp",
+    cta_consult:"Schedule a free call", cta_whatsapp:"Chat on WhatsApp",
     why_title:"Why Choose Aurea?",
     why1_t:"Accuracy You Can Trust", why1_p:"Every transaction recorded, every account reconciled. No guesswork, no surprises.",
     why2_t:"Always On Time", why2_p:"Monthly reports delivered consistently so you always know where your business stands.",
@@ -402,105 +241,29 @@ const dict = {
     about_title:"Aurea Financial was founded on a simple belief: every business deserves accurate, reliable books — and the peace of mind that comes with them.",
     about_p1:"We partner with small businesses and entrepreneurs across the US to manage their finances with care, precision, and complete transparency.",
     about_p2:"\"Aurea\" means golden — a reflection of the standard we hold ourselves to every single day.",
+    about_team:"Meet the team",
     svc_title:"Our Services",
     svc1_d:"QuickBooks kept up to date, monthly reconciliation of bank accounts and cards, and reports in English and Portuguese.",
     svc_open:"We are currently accepting new clients",
     svc2_t:"Taxes", svc2_d:"Tax returns for businesses and individuals.",
     svc3_t:"Insurance", svc3_d:"Protection for your business, with the same personal service.",
-    soon:"Coming soon",
+    soon:"Coming soon", svc_all:"See all services", t_title:"What clients say", faq_title:"Frequently asked questions",
     creds_title:"Credentials", creds_sub:"Badges and Certifications",
     contact_t1:"Ready to take control of your finances?",
     contact_t2:"Let's talk about your business and how Aurea can help you move forward with confidence.",
     contact_side:"Fill out the form and we'll get back to you within 1 business day. You can also reach us on WhatsApp or by email.",
-    form_title:"Contact us", f_first:"First name *", f_last:"Last name", f_email:"Email *", f_phone:"Phone *", f_msg:"Write a message *", f_send:"Submit",
-    copy:"© 2026 Aurea Financial LLC. All rights reserved.",
-    wa_text:"Hi! I found Aurea through the website and would like to learn more about bookkeeping."
+    insta_title:"Follow Aurea",
+    insta_fallback:"Finance tips for your business, behind the scenes and news from Aurea.",
+    insta_follow:"Follow on Instagram"
   }
 };
-
-let currentLang = "pt";
-function setLang(lang){
-  const d = dict[lang] || dict.pt;
-  document.documentElement.lang = lang === "en" ? "en" : "pt-BR";
-  document.querySelectorAll("[data-i18n]").forEach(el => {
-    const k = el.dataset.i18n;
-    if (d[k] !== undefined) el.textContent = d[k];
-  });
-  document.querySelectorAll(".lang button").forEach(b => b.classList.toggle("on", b.dataset.lang === lang));
-  document.querySelectorAll(".wa-link").forEach(a => a.href = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(d.wa_text));
-  currentLang = lang;
-  try { localStorage.setItem("aurea_lang", lang); } catch(e) {}
-}
-
-let start = "pt";
-try {
-  const saved = localStorage.getItem("aurea_lang");
-  if (saved) start = saved;
-  else if (!(navigator.language || "").toLowerCase().startsWith("pt")) start = "en";
-} catch(e) {}
-const urlLang = new URLSearchParams(location.search).get("lang");
-if (urlLang === "en" || urlLang === "pt") start = urlLang;
-setLang(start);
-
-document.querySelectorAll(".lang button").forEach(b => b.addEventListener("click", () => setLang(b.dataset.lang)));
-
-const burger = document.getElementById("burger"), menu = document.getElementById("menu");
-burger.addEventListener("click", () => menu.classList.toggle("open"));
-menu.querySelectorAll("a").forEach(a => a.addEventListener("click", () => menu.classList.remove("open")));
-
-// Formulário: abre o WhatsApp com a mensagem já preenchida
-const msgs = {
-  pt: { missing:"Preencha nome, e-mail, telefone e mensagem.", ok:"Abrimos o WhatsApp com a sua mensagem. É só tocar em enviar.",
-        intro:"Olá! Vim pelo site da Aurea.", name:"Nome", email:"E-mail", phone:"Telefone", msg:"Mensagem" },
-  en: { missing:"Please fill in name, email, phone and message.", sending:"Sending...",
-        sent:"Thank you! Your message was sent. We'll get back to you within 1 business day.",
-        error:"Something went wrong. Please try again or email us at info@aureafi.com." }
-};
-const form = document.getElementById("contact-form");
-form.addEventListener("submit", async e => {
-  e.preventDefault();
-  const m = msgs[currentLang] || msgs.pt;
-  const v = id => document.getElementById(id).value.trim();
-  const status = document.getElementById("form-status");
-  const first = v("fn"), last = v("ln"), email = v("em"), phone = v("ph"), msg = v("msg");
-  if (!first || !email || !phone || !msg) { status.textContent = m.missing; return; }
-
-  // Versão em inglês: envia por e-mail (Web3Forms)
-  if (currentLang === "en") {
-    if (!WEB3FORMS_KEY) { status.textContent = m.error; return; }
-    const btn = form.querySelector('button[type="submit"]');
-    btn.disabled = true; status.textContent = m.sending;
-    try {
-      const res = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Accept": "application/json" },
-        body: JSON.stringify({
-          access_key: WEB3FORMS_KEY,
-          subject: "New contact from the Aurea website (English)",
-          from_name: "Aurea website",
-          name: (first + " " + last).trim(), email: email, phone: phone, message: msg
-        })
-      });
-      const data = await res.json();
-      if (data.success) { form.reset(); status.textContent = m.sent; }
-      else status.textContent = m.error;
-    } catch (err) { status.textContent = m.error; }
-    btn.disabled = false;
-    return;
-  }
-
-  // Versão em português: abre o WhatsApp
-  const text = m.intro + "\n\n" +
-    m.name + ": " + (first + " " + last).trim() + "\n" +
-    m.email + ": " + email + "\n" +
-    m.phone + ": " + phone + "\n\n" +
-    m.msg + ": " + msg;
-  window.open("https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(text), "_blank", "noopener");
-  status.textContent = m.ok;
-});
-
-const header = document.querySelector("header");
-window.addEventListener("scroll", () => header.classList.toggle("scrolled", window.scrollY > 10));
 </script>
+<script>
+// Depoimentos reais, com autorização do cliente. Exemplo de formato:
+// { name:"Nome do cliente", company:"Empresa LLC", pt:"Texto em português", en:"Text in English" }
+window.TESTIMONIALS = [];
+</script>
+<script src="main.js"></script>
+<script async src="https://cdn.credly.com/assets/utilities/embed.js"></script>
 </body>
 </html>
