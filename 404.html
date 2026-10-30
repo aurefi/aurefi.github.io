@@ -23,11 +23,21 @@
   <div class="wrap center-page">
     <div>
       <div class="big">404</div>
-      <h1 class="title" data-i18n="title">Esta página não existe.</h1>
-      <p class="lead" data-i18n="lead">O endereço pode ter mudado ou ter sido digitado errado. Mas os seus números continuam em boas mãos.</p>
+      <h1 class="title" data-i18n="title">As contas não batem.</h1>
+      <p class="lead" data-i18n="lead">Conciliamos todos os extratos e esta página não apareceu em nenhum deles.</p>
+
+      <div class="recon" aria-label="Conciliação">
+        <div class="recon-head" data-i18n="r_head">Conciliação</div>
+        <div class="recon-row"><span data-i18n="r1">Páginas esperadas</span><b>1</b></div>
+        <div class="recon-row"><span data-i18n="r2">Páginas encontradas</span><b>0</b></div>
+        <div class="recon-row diff"><span data-i18n="r3">Diferença não conciliada</span><b>404</b></div>
+        <div class="recon-stamp" data-i18n="stamp">Não conciliado</div>
+      </div>
+
+      <p class="lead small" data-i18n="lead2">Talvez o endereço tenha mudado ou tenha sido digitado errado. Fique tranquilo: com os números da sua empresa isso não acontece.</p>
       <div class="ctas">
         <a class="btn btn-dark" href="./" data-i18n="b1">Voltar ao início</a>
-        <a class="btn btn-line" href="contact.html" data-i18n="b2">Fale conosco</a>
+        <a class="btn btn-line" href="contact.html" data-i18n="b2">Agende uma ligação gratuita</a>
       </div>
     </div>
   </div>
@@ -37,12 +47,16 @@
 
 <script>
 window.PAGE_DICT = {
-  pt: { page_title:"Página não encontrada · Aurea Financial", title:"Esta página não existe.",
-        lead:"O endereço pode ter mudado ou ter sido digitado errado. Mas os seus números continuam em boas mãos.",
-        b1:"Voltar ao início", b2:"Fale conosco" },
-  en: { page_title:"Page not found · Aurea Financial", title:"This page doesn't exist.",
-        lead:"The address may have changed or been mistyped. Your numbers are still in good hands, though.",
-        b1:"Back to home", b2:"Get in touch" }
+  pt: { page_title:"As contas não batem · Aurea Financial", title:"As contas não batem.",
+        lead:"Conciliamos todos os extratos e esta página não apareceu em nenhum deles.",
+        r_head:"Conciliação", r1:"Páginas esperadas", r2:"Páginas encontradas", r3:"Diferença não conciliada", stamp:"Não conciliado",
+        lead2:"Talvez o endereço tenha mudado ou tenha sido digitado errado. Fique tranquilo: com os números da sua empresa isso não acontece.",
+        b1:"Voltar ao início", b2:"Agende uma ligação gratuita" },
+  en: { page_title:"The books don't balance · Aurea Financial", title:"The books don't balance.",
+        lead:"We reconciled every statement and this page didn't show up on any of them.",
+        r_head:"Reconciliation", r1:"Pages expected", r2:"Pages found", r3:"Unreconciled difference", stamp:"Not reconciled",
+        lead2:"The address may have changed or been mistyped. Don't worry: this never happens with your business's numbers.",
+        b1:"Back to home", b2:"Schedule a free call" }
 };
 </script>
 <script src="main.js"></script>
