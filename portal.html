@@ -63,10 +63,6 @@
         </div>
       </div>
 
-      <ul class="files" id="files"></ul>
-      <div class="empty" id="empty" hidden data-i18n="empty">Ainda não há relatórios na sua pasta. Assim que o relatório do mês estiver pronto, ele aparece aqui.</div>
-      <p class="msg" id="files-msg" role="status"></p>
-
       <div class="pw-box" id="pw-box" hidden>
         <h3 data-i18n="pw_t">Trocar senha</h3>
         <form id="pw-form" novalidate>
@@ -78,6 +74,55 @@
           <p class="msg" id="pw-msg" role="status"></p>
         </form>
       </div>
+
+      <p class="msg" id="files-msg" role="status"></p>
+      <div class="empty" id="empty" hidden data-i18n="empty">Ainda não há relatórios na sua pasta. Assim que o relatório do mês estiver pronto, ele aparece aqui.</div>
+
+      <!-- Visão do ano -->
+      <section id="year-view" class="pv" hidden>
+        <div class="years" id="years" role="tablist"></div>
+        <div class="chart-card" id="chart-card" hidden>
+          <div class="chart-top">
+            <h3 id="chart-title"></h3>
+            <span class="chart-legend"><i class="sw pos"></i><span data-i18n="leg_pos">Lucro</span><i class="sw neg"></i><span data-i18n="leg_neg">Prejuízo</span></span>
+          </div>
+          <div class="chart" id="chart"></div>
+          <div class="tip" id="tip" hidden></div>
+        </div>
+        <div class="months" id="months"></div>
+        <div class="others" id="others" hidden>
+          <h3 data-i18n="others">Outros documentos</h3>
+          <ul class="files" id="others-list"></ul>
+        </div>
+      </section>
+
+      <!-- Visão do mês -->
+      <section id="month-view" class="pv" hidden>
+        <div class="m-nav">
+          <button class="back" id="m-back" type="button">&larr; <span id="m-back-y"></span></button>
+          <div class="m-arrows">
+            <button class="arrow" id="m-prev" type="button" aria-label="Mês anterior">&lsaquo;</button>
+            <button class="arrow" id="m-next" type="button" aria-label="Próximo mês">&rsaquo;</button>
+          </div>
+        </div>
+        <h2 class="m-title" id="m-title"></h2>
+        <div class="kpis" id="kpis"></div>
+        <p class="note" id="m-note" hidden></p>
+        <h3 class="m-sub" data-i18n="m_docs">Relatórios do mês</h3>
+        <ul class="files" id="m-files"></ul>
+        <p class="empty sm" id="m-nofiles" hidden data-i18n="m_nofiles">Os relatórios deste mês ainda não foram publicados.</p>
+        <div class="viewer" id="viewer" hidden>
+          <div class="viewer-bar">
+            <b id="viewer-name"></b>
+            <div class="viewer-actions">
+              <a class="btn btn-line sm" id="viewer-new" target="_blank" rel="noopener" data-i18n="v_new">Abrir em nova aba</a>
+              <a class="btn btn-dark sm" id="viewer-dl" data-i18n="v_dl">Baixar</a>
+              <button class="viewer-x" id="viewer-x" type="button" aria-label="Fechar">&times;</button>
+            </div>
+          </div>
+          <div class="viewer-body" id="viewer-body"></div>
+        </div>
+      </section>
     </div>
 
   </div>
@@ -102,7 +147,13 @@ window.PAGE_DICT = {
     m_fill:"Preencha e-mail e senha.", m_bad:"E-mail ou senha incorretos.", m_wait:"Entrando...",
     m_err:"Não foi possível carregar os relatórios. Tente novamente em instantes.",
     m_open:"Abrir", m_short:"A senha precisa ter pelo menos 8 caracteres.", m_diff:"As senhas não são iguais.",
-    m_pwok:"Senha alterada com sucesso.", m_pwerr:"Não foi possível alterar a senha. Tente novamente."
+    m_pwok:"Senha alterada com sucesso.", m_pwerr:"Não foi possível alterar a senha. Tente novamente.",
+    leg_pos:"Lucro", leg_neg:"Prejuízo", chart_t:"Lucro por mês", others:"Outros documentos",
+    m_docs:"Relatórios do mês", m_nofiles:"Os relatórios deste mês ainda não foram publicados.",
+    v_new:"Abrir em nova aba", v_dl:"Baixar",
+    k_rev:"Receita", k_exp:"Despesas", k_net:"Lucro líquido", k_margin:"Margem", k_cash:"Saldo em caixa",
+    vs_prev:"vs. mês anterior", n_docs1:"1 relatório", n_docs:"{n} relatórios", no_data:"Sem dados",
+    no_summary:"O resumo deste mês ainda não foi publicado.", pp:"p.p.", note_t:"Nota da Aurea", noprev:"sem comparação"
   },
   en: {
     page_title:"Client Portal · Aurea Financial",
@@ -118,7 +169,13 @@ window.PAGE_DICT = {
     m_fill:"Please enter your email and password.", m_bad:"Incorrect email or password.", m_wait:"Signing in...",
     m_err:"We couldn't load your reports. Please try again in a moment.",
     m_open:"Open", m_short:"The password must have at least 8 characters.", m_diff:"The passwords don't match.",
-    m_pwok:"Password changed successfully.", m_pwerr:"We couldn't change your password. Please try again."
+    m_pwok:"Password changed successfully.", m_pwerr:"We couldn't change your password. Please try again.",
+    leg_pos:"Profit", leg_neg:"Loss", chart_t:"Profit by month", others:"Other documents",
+    m_docs:"This month's reports", m_nofiles:"This month's reports haven't been published yet.",
+    v_new:"Open in new tab", v_dl:"Download",
+    k_rev:"Revenue", k_exp:"Expenses", k_net:"Net profit", k_margin:"Margin", k_cash:"Cash balance",
+    vs_prev:"vs. previous month", n_docs1:"1 report", n_docs:"{n} reports", no_data:"No data",
+    no_summary:"This month's summary hasn't been published yet.", pp:"pts", note_t:"Note from Aurea", noprev:"no comparison"
   }
 };
 </script>
