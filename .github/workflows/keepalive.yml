@@ -1,0 +1,15 @@
+name: Manter a Área do cliente ativa
+
+on:
+  schedule:
+    - cron: "17 13 * * *"   # todo dia, 7h17 no horário central
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Acessar o Supabase
+        run: |
+          curl -fsS "https://eslputtmlufvxhdanczy.supabase.co/rest/v1/keepalive?select=id" \
+            -H "apikey: sb_publishable_-7TaudR-eu2t1e8L6qfgmw_i4cg6Ksa"
