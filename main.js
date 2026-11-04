@@ -38,7 +38,7 @@ if (META_PIXEL_ID) {
 // ===== Textos comuns (cabeçalho, rodapé, formulário) =====
 const COMMON = {
   pt: {
-    nav_about:"Sobre a Aurea", nav_services:"Serviços", nav_team:"Time", nav_contact:"Fale conosco",
+    nav_about:"Sobre a Aurea", nav_services:"Serviços", nav_team:"Time", nav_contact:"Fale conosco", nav_portal:"Área do cliente",
     foot_team:"Time", foot_terms:"Termos e privacidade", foot_insta:"Instagram",
     copy:"© 2026 Aurea Financial LLC. Todos os direitos reservados.",
     wa_text:"Olá! Vim pelo site da Aurea e gostaria de saber mais sobre o bookkeeping.",
@@ -47,7 +47,7 @@ const COMMON = {
     f_note:"Ao enviar, você concorda com os nossos", f_note_link:"Termos e Política de Privacidade", close:"Fechar", f_cal:"Prefiro escolher o horário na agenda", f_or:"ou envie uma mensagem"
   },
   en: {
-    nav_about:"About Aurea", nav_services:"Services", nav_team:"Team", nav_contact:"Get In Touch",
+    nav_about:"About Aurea", nav_services:"Services", nav_team:"Team", nav_contact:"Get In Touch", nav_portal:"Client Portal",
     foot_team:"Team", foot_terms:"Terms & Privacy", foot_insta:"Instagram",
     copy:"© 2026 Aurea Financial LLC. All rights reserved.",
     wa_text:"Hi! I found Aurea through the website and would like to learn more about bookkeeping.",
@@ -73,6 +73,7 @@ document.getElementById("site-header").outerHTML = `
       <li><a href="services.html" data-i18n="nav_services" class="${page === "services" ? "current" : ""}">Serviços</a></li>
       <li><a href="team.html" data-i18n="nav_team" class="${page === "team" ? "current" : ""}">Time</a></li>
       <li><a href="contact.html" data-i18n="nav_contact" class="${page === "contact" ? "current" : ""}">Fale conosco</a></li>
+      <li><a href="portal.html" class="portal-link ${page === "portal" ? "current" : ""}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg><span data-i18n="nav_portal">Área do cliente</span></a></li>
     </ul>
     <div class="right">
       <div class="lang" role="group" aria-label="Idioma / Language">
@@ -97,6 +98,7 @@ document.getElementById("site-footer").outerHTML = `
         <a href="services.html" data-i18n="nav_services">Serviços</a>
         <a href="team.html" data-i18n="foot_team">Time</a>
         <a href="https://www.instagram.com/${IG_HANDLE}/" target="_blank" rel="noopener">@${IG_HANDLE}</a>
+        <a href="portal.html" data-i18n="nav_portal">Área do cliente</a>
         <a href="terms.html" data-i18n="foot_terms">Termos e privacidade</a>
       </div>
     </div>

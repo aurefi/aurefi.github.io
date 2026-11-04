@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Área do cliente · Aurea Financial</title>
+<meta name="description" content="Acesse os relatórios mensais da sua empresa.">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,600;6..96,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="portal">
+
+<div id="site-header"></div>
+
+<main>
+  <div class="wrap page-head">
+    <h1 class="eyebrow" data-i18n="eyebrow">Área do cliente</h1>
+    <p class="title" data-i18n="title">Os relatórios da sua empresa, num só lugar.</p>
+  </div>
+
+  <div class="wrap portal">
+
+    <!-- Carregando -->
+    <p id="v-loading" class="help" data-i18n="loading">Carregando...</p>
+
+    <!-- Ainda não configurado -->
+    <div id="v-setup" class="card-box" hidden>
+      <h2 data-i18n="setup_t">Em breve</h2>
+      <p class="sub" data-i18n="setup_d">A Área do cliente está sendo preparada. Enquanto isso, os seus relatórios continuam chegando por e-mail e WhatsApp.</p>
+    </div>
+
+    <!-- Login -->
+    <div id="v-login" class="card-box" hidden>
+      <h2 data-i18n="login_t">Entrar</h2>
+      <p class="sub" data-i18n="login_d">Use o e-mail e a senha que a Aurea enviou para você.</p>
+      <form id="login-form" novalidate>
+        <label for="l-email" data-i18n="email">E-mail</label>
+        <input id="l-email" type="email" autocomplete="username" required>
+        <label for="l-pass" data-i18n="pass">Senha</label>
+        <input id="l-pass" type="password" autocomplete="current-password" required>
+        <button class="btn btn-dark" type="submit" data-i18n="login_btn">Entrar</button>
+        <p class="msg" id="login-msg" role="status"></p>
+      </form>
+      <p class="help"><span data-i18n="forgot">Esqueceu a senha ou ainda não tem acesso?</span> <a class="wa-link" href="https://wa.me/13259565160" target="_blank" rel="noopener" data-i18n="forgot_link">Fale com a Aurea no WhatsApp</a>.</p>
+    </div>
+
+    <!-- Painel -->
+    <div id="v-dash" hidden>
+      <div class="dash-head">
+        <div>
+          <h2 class="title" style="font-size:clamp(1.6rem,3vw,2.2rem)" data-i18n="dash_t">Seus relatórios</h2>
+          <p class="who"><span data-i18n="logged">Conectado como</span> <b id="who"></b></p>
+        </div>
+        <div class="dash-actions">
+          <button class="btn btn-line sm" id="pw-toggle" type="button" data-i18n="pw_btn">Trocar senha</button>
+          <button class="btn btn-dark sm" id="logout" type="button" data-i18n="logout">Sair</button>
+        </div>
+      </div>
+
+      <ul class="files" id="files"></ul>
+      <div class="empty" id="empty" hidden data-i18n="empty">Ainda não há relatórios na sua pasta. Assim que o relatório do mês estiver pronto, ele aparece aqui.</div>
+      <p class="msg" id="files-msg" role="status"></p>
+
+      <div class="pw-box" id="pw-box" hidden>
+        <h3 data-i18n="pw_t">Trocar senha</h3>
+        <form id="pw-form" novalidate>
+          <label for="p-new" data-i18n="pw_new">Nova senha (mínimo de 8 caracteres)</label>
+          <input id="p-new" type="password" autocomplete="new-password" minlength="8" required>
+          <label for="p-conf" data-i18n="pw_conf">Repita a nova senha</label>
+          <input id="p-conf" type="password" autocomplete="new-password" minlength="8" required>
+          <button class="btn btn-gold sm" type="submit" data-i18n="pw_save">Salvar nova senha</button>
+          <p class="msg" id="pw-msg" role="status"></p>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<div id="site-footer"></div>
+
+<script>
+window.PAGE_DICT = {
+  pt: {
+    page_title:"Área do cliente · Aurea Financial",
+    eyebrow:"Área do cliente", title:"Os relatórios da sua empresa, num só lugar.",
+    loading:"Carregando...",
+    setup_t:"Em breve", setup_d:"A Área do cliente está sendo preparada. Enquanto isso, os seus relatórios continuam chegando por e-mail e WhatsApp.",
+    login_t:"Entrar", login_d:"Use o e-mail e a senha que a Aurea enviou para você.",
+    email:"E-mail", pass:"Senha", login_btn:"Entrar",
+    forgot:"Esqueceu a senha ou ainda não tem acesso?", forgot_link:"Fale com a Aurea no WhatsApp",
+    dash_t:"Seus relatórios", logged:"Conectado como", pw_btn:"Trocar senha", logout:"Sair",
+    empty:"Ainda não há relatórios na sua pasta. Assim que o relatório do mês estiver pronto, ele aparece aqui.",
+    pw_t:"Trocar senha", pw_new:"Nova senha (mínimo de 8 caracteres)", pw_conf:"Repita a nova senha", pw_save:"Salvar nova senha",
+    // mensagens usadas pelo portal.js
+    m_fill:"Preencha e-mail e senha.", m_bad:"E-mail ou senha incorretos.", m_wait:"Entrando...",
+    m_err:"Não foi possível carregar os relatórios. Tente novamente em instantes.",
+    m_open:"Abrir", m_short:"A senha precisa ter pelo menos 8 caracteres.", m_diff:"As senhas não são iguais.",
+    m_pwok:"Senha alterada com sucesso.", m_pwerr:"Não foi possível alterar a senha. Tente novamente."
+  },
+  en: {
+    page_title:"Client Portal · Aurea Financial",
+    eyebrow:"Client Portal", title:"Your business reports, all in one place.",
+    loading:"Loading...",
+    setup_t:"Coming soon", setup_d:"The Client Portal is being set up. In the meantime, your reports will keep arriving by email and WhatsApp.",
+    login_t:"Sign in", login_d:"Use the email and password Aurea sent you.",
+    email:"Email", pass:"Password", login_btn:"Sign in",
+    forgot:"Forgot your password or don't have access yet?", forgot_link:"Message Aurea on WhatsApp",
+    dash_t:"Your reports", logged:"Signed in as", pw_btn:"Change password", logout:"Sign out",
+    empty:"There are no reports in your folder yet. As soon as this month's report is ready, it will show up here.",
+    pw_t:"Change password", pw_new:"New password (at least 8 characters)", pw_conf:"Repeat the new password", pw_save:"Save new password",
+    m_fill:"Please enter your email and password.", m_bad:"Incorrect email or password.", m_wait:"Signing in...",
+    m_err:"We couldn't load your reports. Please try again in a moment.",
+    m_open:"Open", m_short:"The password must have at least 8 characters.", m_diff:"The passwords don't match.",
+    m_pwok:"Password changed successfully.", m_pwerr:"We couldn't change your password. Please try again."
+  }
+};
+</script>
+<script src="main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js"></script>
+<script src="portal.js"></script>
+</body>
+</html>
