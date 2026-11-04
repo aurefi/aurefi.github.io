@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Área do cliente · Aurea Financial</title>
-<meta name="description" content="Acesse os relatórios mensais da sua empresa.">
+<meta name="description" content="Acesse o painel e os relatórios mensais da sua empresa.">
 <meta name="robots" content="noindex">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -19,23 +19,20 @@
 <div id="site-header"></div>
 
 <main>
-  <div class="wrap page-head">
-    <h1 class="eyebrow" data-i18n="eyebrow">Área do cliente</h1>
-    <p class="title" data-i18n="title">Os relatórios da sua empresa, num só lugar.</p>
-  </div>
+  <!-- ============ Telas antes do login (com o visual do site) ============ -->
+  <div class="wrap portal" id="pre-login">
+    <div class="page-head" style="padding-left:0;padding-right:0">
+      <h1 class="eyebrow" data-i18n="eyebrow">Área do cliente</h1>
+      <p class="title" data-i18n="title">Os números da sua empresa, num só lugar.</p>
+    </div>
 
-  <div class="wrap portal">
-
-    <!-- Carregando -->
     <p id="v-loading" class="help" data-i18n="loading">Carregando...</p>
 
-    <!-- Ainda não configurado -->
     <div id="v-setup" class="card-box" hidden>
       <h2 data-i18n="setup_t">Em breve</h2>
       <p class="sub" data-i18n="setup_d">A Área do cliente está sendo preparada. Enquanto isso, os seus relatórios continuam chegando por e-mail e WhatsApp.</p>
     </div>
 
-    <!-- Login -->
     <div id="v-login" class="card-box" hidden>
       <h2 data-i18n="login_t">Entrar</h2>
       <p class="sub" data-i18n="login_d">Use o e-mail e a senha que a Aurea enviou para você.</p>
@@ -49,82 +46,135 @@
       </form>
       <p class="help"><span data-i18n="forgot">Esqueceu a senha ou ainda não tem acesso?</span> <a class="wa-link" href="https://wa.me/13259565160" target="_blank" rel="noopener" data-i18n="forgot_link">Fale com a Aurea no WhatsApp</a>.</p>
     </div>
+  </div>
 
-    <!-- Painel -->
-    <div id="v-dash" hidden>
-      <div class="dash-head">
-        <div>
-          <h2 class="title" style="font-size:clamp(1.6rem,3vw,2.2rem)" data-i18n="dash_t">Seus relatórios</h2>
-          <p class="who"><span data-i18n="logged">Conectado como</span> <b id="who"></b></p>
+  <!-- ============ Painel (depois do login) ============ -->
+  <div class="app" id="v-dash" hidden>
+    <aside class="side-nav">
+      <a class="side-logo" href="./" aria-label="Aurea Financial"><img src="logo.png" alt="Aurea Financial"></a>
+      <nav class="side-links" aria-label="Área do cliente">
+        <button type="button" class="nav-btn on" data-page="dash">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+          <span data-i18n="nav_dash">Painel</span>
+        </button>
+        <button type="button" class="nav-btn" data-page="reports">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9 12h7M9 16h7"/></svg>
+          <span data-i18n="nav_reports">Relatórios</span>
+        </button>
+        <button type="button" class="nav-btn" data-page="account">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          <span data-i18n="nav_account">Minha conta</span>
+        </button>
+      </nav>
+      <div class="side-bottom">
+        <div class="side-lang" role="group" aria-label="Idioma / Language">
+          <button type="button" data-setlang="pt">PT</button><button type="button" data-setlang="en">EN</button>
         </div>
-        <div class="dash-actions">
-          <button class="btn btn-line sm" id="pw-toggle" type="button" data-i18n="pw_btn">Trocar senha</button>
-          <button class="btn btn-dark sm" id="logout" type="button" data-i18n="logout">Sair</button>
+        <a class="side-link" href="./" data-i18n="back_site">Voltar ao site</a>
+        <button type="button" class="side-link" id="logout" data-i18n="logout">Sair</button>
+      </div>
+    </aside>
+
+    <section class="app-main">
+      <header class="app-top">
+        <h1 id="app-title" data-i18n="nav_dash">Painel</h1>
+        <span class="who-chip" id="who"></span>
+      </header>
+
+      <!-- ===== Painel ===== -->
+      <div class="app-page in" id="p-dash">
+        <div class="filters">
+          <label class="sel"><span data-i18n="f_year">Ano</span><select id="f-year"></select></label>
+          <label class="sel"><span data-i18n="f_period">Período</span><select id="f-period"></select></label>
+        </div>
+
+        <div class="empty" id="dash-empty" hidden data-i18n="dash_empty">Os números do painel aparecem aqui assim que o primeiro mês for publicado.</div>
+
+        <div id="dash-body">
+          <div class="kpi-row" id="kpis"></div>
+
+          <div class="pcard chart-card2">
+            <div class="card-head">
+              <h2 id="chart-title"></h2>
+              <div class="legend">
+                <span><i class="lg rev"></i><span data-i18n="k_rev">Receita</span></span>
+                <span><i class="lg exp"></i><span data-i18n="k_exp">Despesas</span></span>
+                <span><i class="lg net"></i><span data-i18n="k_net">Lucro líquido</span></span>
+              </div>
+            </div>
+            <div class="chart2" id="chart"></div>
+            <div class="tip2" id="tip" hidden></div>
+            <button type="button" class="link-btn" id="tbl-toggle" data-i18n="show_table">Ver tabela</button>
+            <div class="tbl-wrap" id="tbl" hidden></div>
+          </div>
+
+          <div class="dash-grid">
+            <div class="pcard" id="note-card" hidden>
+              <div class="card-head"><h2 id="note-title">Nota da Aurea</h2></div>
+              <p class="note-text" id="note-text"></p>
+            </div>
+            <div class="pcard" id="dash-files-card">
+              <div class="card-head"><h2 id="dash-files-t"></h2><button type="button" class="link-btn" data-goto="reports" data-i18n="see_all">Ver todos</button></div>
+              <ul class="files" id="dash-files"></ul>
+              <p class="muted" id="dash-nofiles" hidden data-i18n="m_nofiles">Os relatórios deste período ainda não foram publicados.</p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="pw-box" id="pw-box" hidden>
-        <h3 data-i18n="pw_t">Trocar senha</h3>
-        <form id="pw-form" novalidate>
-          <label for="p-new" data-i18n="pw_new">Nova senha (mínimo de 8 caracteres)</label>
-          <input id="p-new" type="password" autocomplete="new-password" minlength="8" required>
-          <label for="p-conf" data-i18n="pw_conf">Repita a nova senha</label>
-          <input id="p-conf" type="password" autocomplete="new-password" minlength="8" required>
-          <button class="btn btn-gold sm" type="submit" data-i18n="pw_save">Salvar nova senha</button>
-          <p class="msg" id="pw-msg" role="status"></p>
-        </form>
+      <!-- ===== Relatórios ===== -->
+      <div class="app-page" id="p-reports" hidden>
+        <div class="years" id="years"></div>
+        <div class="months" id="months"></div>
+        <div class="pcard month-files" id="month-files" hidden>
+          <div class="card-head"><h2 id="mf-title"></h2></div>
+          <ul class="files" id="mf-list"></ul>
+        </div>
+        <div class="pcard" id="others" hidden>
+          <div class="card-head"><h2 data-i18n="others">Outros documentos</h2></div>
+          <ul class="files" id="others-list"></ul>
+        </div>
+        <div class="empty" id="rep-empty" hidden data-i18n="empty">Ainda não há relatórios na sua pasta. Assim que o relatório do mês estiver pronto, ele aparece aqui.</div>
+      </div>
+
+      <!-- ===== Minha conta ===== -->
+      <div class="app-page" id="p-account" hidden>
+        <div class="pcard acc-card">
+          <div class="card-head"><h2 data-i18n="acc_t">Dados de acesso</h2></div>
+          <p><span class="muted" data-i18n="email">E-mail</span><br><b id="acc-email"></b></p>
+        </div>
+        <div class="pcard acc-card">
+          <div class="card-head"><h2 data-i18n="pw_t">Trocar senha</h2></div>
+          <form id="pw-form" novalidate>
+            <label for="p-new" data-i18n="pw_new">Nova senha (mínimo de 8 caracteres)</label>
+            <input id="p-new" type="password" autocomplete="new-password" minlength="8" required>
+            <label for="p-conf" data-i18n="pw_conf">Repita a nova senha</label>
+            <input id="p-conf" type="password" autocomplete="new-password" minlength="8" required>
+            <button class="btn btn-gold sm" type="submit" data-i18n="pw_save">Salvar nova senha</button>
+            <p class="msg" id="pw-msg" role="status"></p>
+          </form>
+        </div>
+        <p class="help"><span data-i18n="help_q">Dúvidas sobre os seus números?</span> <a class="wa-link" href="https://wa.me/13259565160" target="_blank" rel="noopener" data-i18n="help_wa">Fale com a Aurea no WhatsApp</a>.</p>
       </div>
 
       <p class="msg" id="files-msg" role="status"></p>
-      <div class="empty" id="empty" hidden data-i18n="empty">Ainda não há relatórios na sua pasta. Assim que o relatório do mês estiver pronto, ele aparece aqui.</div>
+    </section>
+  </div>
 
-      <!-- Visão do ano -->
-      <section id="year-view" class="pv" hidden>
-        <div class="years" id="years" role="tablist"></div>
-        <div class="chart-card" id="chart-card" hidden>
-          <div class="chart-top">
-            <h3 id="chart-title"></h3>
-            <span class="chart-legend"><i class="sw pos"></i><span data-i18n="leg_pos">Lucro</span><i class="sw neg"></i><span data-i18n="leg_neg">Prejuízo</span></span>
-          </div>
-          <div class="chart" id="chart"></div>
-          <div class="tip" id="tip" hidden></div>
+  <!-- Visualizador de relatório (abre por cima, na mesma página) -->
+  <div class="doc-viewer" id="viewer" hidden>
+    <div class="doc-backdrop" data-close-viewer></div>
+    <div class="doc-box" role="dialog" aria-modal="true" aria-labelledby="viewer-name">
+      <div class="viewer-bar">
+        <b id="viewer-name"></b>
+        <div class="viewer-actions">
+          <a class="btn btn-line sm" id="viewer-new" target="_blank" rel="noopener" data-i18n="v_new">Abrir em nova aba</a>
+          <a class="btn btn-dark sm" id="viewer-dl" data-i18n="v_dl">Baixar</a>
+          <button class="viewer-x" type="button" data-close-viewer aria-label="Fechar">&times;</button>
         </div>
-        <div class="months" id="months"></div>
-        <div class="others" id="others" hidden>
-          <h3 data-i18n="others">Outros documentos</h3>
-          <ul class="files" id="others-list"></ul>
-        </div>
-      </section>
-
-      <!-- Visão do mês -->
-      <section id="month-view" class="pv" hidden>
-        <div class="m-nav">
-          <button class="back" id="m-back" type="button">&larr; <span id="m-back-y"></span></button>
-          <div class="m-arrows">
-            <button class="arrow" id="m-prev" type="button" aria-label="Mês anterior">&lsaquo;</button>
-            <button class="arrow" id="m-next" type="button" aria-label="Próximo mês">&rsaquo;</button>
-          </div>
-        </div>
-        <h2 class="m-title" id="m-title"></h2>
-        <div class="kpis" id="kpis"></div>
-        <p class="note" id="m-note" hidden></p>
-        <h3 class="m-sub" data-i18n="m_docs">Relatórios do mês</h3>
-        <ul class="files" id="m-files"></ul>
-        <p class="empty sm" id="m-nofiles" hidden data-i18n="m_nofiles">Os relatórios deste mês ainda não foram publicados.</p>
-        <div class="viewer" id="viewer" hidden>
-          <div class="viewer-bar">
-            <b id="viewer-name"></b>
-            <div class="viewer-actions">
-              <a class="btn btn-line sm" id="viewer-new" target="_blank" rel="noopener" data-i18n="v_new">Abrir em nova aba</a>
-              <a class="btn btn-dark sm" id="viewer-dl" data-i18n="v_dl">Baixar</a>
-              <button class="viewer-x" id="viewer-x" type="button" aria-label="Fechar">&times;</button>
-            </div>
-          </div>
-          <div class="viewer-body" id="viewer-body"></div>
-        </div>
-      </section>
+      </div>
+      <div class="viewer-body" id="viewer-body"></div>
     </div>
-
   </div>
 </main>
 
@@ -134,53 +184,61 @@
 window.PAGE_DICT = {
   pt: {
     page_title:"Área do cliente · Aurea Financial",
-    eyebrow:"Área do cliente", title:"Os relatórios da sua empresa, num só lugar.",
-    loading:"Carregando...",
+    eyebrow:"Área do cliente", title:"Os números da sua empresa, num só lugar.", loading:"Carregando...",
     setup_t:"Em breve", setup_d:"A Área do cliente está sendo preparada. Enquanto isso, os seus relatórios continuam chegando por e-mail e WhatsApp.",
     login_t:"Entrar", login_d:"Use o e-mail e a senha que a Aurea enviou para você.",
     email:"E-mail", pass:"Senha", login_btn:"Entrar",
     forgot:"Esqueceu a senha ou ainda não tem acesso?", forgot_link:"Fale com a Aurea no WhatsApp",
-    dash_t:"Seus relatórios", logged:"Conectado como", pw_btn:"Trocar senha", logout:"Sair",
-    empty:"Ainda não há relatórios na sua pasta. Assim que o relatório do mês estiver pronto, ele aparece aqui.",
-    pw_t:"Trocar senha", pw_new:"Nova senha (mínimo de 8 caracteres)", pw_conf:"Repita a nova senha", pw_save:"Salvar nova senha",
-    // mensagens usadas pelo portal.js
-    m_fill:"Preencha e-mail e senha.", m_bad:"E-mail ou senha incorretos.", m_wait:"Entrando...",
-    m_err:"Não foi possível carregar os relatórios. Tente novamente em instantes.",
-    m_open:"Abrir", m_short:"A senha precisa ter pelo menos 8 caracteres.", m_diff:"As senhas não são iguais.",
-    m_pwok:"Senha alterada com sucesso.", m_pwerr:"Não foi possível alterar a senha. Tente novamente.",
-    leg_pos:"Lucro", leg_neg:"Prejuízo", chart_t:"Lucro por mês", others:"Outros documentos",
-    m_docs:"Relatórios do mês", m_nofiles:"Os relatórios deste mês ainda não foram publicados.",
+    nav_dash:"Painel", nav_reports:"Relatórios", nav_account:"Minha conta", back_site:"Voltar ao site", logout:"Sair",
+    f_year:"Ano", f_period:"Período", ytd:"Ano até hoje",
+    dash_empty:"Os números do painel aparecem aqui assim que o primeiro mês for publicado.",
+    k_rev:"Receita", k_exp:"Despesas", k_net:"Lucro líquido", margin:"Margem",
+    t_rev:"Receita total", t_exp:"Despesas totais", t_net:"Lucro líquido",
+    vs_prev:"vs. mês anterior", months_in:"{n} meses", month_1:"1 mês",
+    chart_t:"Receita, despesas e lucro", show_table:"Ver tabela", hide_table:"Ocultar tabela", th_month:"Mês",
+    note_t:"Nota da Aurea", files_t:"Relatórios de {p}", files_latest:"Relatórios mais recentes", see_all:"Ver todos",
+    m_nofiles:"Os relatórios deste período ainda não foram publicados.",
+    others:"Outros documentos", empty:"Ainda não há relatórios na sua pasta. Assim que o relatório do mês estiver pronto, ele aparece aqui.",
+    n_docs1:"1 relatório", n_docs:"{n} relatórios", no_data:"Sem dados",
+    acc_t:"Dados de acesso", pw_t:"Trocar senha", pw_new:"Nova senha (mínimo de 8 caracteres)", pw_conf:"Repita a nova senha", pw_save:"Salvar nova senha",
+    help_q:"Dúvidas sobre os seus números?", help_wa:"Fale com a Aurea no WhatsApp",
     v_new:"Abrir em nova aba", v_dl:"Baixar",
-    k_rev:"Receita", k_exp:"Despesas", k_net:"Lucro líquido", k_margin:"Margem", k_cash:"Saldo em caixa",
-    vs_prev:"vs. mês anterior", n_docs1:"1 relatório", n_docs:"{n} relatórios", no_data:"Sem dados",
-    no_summary:"O resumo deste mês ainda não foi publicado.", pp:"p.p.", note_t:"Nota da Aurea", noprev:"sem comparação"
+    m_fill:"Preencha e-mail e senha.", m_bad:"E-mail ou senha incorretos.", m_wait:"Entrando...",
+    m_err:"Não foi possível carregar os dados. Tente novamente em instantes.",
+    m_open:"Abrir", m_short:"A senha precisa ter pelo menos 8 caracteres.", m_diff:"As senhas não são iguais.",
+    m_pwok:"Senha alterada com sucesso.", m_pwerr:"Não foi possível alterar a senha. Tente novamente.", noprev:"sem comparação"
   },
   en: {
     page_title:"Client Portal · Aurea Financial",
-    eyebrow:"Client Portal", title:"Your business reports, all in one place.",
-    loading:"Loading...",
+    eyebrow:"Client Portal", title:"Your business numbers, all in one place.", loading:"Loading...",
     setup_t:"Coming soon", setup_d:"The Client Portal is being set up. In the meantime, your reports will keep arriving by email and WhatsApp.",
     login_t:"Sign in", login_d:"Use the email and password Aurea sent you.",
     email:"Email", pass:"Password", login_btn:"Sign in",
     forgot:"Forgot your password or don't have access yet?", forgot_link:"Message Aurea on WhatsApp",
-    dash_t:"Your reports", logged:"Signed in as", pw_btn:"Change password", logout:"Sign out",
-    empty:"There are no reports in your folder yet. As soon as this month's report is ready, it will show up here.",
-    pw_t:"Change password", pw_new:"New password (at least 8 characters)", pw_conf:"Repeat the new password", pw_save:"Save new password",
-    m_fill:"Please enter your email and password.", m_bad:"Incorrect email or password.", m_wait:"Signing in...",
-    m_err:"We couldn't load your reports. Please try again in a moment.",
-    m_open:"Open", m_short:"The password must have at least 8 characters.", m_diff:"The passwords don't match.",
-    m_pwok:"Password changed successfully.", m_pwerr:"We couldn't change your password. Please try again.",
-    leg_pos:"Profit", leg_neg:"Loss", chart_t:"Profit by month", others:"Other documents",
-    m_docs:"This month's reports", m_nofiles:"This month's reports haven't been published yet.",
+    nav_dash:"Dashboard", nav_reports:"Reports", nav_account:"My account", back_site:"Back to website", logout:"Sign out",
+    f_year:"Year", f_period:"Period", ytd:"Year to date",
+    dash_empty:"Your dashboard numbers will show up here as soon as the first month is published.",
+    k_rev:"Revenue", k_exp:"Expenses", k_net:"Net income", margin:"Margin",
+    t_rev:"Total revenue", t_exp:"Total expenses", t_net:"Net income",
+    vs_prev:"vs. previous month", months_in:"{n} months", month_1:"1 month",
+    chart_t:"Revenue, expenses and profit", show_table:"Show table", hide_table:"Hide table", th_month:"Month",
+    note_t:"Note from Aurea", files_t:"Reports for {p}", files_latest:"Latest reports", see_all:"See all",
+    m_nofiles:"Reports for this period haven't been published yet.",
+    others:"Other documents", empty:"There are no reports in your folder yet. As soon as this month's report is ready, it will show up here.",
+    n_docs1:"1 report", n_docs:"{n} reports", no_data:"No data",
+    acc_t:"Sign-in details", pw_t:"Change password", pw_new:"New password (at least 8 characters)", pw_conf:"Repeat the new password", pw_save:"Save new password",
+    help_q:"Questions about your numbers?", help_wa:"Message Aurea on WhatsApp",
     v_new:"Open in new tab", v_dl:"Download",
-    k_rev:"Revenue", k_exp:"Expenses", k_net:"Net profit", k_margin:"Margin", k_cash:"Cash balance",
-    vs_prev:"vs. previous month", n_docs1:"1 report", n_docs:"{n} reports", no_data:"No data",
-    no_summary:"This month's summary hasn't been published yet.", pp:"pts", note_t:"Note from Aurea", noprev:"no comparison"
+    m_fill:"Please enter your email and password.", m_bad:"Incorrect email or password.", m_wait:"Signing in...",
+    m_err:"We couldn't load your data. Please try again in a moment.",
+    m_open:"Open", m_short:"The password must have at least 8 characters.", m_diff:"The passwords don't match.",
+    m_pwok:"Password changed successfully.", m_pwerr:"We couldn't change your password. Please try again.", noprev:"no comparison"
   }
 };
 </script>
 <script src="main.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="portal.js"></script>
 </body>
 </html>
