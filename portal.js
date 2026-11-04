@@ -91,9 +91,9 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     if (root.error) throw root.error;
     const items = (root.data || []).filter(f => f.name !== ".emptyFolderPlaceholder");
     const monthFolders = [];
-    let hasData = false;
+    let dataDir = null;  // nome real da pasta de dados (aceita "dados", "Dados"...)
     items.forEach(f => {
-      if (!f.id) { if (f.name.toLowerCase() === DATA_FOLDER) hasData = true; else if (keyFrom(f.name)) monthFolders.push(f.name); return; }
+      if (!f.id) { if (f.name.toLowerCase() === DATA_FOLDER) dataDir = f.name; else if (keyFrom(f.name)) monthFolders.push(f.name); return; }
       const k = keyFrom(f.name), file = asFile(f, folder + "/" + f.name);
       if (k) slot(k).files.push(file); else others.push(file);
     });
@@ -102,12 +102,12 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
       (r.data || []).filter(f => f.id && f.name !== ".emptyFolderPlaceholder").forEach(f => slot(keyFrom(sf)).files.push(asFile(f, folder + "/" + sf + "/" + f.name)));
     }));
     // Exports do QuickBooks na pasta "dados" (os mais novos têm prioridade)
-    if (hasData && window.XLSX) {
-      const r = await sb.storage.from(BUCKET).list(folder + "/" + DATA_FOLDER, { limit: 100, sortBy: { column: "updated_at", order: "asc" } });
+    if (dataDir && window.XLSX) {
+      const r = await sb.storage.from(BUCKET).list(folder + "/" + dataDir, { limit: 100, sortBy: { column: "updated_at", order: "asc" } });
       const files = (r.data || []).filter(f => f.id && /\.(xlsx|xls|csv)$/i.test(f.name));
       for (const f of files) {
         try {
-          const dl = await sb.storage.from(BUCKET).download(folder + "/" + DATA_FOLDER + "/" + f.name);
+          const dl = await sb.storage.from(BUCKET).download(folder + "/" + dataDir + "/" + f.name);
           if (dl.error) continue;
           const buf = await dl.data.arrayBuffer();
           const wb = /\.csv$/i.test(f.name) ? XLSX.read(new TextDecoder().decode(buf), { type: "string" }) : XLSX.read(buf, { type: "array" });
