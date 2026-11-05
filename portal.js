@@ -37,7 +37,15 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
   const ext = n => (n.split(".").pop() || "").slice(0, 4).toUpperCase();
   const isHtml = n => /\.html?$/i.test(n);   // relatórios interativos da Aurea (ex.: P&L traduzido)
   let viewerUrl = null;                       // endereço temporário do relatório interativo aberto
-  const cleanName = n => { const b = n.replace(/\.[^.]+$/, ""); return b.replace(/^\d{4}[-_ ]?\d{2}\s*[-_ ]*\s*/, "").replace(/_+/g, " ").trim() || b; };
+  // Idioma do relatório: "(traduzido)", " - PT" ou "[PT]" no nome = português; " - EN" ou "[EN]" = inglês; sem marca = inglês (QuickBooks)
+  const LANG_PT = /traduzid|[\s_(\[-]PT(-BR)?[\])]?$/i, LANG_EN = /[\s_(\[-]EN[\])]?$/i;
+  const fileLang = n => { const b = n.replace(/\.[^.]+$/, "").trim(); return LANG_PT.test(b) ? "pt" : "en"; };
+  const FLAGS = {
+    en: '<svg viewBox="0 0 19 10" aria-hidden="true"><rect width="19" height="10" fill="#B22234"/><path d="M0 1.15h19M0 2.69h19M0 4.23h19M0 5.77h19M0 7.31h19M0 8.85h19" stroke="#fff" stroke-width=".77"/><rect width="7.6" height="5.38" fill="#3C3B6E"/></svg>',
+    pt: '<svg viewBox="0 0 20 14" aria-hidden="true"><rect width="20" height="14" fill="#009C3B"/><path d="M10 1.4L18.4 7 10 12.6 1.6 7z" fill="#FFDF00"/><circle cx="10" cy="7" r="3.4" fill="#002776"/><path d="M6.7 6.3c2.2-.5 4.6-.1 6.6 1.1" stroke="#fff" stroke-width=".6" fill="none"/></svg>'
+  };
+  const langLabel = l => currentLang === "en" ? (l === "pt" ? "Report in Portuguese" : "Report in English") : (l === "pt" ? "Relatório em português" : "Relatório em inglês");
+  const cleanName = n => { const b = n.replace(/\.[^.]+$/, "").replace(/\s*[-_]?\s*\[?(PT(-BR)?|EN)\]?$/i, ""); return b.replace(/^\d{4}[-_ ]?\d{2}\s*[-_ ]*\s*/, "").replace(/_+/g, " ").trim() || b; };
   const keyFrom = n => { const m = n.match(/^(\d{4})[-_ ]?(0[1-9]|1[0-2])(?!\d)/); return m ? `${m[1]}-${m[2]}` : null; };
   const prevKey = k => { let [y, m] = k.split("-").map(Number); m--; if (!m) { m = 12; y--; } return `${y}-${String(m).padStart(2, "0")}`; };
   const slot = k => (data[k] = data[k] || { files: [], num: null, note: null });
@@ -318,7 +326,9 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     list.innerHTML = "";
     files.slice().sort((a, b) => a.name.localeCompare(b.name)).forEach(f => {
       const li = document.createElement("li");
-      li.innerHTML = '<div class="f-main"><span class="f-ico"></span><div><div class="f-name"></div><div class="f-meta"></div></div></div><button class="btn btn-line sm" type="button"></button>';
+      li.innerHTML = '<div class="f-main"><span class="f-ico"></span><div><div class="f-name"></div><div class="f-meta"></div></div></div><div class="f-act"><span class="f-lang" role="img"></span><button class="btn btn-line sm" type="button"></button></div>';
+      const lg = fileLang(f.name), fl = li.querySelector(".f-lang");
+      fl.innerHTML = FLAGS[lg]; fl.setAttribute("aria-label", langLabel(lg)); fl.title = langLabel(lg);
       li.querySelector(".f-ico").textContent = isHtml(f.name) ? "WEB" : ext(f.name);
       li.querySelector(".f-name").textContent = cleanName(f.name);
       li.querySelector(".f-meta").textContent = [withMonth && f.month ? mTitle(f.month) : fmtDate(f.date), fmtSize(f.size)].filter(Boolean).join(" · ");
