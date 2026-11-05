@@ -333,11 +333,15 @@ body.modal-open{overflow:hidden}
 .files .f-ico{flex:none;width:40px;height:48px;border:1.5px solid var(--brown);display:grid;place-items:center;font-size:10px;font-weight:800;color:var(--brown);letter-spacing:.04em}
 .files .f-main{flex:1;min-width:0;display:flex;align-items:center;gap:16px}
 .files .f-name{font-weight:600;word-break:break-word}
+.files .f-act{flex:none;display:flex;align-items:center;gap:14px}
+.files .f-lang{display:block;width:24px;height:16px;flex:none;border-radius:2px;overflow:hidden;box-shadow:0 0 0 1px rgba(19,31,28,.14)}
+.files .f-lang svg{display:block;width:100%;height:100%}
 .files .f-meta{font-size:14px;color:var(--muted)}
 .empty{background:var(--cream-2);border:1px dashed var(--brown);padding:32px;text-align:center;color:var(--muted)}
 .pw-box{margin-top:32px;max-width:480px;background:var(--cream-2);border:1px solid var(--line);padding:24px}
 .pw-box h3{font-weight:700;font-size:19px;margin-bottom:14px}
 @media (max-width:520px){ .portal .card-box{padding:24px} .files li{flex-direction:column;align-items:stretch} .files .btn{justify-content:center} }
+@media (max-width:520px){ .files .f-act{justify-content:flex-end} .files .f-act .btn{flex:1} }
 .portal form{padding:0;background:none;border:0}
 
 /* ---------- Portal: painel dinâmico ---------- */
