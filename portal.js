@@ -35,6 +35,8 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
   const fmtSize = b => !b ? "" : b < 1048576 ? Math.round(b / 1024) + " KB" : (b / 1048576).toFixed(1) + " MB";
   const fmtDate = s => s ? new Date(s).toLocaleDateString(locale(), { day: "2-digit", month: "short", year: "numeric" }) : "";
   const ext = n => (n.split(".").pop() || "").slice(0, 4).toUpperCase();
+  const isHtml = n => /\.html?$/i.test(n);   // relatórios interativos da Aurea (ex.: P&L traduzido)
+  let viewerUrl = null;                       // endereço temporário do relatório interativo aberto
   const cleanName = n => { const b = n.replace(/\.[^.]+$/, ""); return b.replace(/^\d{4}[-_ ]?\d{2}\s*[-_ ]*\s*/, "").replace(/_+/g, " ").trim() || b; };
   const keyFrom = n => { const m = n.match(/^(\d{4})[-_ ]?(0[1-9]|1[0-2])(?!\d)/); return m ? `${m[1]}-${m[2]}` : null; };
   const prevKey = k => { let [y, m] = k.split("-").map(Number); m--; if (!m) { m = 12; y--; } return `${y}-${String(m).padStart(2, "0")}`; };
@@ -317,7 +319,7 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     files.slice().sort((a, b) => a.name.localeCompare(b.name)).forEach(f => {
       const li = document.createElement("li");
       li.innerHTML = '<div class="f-main"><span class="f-ico"></span><div><div class="f-name"></div><div class="f-meta"></div></div></div><button class="btn btn-line sm" type="button"></button>';
-      li.querySelector(".f-ico").textContent = ext(f.name);
+      li.querySelector(".f-ico").textContent = isHtml(f.name) ? "WEB" : ext(f.name);
       li.querySelector(".f-name").textContent = cleanName(f.name);
       li.querySelector(".f-meta").textContent = [withMonth && f.month ? mTitle(f.month) : fmtDate(f.date), fmtSize(f.size)].filter(Boolean).join(" · ");
       const btn = li.querySelector("button"); btn.textContent = T("m_open");
@@ -325,7 +327,23 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
       list.append(li);
     });
   }
+  // Relatório interativo: baixa o arquivo e mostra dentro do visualizador, isolado do portal
+  async function openHtml(f) {
+    const { data: blob, error } = await sb.storage.from(BUCKET).download(f.path);
+    if (error || !blob) { $("files-msg").textContent = T("m_err"); return; }
+    const html = await blob.text();
+    if (viewerUrl) URL.revokeObjectURL(viewerUrl);
+    viewerUrl = URL.createObjectURL(new Blob([html], { type: "text/html" }));
+    $("viewer-name").textContent = cleanName(f.name);
+    $("viewer-new").hidden = true;
+    const dl = $("viewer-dl"); dl.href = viewerUrl; dl.setAttribute("download", f.name);
+    $("viewer-body").innerHTML = `<iframe sandbox="allow-scripts allow-popups" src="${viewerUrl}" title=""></iframe>`;
+    $("viewer").hidden = false; document.body.classList.add("modal-open");
+    requestAnimationFrame(() => $("viewer").classList.add("open"));
+  }
   async function openFile(f) {
+    if (isHtml(f.name)) return openHtml(f);
+    $("viewer-new").hidden = false; $("viewer-dl").removeAttribute("download");
     const e = ext(f.name), previewable = ["PDF", "PNG", "JPG", "JPEG", "GIF", "WEBP"].includes(e);
     if (!previewable || isSmall()) {
       const w = window.open("", "_blank");
@@ -348,7 +366,7 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
   }
   function closeViewer() {
     $("viewer").classList.remove("open"); document.body.classList.remove("modal-open");
-    setTimeout(() => { $("viewer").hidden = true; $("viewer-body").innerHTML = ""; }, reduceMotion ? 0 : 250);
+    setTimeout(() => { $("viewer").hidden = true; $("viewer-body").innerHTML = ""; if (viewerUrl) { URL.revokeObjectURL(viewerUrl); viewerUrl = null; } }, reduceMotion ? 0 : 250);
   }
   document.querySelectorAll("[data-close-viewer]").forEach(b => b.addEventListener("click", closeViewer));
   document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("viewer").hidden) closeViewer(); });
