@@ -607,3 +607,12 @@ body.app-mode .sorteio-pill{display:none !important}
   .promo-banner .pb-img{left:auto;right:0;width:74%}
   .promo-banner .pb-shade{background:linear-gradient(90deg,rgba(19,31,28,1) 0%,rgba(19,31,28,1) 26%,rgba(19,31,28,.55) 42%,rgba(19,31,28,0) 60%)}
 }
+
+/* ---------- Correção: botão de fechar dos popups sempre visível (iPhone/Chrome) ---------- */
+.modal-box{max-height:calc(100vh - 40px);max-height:calc(100dvh - 40px);overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.modal-close{position:sticky !important;top:8px;float:right;margin:8px 8px -52px 0;z-index:5;width:40px;height:40px;padding:0 !important;display:grid;place-items:center;border-radius:50%;background:rgba(19,31,28,.55) !important;color:#FBF3E8 !important;font-size:28px !important;line-height:1}
+.modal-close:hover{background:rgba(19,31,28,.8) !important}
+@media (max-width:520px){
+  .modal{padding:0 !important;align-items:end}
+  .modal-box{max-height:88vh;max-height:calc(100dvh - 16px);border-radius:14px 14px 0 0 !important;padding-bottom:env(safe-area-inset-bottom)}
+}

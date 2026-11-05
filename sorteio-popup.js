@@ -10,6 +10,7 @@
   const ESPERA_MS = 6000;                                          // ...depois de 6 segundos (ou ao rolar 35% da página)
 
   const aberto = new Date() <= FIM_INSCRICOES;
+  const viaLink = /(^|[?&])sorteio(=|&|$)/.test(location.search.slice(1)) || location.hash === "#sorteio";
   const store = {
     get: k => { try { return localStorage.getItem(k); } catch (e) { return null; } },
     set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} }
@@ -17,6 +18,7 @@
 
   // Depois do prazo, os links levam ao regulamento e nada abre sozinho
   if (!aberto) {
+    if (viaLink) { location.replace("sorteio.html"); return; }
     document.querySelectorAll("[data-open-sorteio]").forEach(a => a.addEventListener("click", e => { e.preventDefault(); location.href = "sorteio.html"; }));
     return;
   }
@@ -149,9 +151,12 @@
   atualizarPill();
   document.querySelectorAll(".lang button").forEach(b => b.addEventListener("click", () => setTimeout(atualizarPill, 0)));
 
+  // Link direto (aureafi.com/?sorteio): abre na hora, em qualquer página e em qualquer idioma
+  if (viaLink) { setTimeout(abrir, 400); }
+
   // Abre sozinho na home: uma vez por dia, só em português e só para quem ainda não se inscreveu
   const fechadoEm = +store.get("aurea_sorteio_fechado") || 0;
-  if (ABRIR_SOZINHO && !store.get("aurea_sorteio_ok") && Date.now() - fechadoEm > 24 * 3600 * 1000) {
+  if (!viaLink && ABRIR_SOZINHO && !store.get("aurea_sorteio_ok") && Date.now() - fechadoEm > 24 * 3600 * 1000) {
     let feito = false;
     const tentar = () => { if (feito || !ptAtivo() || document.body.classList.contains("modal-open")) return; feito = true; abrir(); window.removeEventListener("scroll", rolar); };
     const rolar = () => { const h = document.documentElement; if ((h.scrollTop + innerHeight) / h.scrollHeight > 0.35) tentar(); };
