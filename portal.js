@@ -78,7 +78,8 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
       const inc = g(rInc), exp = [g(rCogs), g(rExp), g(rOth)].filter(v => v != null);
       const despesas = exp.length ? exp.reduce((a, b) => a + b, 0) : null;
       let net = g(rNet); if (net == null && inc != null && despesas != null) net = inc - despesas;
-      if (inc != null || despesas != null || net != null) out[k] = { receita: inc, despesas, lucro: net };
+      // meses zerados (antes de o cliente começar) são ignorados
+      if ([inc, despesas, net].some(v => v != null && Math.abs(v) > 0.004)) out[k] = { receita: inc, despesas, lucro: net };
     });
     return out;
   }
@@ -164,7 +165,7 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     if (selPeriod === "ytd") {
       cur = mk.reduce((a, k) => { const n = data[k].num; ["receita", "despesas", "lucro"].forEach(f => { if (n[f] != null) a[f] = (a[f] || 0) + n[f]; }); return a; }, {});
       const last = mk[mk.length - 1];
-      sub = (mk.length === 1 ? T("month_1") : T("months_in").replace("{n}", mk.length)) + " · " + mName(+selYear, +mk[0].slice(5), "short") + "–" + mName(+selYear, +last.slice(5), "short");
+      sub = mk.length === 1 ? mTitle(last) : T("months_in").replace("{n}", mk.length) + " · " + mName(+selYear, +mk[0].slice(5), "short") + "–" + mName(+selYear, +last.slice(5), "short");
     } else {
       cur = data[selPeriod].num; prev = data[prevKey(selPeriod)] && data[prevKey(selPeriod)].num; sub = mTitle(selPeriod);
     }
