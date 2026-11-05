@@ -43,7 +43,13 @@
         <label for="s-email">E-mail *</label>
         <input id="s-email" name="email" type="email" autocomplete="email" required>
         <label for="s-wa">WhatsApp *</label>
-        <input id="s-wa" name="whatsapp" type="tel" autocomplete="tel" placeholder="(000) 000-0000" required>
+        <div class="s-phone">
+          <div class="s-ddi">
+            <span class="s-ddi-face" aria-hidden="true"><span class="s-flag" id="s-flag"></span><span id="s-ddi-code">+1</span><svg class="s-chev" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></span>
+            <select id="s-pais" aria-label="País do WhatsApp"></select>
+          </div>
+          <input id="s-wa" name="whatsapp" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(000) 000-0000" required>
+        </div>
         <input type="text" name="empresa_site" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
         <label class="s-check"><input type="checkbox" id="s-aceite" required> <span>Li e aceito o <a href="sorteio.html" target="_blank" rel="noopener">regulamento do sorteio</a>.</span></label>
         <button class="btn btn-gold" type="submit">Quero participar</button>
@@ -66,6 +72,54 @@
   const form = document.getElementById("sorteio-form");
   const status = document.getElementById("s-status");
   const ptAtivo = () => typeof currentLang === "undefined" || currentLang === "pt";
+
+  // ===== WhatsApp: país (código + bandeira) e formato do número =====
+  const mascara = (d, m) => { let s = "", i = 0; for (const c of m) { if (i >= d.length) break; s += c === "X" ? d[i++] : c; } return s; };
+  const PAISES = {
+    us: { nome: "Estados Unidos", ddi: "1", emoji: "🇺🇸", min: 10, max: 10, ph: "(000) 000-0000",
+          fmt: d => mascara(d, "(XXX) XXX-XXXX"), erro: "Confira o WhatsApp: nos EUA são 10 dígitos, com o código de área. Ex.: (325) 956-5160.",
+          flag: '<svg viewBox="0 0 19 10"><rect width="19" height="10" fill="#B22234"/><path d="M0 1.15h19M0 2.69h19M0 4.23h19M0 5.77h19M0 7.31h19M0 8.85h19" stroke="#fff" stroke-width=".77"/><rect width="7.6" height="5.38" fill="#3C3B6E"/></svg>' },
+    br: { nome: "Brasil", ddi: "55", emoji: "🇧🇷", min: 10, max: 11, ph: "(00) 00000-0000",
+          fmt: d => mascara(d, d.length > 10 ? "(XX) XXXXX-XXXX" : "(XX) XXXX-XXXX"), erro: "Confira o WhatsApp: no Brasil, use o DDD e o número. Ex.: (11) 98765-4321.",
+          flag: '<svg viewBox="0 0 20 14"><rect width="20" height="14" fill="#009C3B"/><path d="M10 1.4L18.4 7 10 12.6 1.6 7z" fill="#FFDF00"/><circle cx="10" cy="7" r="3.4" fill="#002776"/><path d="M6.7 6.3c2.2-.5 4.6-.1 6.6 1.1" stroke="#fff" stroke-width=".6" fill="none"/></svg>' },
+    pt: { nome: "Portugal", ddi: "351", emoji: "🇵🇹", min: 9, max: 9, ph: "000 000 000",
+          fmt: d => mascara(d, "XXX XXX XXX"), erro: "Confira o WhatsApp: em Portugal são 9 dígitos. Ex.: 912 345 678.",
+          flag: '<svg viewBox="0 0 30 20"><rect width="30" height="20" fill="#DA291C"/><rect width="12" height="20" fill="#046A38"/><circle cx="12" cy="10" r="4.2" fill="#FFE900"/><circle cx="12" cy="10" r="2.4" fill="#DA291C"/></svg>' }
+  };
+  const selPais = document.getElementById("s-pais"), inWa = document.getElementById("s-wa");
+  selPais.innerHTML = Object.entries(PAISES).map(([k, p]) => `<option value="${k}">${p.emoji} ${p.nome} (+${p.ddi})</option>`).join("");
+  const pais = () => PAISES[selPais.value];
+  function mostrarPais() {
+    const p = pais();
+    document.getElementById("s-flag").innerHTML = p.flag;
+    document.getElementById("s-ddi-code").textContent = "+" + p.ddi;
+    inWa.placeholder = p.ph;
+  }
+  function formatarWa() {
+    let bruto = inWa.value;
+    // Quem cola o número com o código do país (+55..., +1...) troca o país sozinho
+    if (/^\s*(\+|00)/.test(bruto)) {
+      const d = bruto.replace(/\D/g, "").replace(/^00/, "");
+      const achado = Object.keys(PAISES).sort((a, b) => PAISES[b].ddi.length - PAISES[a].ddi.length).find(k => d.startsWith(PAISES[k].ddi));
+      if (achado) { selPais.value = achado; mostrarPais(); bruto = d.slice(PAISES[achado].ddi.length); }
+    }
+    const p = pais();
+    let d = bruto.replace(/\D/g, "");
+    if (d.length > p.max && d.startsWith(p.ddi)) d = d.slice(p.ddi.length);   // ex.: 1 (325) 956-5160
+    d = d.slice(0, p.max);
+    // mantém o cursor no lugar certo ao editar no meio do número
+    const pos = inWa.selectionStart == null ? inWa.value.length : inWa.selectionStart;
+    const antes = inWa.value.slice(0, pos).replace(/\D/g, "").length;
+    inWa.value = p.fmt(d);
+    if (document.activeElement === inWa) {
+      let c = 0, i = 0; while (i < inWa.value.length && c < antes) { if (/\d/.test(inWa.value[i])) c++; i++; }
+      try { inWa.setSelectionRange(i, i); } catch (e) {}
+    }
+  }
+  selPais.addEventListener("change", () => { mostrarPais(); formatarWa(); inWa.focus(); });
+  inWa.addEventListener("input", formatarWa);
+  [form.nome, form.email, inWa].forEach(i => i.addEventListener("input", () => { if (i.hasAttribute("aria-invalid")) { i.removeAttribute("aria-invalid"); status.textContent = ""; } }));
+  mostrarPais();
 
   function abrir() {
     if (store.get("aurea_sorteio_ok")) mostrarOk(true);
@@ -108,11 +162,16 @@
   // ===== Envio =====
   form.addEventListener("submit", async e => {
     e.preventDefault();
-    const nome = form.nome.value.trim(), email = form.email.value.trim().toLowerCase(), whatsapp = form.whatsapp.value.trim();
+    const p = pais(), digitos = inWa.value.replace(/\D/g, "");
+    const nome = form.nome.value.trim(), email = form.email.value.trim().toLowerCase(), whatsapp = "+" + p.ddi + digitos;
     if (form.empresa_site.value) return; // robô
-    if (nome.length < 2 || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || whatsapp.replace(/\D/g, "").length < 10) {
-      status.textContent = "Preencha nome, e-mail e WhatsApp (com DDD) corretamente."; return;
-    }
+    // Aponta o primeiro campo com problema, em vez de uma mensagem genérica
+    const erro = nome.length < 2 ? [form.nome, "Preencha seu nome completo."]
+      : !/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(email) ? [form.email, "Confira o e-mail: ele precisa estar no formato nome@exemplo.com."]
+      : (digitos.length < p.min || digitos.length > p.max || (p.ddi === "1" && /^[01]/.test(digitos))) ? [inWa, p.erro]
+      : null;
+    [form.nome, form.email, inWa].forEach(i => i.removeAttribute("aria-invalid"));
+    if (erro) { erro[0].setAttribute("aria-invalid", "true"); erro[0].focus(); status.textContent = erro[1]; return; }
     if (!document.getElementById("s-aceite").checked) { status.textContent = "Para participar, aceite o regulamento do sorteio."; return; }
     const btn = form.querySelector('button[type="submit"]'); btn.disabled = true; status.textContent = "Enviando...";
     try {
