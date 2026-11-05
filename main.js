@@ -7,7 +7,7 @@ const IG_HANDLE = "aureafinancial";
 const BEHOLD_FEED_ID = "";  // cole aqui o Feed ID do Behold para mostrar os posts do Instagram
 const GOOGLE_TAG_ID = "";            // Google Ads (ex.: AW-123456789)
 const GOOGLE_CONVERSION_LABEL = "";  // rótulo da conversão do Google Ads (ex.: AbC-D_efG-h12_34-567)
-const GA_ID = "";                    // Google Analytics 4 (ex.: G-XXXXXXXXXX)
+const GA_ID = "G-M0TRJBKRSV";                    // Google Analytics 4 (ex.: G-XXXXXXXXXX)
 const META_PIXEL_ID = "";            // Meta Pixel (ex.: 1234567890123456)
 const CALENDLY_URL = "";             // link da sua agenda (ex.: https://calendly.com/aureafi/30min)
 
