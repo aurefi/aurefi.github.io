@@ -6,7 +6,8 @@ const SUPABASE_ANON_KEY = "sb_publishable_-7TaudR-eu2t1e8L6qfgmw_i4cg6Ksa";  // 
 const BUCKET = "relatorios";        // uma pasta por cliente (o e-mail dele)
 const DATA_FOLDER = "dados";        // dentro da pasta do cliente: exports do QuickBooks (P&L por mês)
 const SUMMARY_TABLE = "resumo_mensal";
-const PROFILE_TABLE = "perfil_cliente";  // nome da empresa e logo que o cliente define em Minha conta  // opcional: notas do mês e valores manuais
+const PROFILE_TABLE = "perfil_cliente";
+const ADMIN_TABLE = "admins";             // e-mails da Aurea que podem ver todas as contas (só leitura)  // nome da empresa e logo que o cliente define em Minha conta  // opcional: notas do mês e valores manuais
 
 const $ = id => document.getElementById(id);
 const T = k => (window.PAGE_DICT[currentLang] || window.PAGE_DICT.pt)[k] || k;
@@ -129,7 +130,7 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
       }
     }
     // Tabela opcional: nota do mês e valores manuais (usados quando não há export)
-    const s = await sb.from(SUMMARY_TABLE).select("mes,receita,despesas,lucro_liquido,observacao");
+    const s = await sb.from(SUMMARY_TABLE).select("mes,receita,despesas,lucro_liquido,observacao").eq("cliente_email", folder);
     if (!s.error) (s.data || []).forEach(r => {
       if (!/^\d{4}-\d{2}$/.test(r.mes)) return;
       const d = slot(r.mes);
@@ -395,11 +396,36 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     }
     document.body.classList.add("app-mode");
     $("pre-login").hidden = true; $("v-dash").hidden = false;
-    $("acc-email").textContent = session.user.email;
-    loadPerfil(session.user.email);
     $("files-msg").textContent = "";
-    try { await loadAll(session.user.email); } catch (e) { $("files-msg").textContent = T("m_err"); }
+    // Modo administrador: a Aurea escolhe a conta do cliente para conferir (só leitura)
+    let admin = false;
+    try { const { data: a } = await sb.from(ADMIN_TABLE).select("email").eq("email", session.user.email.toLowerCase()).maybeSingle(); admin = !!a; } catch (e) { admin = false; }
+    document.body.classList.toggle("admin-view", admin);
+    $("admin-bar").hidden = !admin; $("co-card").hidden = $("pw-card").hidden = admin; $("adm-note").hidden = !admin;
+    if (admin) return iniciarAdmin();
+    await abrirConta(session.user.email);
+  }
+  async function abrirConta(email) {
+    $("acc-email").textContent = email;
+    loadPerfil(email);
+    try { await loadAll(email); } catch (e) { $("files-msg").textContent = T("m_err"); }
     go(page);
+  }
+  async function iniciarAdmin() {
+    const r = await sb.storage.from(BUCKET).list("", { limit: 1000, sortBy: { column: "name", order: "asc" } });
+    const contas = (r.data || []).filter(f => !f.id && f.name.includes("@")).map(f => f.name);
+    const sel = $("admin-sel");
+    if (!contas.length) { sel.innerHTML = ""; $("files-msg").textContent = T("adm_none"); return; }
+    sel.innerHTML = contas.map(c => `<option value="${c}">${c}</option>`).join("");
+    let ult = null; try { ult = localStorage.getItem("aurea_admin_conta"); } catch (e) {}
+    sel.value = contas.includes(ult) ? ult : contas[0];
+    await verComoCliente(sel.value);
+  }
+  async function verComoCliente(email) {
+    try { localStorage.setItem("aurea_admin_conta", email); } catch (e) {}
+    $("adm-note").textContent = T("adm_note").replace("{e}", email);
+    $("files-msg").textContent = "";
+    await abrirConta(email);
   }
   sb.auth.getSession().then(({ data: d }) => render(d.session));
 
@@ -415,7 +441,8 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     msg.textContent = ""; $("l-pass").value = "";
     swap(() => render(d.session));
   });
-  $("logout").addEventListener("click", async () => { perfil = { nome: null, logo: null }; pendLogo = null; tirarLogo = false; setLogoUrl(null); await sb.auth.signOut(); page = "dash"; selYear = repYear = repMonth = null; selPeriod = "ytd"; render(null); });
+  $("admin-sel").addEventListener("change", e => swap(() => { selYear = repYear = repMonth = null; selPeriod = "ytd"; return verComoCliente(e.target.value); }));
+  $("logout").addEventListener("click", async () => { document.body.classList.remove("admin-view"); $("admin-bar").hidden = true; perfil = { nome: null, logo: null }; pendLogo = null; tirarLogo = false; setLogoUrl(null); await sb.auth.signOut(); page = "dash"; selYear = repYear = repMonth = null; selPeriod = "ytd"; render(null); });
 
   // ---------- Sua empresa: nome e logo no canto superior direito ----------
   let perfil = { nome: null, logo: null }, logoUrl = null, logoData = null, pendLogo = null, tirarLogo = false, emailAtual = "";
