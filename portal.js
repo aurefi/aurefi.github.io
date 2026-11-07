@@ -352,6 +352,9 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     $("viewer-new").hidden = true;
     const dl = $("viewer-dl"); dl.href = viewerUrl; dl.setAttribute("download", f.name);
     $("viewer-body").innerHTML = `<iframe sandbox="allow-scripts allow-popups" src="${viewerUrl}" title=""></iframe>`;
+    // envia ao relatório o nome e a logo definidos em Minha conta (o relatório só aceita texto e imagem)
+    const fr = $("viewer-body").querySelector("iframe");
+    fr.addEventListener("load", () => { if (perfil.nome || logoData) fr.contentWindow.postMessage({ tipo: "aurea-perfil", nome: perfil.nome || null, logo: logoData || null }, "*"); });
     $("viewer").hidden = false; document.body.classList.add("modal-open");
     requestAnimationFrame(() => $("viewer").classList.add("open"));
   }
@@ -415,9 +418,10 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
   $("logout").addEventListener("click", async () => { perfil = { nome: null, logo: null }; pendLogo = null; tirarLogo = false; setLogoUrl(null); await sb.auth.signOut(); page = "dash"; selYear = repYear = repMonth = null; selPeriod = "ytd"; render(null); });
 
   // ---------- Sua empresa: nome e logo no canto superior direito ----------
-  let perfil = { nome: null, logo: null }, logoUrl = null, pendLogo = null, tirarLogo = false, emailAtual = "";
+  let perfil = { nome: null, logo: null }, logoUrl = null, logoData = null, pendLogo = null, tirarLogo = false, emailAtual = "";
+  const paraData = blob => new Promise(ok => { const fr = new FileReader(); fr.onload = () => ok(fr.result); fr.onerror = () => ok(null); fr.readAsDataURL(blob); });
   const logoPath = () => emailAtual + "/perfil/logo.png";
-  function setLogoUrl(u) { if (logoUrl) URL.revokeObjectURL(logoUrl); logoUrl = u; }
+  function setLogoUrl(u) { if (logoUrl) URL.revokeObjectURL(logoUrl); logoUrl = u; if (!u) logoData = null; }
   function paintWho() {
     $("who-name").textContent = perfil.nome || emailAtual;
     $("who").title = emailAtual;
@@ -436,7 +440,7 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
       const { data: row } = await sb.from(PROFILE_TABLE).select("nome_empresa, logo_path").eq("cliente_email", emailAtual).maybeSingle();
       if (row) {
         perfil = { nome: row.nome_empresa, logo: row.logo_path };
-        if (row.logo_path) { const dl = await sb.storage.from(BUCKET).download(row.logo_path); if (!dl.error) setLogoUrl(URL.createObjectURL(dl.data)); }
+        if (row.logo_path) { const dl = await sb.storage.from(BUCKET).download(row.logo_path); if (!dl.error) { setLogoUrl(URL.createObjectURL(dl.data)); logoData = await paraData(dl.data); } }
       }
     } catch (e) { /* sem perfil: mostra o e-mail */ }
     paintWho(); paintForm();
@@ -479,7 +483,7 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
       }
       const { error } = await sb.from(PROFILE_TABLE).upsert({ cliente_email: emailAtual, nome_empresa: nome, logo_path: logo, atualizado_em: new Date().toISOString() }, { onConflict: "cliente_email" });
       if (error) throw error;
-      if (pendLogo) setLogoUrl(URL.createObjectURL(pendLogo)); else if (tirarLogo) setLogoUrl(null);
+      if (pendLogo) { setLogoUrl(URL.createObjectURL(pendLogo)); logoData = await paraData(pendLogo); } else if (tirarLogo) setLogoUrl(null);
       perfil = { nome, logo }; pendLogo = null; tirarLogo = false;
       paintWho(); paintForm(); msg.classList.add("ok"); msg.textContent = T("m_cook");
     } catch (err) { msg.textContent = T("m_coerr"); }
