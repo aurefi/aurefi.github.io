@@ -5,7 +5,8 @@ const SUPABASE_URL = "https://eslputtmlufvxhdanczy.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_-7TaudR-eu2t1e8L6qfgmw_i4cg6Ksa";  // chave publishable (é pública)
 const BUCKET = "relatorios";        // uma pasta por cliente (o e-mail dele)
 const DATA_FOLDER = "dados";        // dentro da pasta do cliente: exports do QuickBooks (P&L por mês)
-const SUMMARY_TABLE = "resumo_mensal";  // opcional: notas do mês e valores manuais
+const SUMMARY_TABLE = "resumo_mensal";
+const PROFILE_TABLE = "perfil_cliente";  // nome da empresa e logo que o cliente define em Minha conta  // opcional: notas do mês e valores manuais
 
 const $ = id => document.getElementById(id);
 const T = k => (window.PAGE_DICT[currentLang] || window.PAGE_DICT.pt)[k] || k;
@@ -167,7 +168,9 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     fy.innerHTML = ys.map(y => `<option value="${y}"${y === selYear ? " selected" : ""}>${y}</option>`).join("");
     const mk = Object.keys(data).filter(k => k.startsWith(selYear) && data[k].num).sort();
     if (selPeriod !== "ytd" && !mk.includes(selPeriod)) selPeriod = "ytd";
-    fp.innerHTML = `<option value="ytd">${T("ytd")}</option>` + mk.slice().reverse().map(k => `<option value="${k}"${k === selPeriod ? " selected" : ""}>${mName(+k.slice(0, 4), +k.slice(5))}</option>`).join("");
+    // Acumulado do ano: do primeiro ao último mês fechado com dados (ex.: Jan–Out)
+    const rng = mk.length ? (mk.length === 1 ? mName(+selYear, +mk[0].slice(5), "short") : `${mName(+selYear, +mk[0].slice(5), "short")}–${mName(+selYear, +mk[mk.length - 1].slice(5), "short")}`) : "";
+    fp.innerHTML = `<option value="ytd">${T("ytd")}${rng ? ` (${rng})` : ""}</option>` + mk.slice().reverse().map(k => `<option value="${k}"${k === selPeriod ? " selected" : ""}>${mName(+k.slice(0, 4), +k.slice(5))}</option>`).join("");
     fp.value = selPeriod;
 
     // KPIs
@@ -217,9 +220,10 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     let files, title;
     if (k) { files = data[k] ? data[k].files : []; title = T("files_t").replace("{p}", mTitle(k)); }
     else {
-      const keys = Object.keys(data).filter(x => data[x].files.length).sort().reverse();
-      files = keys.slice(0, 3).flatMap(x => data[x].files.map(f => Object.assign({ month: x }, f))).slice(0, 5);
-      title = T("files_latest");
+      // Acumulado do ano: todos os relatórios do último mês fechado
+      const ult = Object.keys(data).filter(x => /^\d{4}-\d{2}$/.test(x) && data[x].files.length).sort().pop();
+      files = ult ? data[ult].files.map(f => Object.assign({ month: ult }, f)) : [];
+      title = ult ? T("files_t").replace("{p}", mTitle(ult)) : T("files_latest");
     }
     $("dash-files-t").textContent = title;
     fillFiles($("dash-files"), files, !k);
@@ -388,7 +392,8 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     }
     document.body.classList.add("app-mode");
     $("pre-login").hidden = true; $("v-dash").hidden = false;
-    $("who").textContent = session.user.email; $("acc-email").textContent = session.user.email;
+    $("acc-email").textContent = session.user.email;
+    loadPerfil(session.user.email);
     $("files-msg").textContent = "";
     try { await loadAll(session.user.email); } catch (e) { $("files-msg").textContent = T("m_err"); }
     go(page);
@@ -407,7 +412,79 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     msg.textContent = ""; $("l-pass").value = "";
     swap(() => render(d.session));
   });
-  $("logout").addEventListener("click", async () => { await sb.auth.signOut(); page = "dash"; selYear = repYear = repMonth = null; selPeriod = "ytd"; render(null); });
+  $("logout").addEventListener("click", async () => { perfil = { nome: null, logo: null }; pendLogo = null; tirarLogo = false; setLogoUrl(null); await sb.auth.signOut(); page = "dash"; selYear = repYear = repMonth = null; selPeriod = "ytd"; render(null); });
+
+  // ---------- Sua empresa: nome e logo no canto superior direito ----------
+  let perfil = { nome: null, logo: null }, logoUrl = null, pendLogo = null, tirarLogo = false, emailAtual = "";
+  const logoPath = () => emailAtual + "/perfil/logo.png";
+  function setLogoUrl(u) { if (logoUrl) URL.revokeObjectURL(logoUrl); logoUrl = u; }
+  function paintWho() {
+    $("who-name").textContent = perfil.nome || emailAtual;
+    $("who").title = emailAtual;
+    $("who-logo").hidden = !logoUrl; if (logoUrl) $("who-logo").src = logoUrl;
+    $("who").classList.toggle("has-logo", !!logoUrl);
+  }
+  function paintForm(previewUrl, soImagem) {
+    if (!soImagem) $("co-name").value = perfil.nome || "";
+    const u = previewUrl !== undefined ? previewUrl : logoUrl;
+    $("co-prev").innerHTML = u ? `<img src="${u}" alt="">` : `<span>${T("co_none")}</span>`;
+    $("co-rm").hidden = !u;
+  }
+  async function loadPerfil(email) {
+    emailAtual = email.toLowerCase(); perfil = { nome: null, logo: null }; setLogoUrl(null); paintWho();
+    try {
+      const { data: row } = await sb.from(PROFILE_TABLE).select("nome_empresa, logo_path").eq("cliente_email", emailAtual).maybeSingle();
+      if (row) {
+        perfil = { nome: row.nome_empresa, logo: row.logo_path };
+        if (row.logo_path) { const dl = await sb.storage.from(BUCKET).download(row.logo_path); if (!dl.error) setLogoUrl(URL.createObjectURL(dl.data)); }
+      }
+    } catch (e) { /* sem perfil: mostra o e-mail */ }
+    paintWho(); paintForm();
+  }
+  // Reduz a imagem (até 600 x 200 px) e converte para PNG antes de enviar
+  function reduzir(file) {
+    return new Promise((ok, fail) => {
+      const img = new Image(), u = URL.createObjectURL(file);
+      img.onload = () => {
+        const k = Math.min(1, 600 / img.width, 200 / img.height), c = document.createElement("canvas");
+        c.width = Math.max(1, Math.round(img.width * k)); c.height = Math.max(1, Math.round(img.height * k));
+        c.getContext("2d").drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(u);
+        c.toBlob(b => b ? ok(b) : fail(new Error("png")), "image/png");
+      };
+      img.onerror = () => { URL.revokeObjectURL(u); fail(new Error("img")); };
+      img.src = u;
+    });
+  }
+  $("co-file").addEventListener("change", async e => {
+    const f = e.target.files[0], msg = $("co-msg"); msg.className = "msg"; msg.textContent = ""; e.target.value = "";
+    if (!f) return;
+    if (!/^image\/(png|jpeg|webp)$/.test(f.type)) { msg.textContent = T("m_cotype"); return; }
+    if (f.size > 5 * 1024 * 1024) { msg.textContent = T("m_cobig"); return; }
+    try { pendLogo = await reduzir(f); tirarLogo = false; paintForm(URL.createObjectURL(pendLogo), true); }
+    catch (err) { msg.textContent = T("m_cotype"); }
+  });
+  $("co-rm").addEventListener("click", () => { pendLogo = null; tirarLogo = true; paintForm(null, true); });
+  $("co-form").addEventListener("submit", async e => {
+    e.preventDefault();
+    const msg = $("co-msg"), btn = e.target.querySelector("button[type=submit]"); msg.className = "msg"; msg.textContent = "";
+    const nome = $("co-name").value.trim().slice(0, 80) || null;
+    btn.disabled = true;
+    try {
+      let logo = perfil.logo;
+      if (pendLogo) {
+        const up = await sb.storage.from(BUCKET).upload(logoPath(), pendLogo, { upsert: true, contentType: "image/png", cacheControl: "60" });
+        if (up.error) throw up.error; logo = logoPath();
+      } else if (tirarLogo && perfil.logo) {
+        await sb.storage.from(BUCKET).remove([perfil.logo]); logo = null;
+      }
+      const { error } = await sb.from(PROFILE_TABLE).upsert({ cliente_email: emailAtual, nome_empresa: nome, logo_path: logo, atualizado_em: new Date().toISOString() }, { onConflict: "cliente_email" });
+      if (error) throw error;
+      if (pendLogo) setLogoUrl(URL.createObjectURL(pendLogo)); else if (tirarLogo) setLogoUrl(null);
+      perfil = { nome, logo }; pendLogo = null; tirarLogo = false;
+      paintWho(); paintForm(); msg.classList.add("ok"); msg.textContent = T("m_cook");
+    } catch (err) { msg.textContent = T("m_coerr"); }
+    btn.disabled = false;
+  });
 
   $("pw-form").addEventListener("submit", async e => {
     e.preventDefault();
