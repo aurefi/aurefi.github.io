@@ -78,7 +78,7 @@
     <section class="app-main">
       <header class="app-top">
         <h1 id="app-title" data-i18n="nav_dash">Painel</h1>
-        <span class="who-chip" id="who"></span>
+        <span class="who-chip" id="who"><img id="who-logo" alt="" hidden><span id="who-name"></span></span>
       </header>
 
       <!-- ===== Painel ===== -->
@@ -140,6 +140,25 @@
       <!-- ===== Minha conta ===== -->
       <div class="app-page" id="p-account" hidden>
         <div class="pcard acc-card">
+          <div class="card-head"><h2 data-i18n="co_t">Sua empresa</h2></div>
+          <form id="co-form" novalidate>
+            <label for="co-name" data-i18n="co_name">Nome da empresa</label>
+            <input id="co-name" type="text" maxlength="80" autocomplete="organization">
+            <span class="co-lbl" data-i18n="co_logo">Logo</span>
+            <div class="co-logo">
+              <div class="co-prev" id="co-prev"><span data-i18n="co_none">Sem logo</span></div>
+              <div class="co-btns">
+                <input id="co-file" type="file" accept="image/png,image/jpeg,image/webp" class="sr">
+                <label class="btn btn-line sm" for="co-file" data-i18n="co_pick">Escolher imagem</label>
+                <button class="btn btn-line sm" type="button" id="co-rm" data-i18n="co_rm" hidden>Remover logo</button>
+              </div>
+            </div>
+            <p class="co-hint" data-i18n="co_hint">PNG, JPG ou WEBP, até 5 MB. O nome e a logo aparecem no canto superior direito do portal.</p>
+            <button class="btn btn-gold sm" type="submit" data-i18n="co_save">Salvar</button>
+            <p class="msg" id="co-msg" role="status"></p>
+          </form>
+        </div>
+        <div class="pcard acc-card">
           <div class="card-head"><h2 data-i18n="acc_t">Dados de acesso</h2></div>
           <p><span class="muted" data-i18n="email">E-mail</span><br><b id="acc-email"></b></p>
         </div>
@@ -190,7 +209,7 @@ window.PAGE_DICT = {
     email:"E-mail", pass:"Senha", login_btn:"Entrar",
     forgot:"Esqueceu a senha ou ainda não tem acesso?", forgot_link:"Fale com a Aurea no WhatsApp",
     nav_dash:"Painel", nav_reports:"Relatórios", nav_account:"Minha conta", back_site:"Voltar ao site", logout:"Sair",
-    f_year:"Ano", f_period:"Período", ytd:"Ano até hoje",
+    f_year:"Ano", f_period:"Período", ytd:"Acumulado do ano",
     dash_empty:"Os números do painel aparecem aqui assim que o primeiro mês for publicado.",
     k_rev:"Receita", k_exp:"Despesas", k_net:"Lucro líquido", margin:"Margem",
     t_rev:"Receita total", t_exp:"Despesas totais", t_net:"Lucro líquido",
@@ -200,6 +219,7 @@ window.PAGE_DICT = {
     m_nofiles:"Os relatórios deste período ainda não foram publicados.",
     others:"Outros documentos", empty:"Ainda não há relatórios na sua pasta. Assim que o relatório do mês estiver pronto, ele aparece aqui.",
     n_docs1:"1 relatório", n_docs:"{n} relatórios", no_data:"Sem dados",
+    co_t:"Sua empresa", co_name:"Nome da empresa", co_logo:"Logo", co_none:"Sem logo", co_pick:"Escolher imagem", co_rm:"Remover logo", co_save:"Salvar", co_hint:"PNG, JPG ou WEBP, até 5 MB. O nome e a logo aparecem no canto superior direito do portal.", m_cook:"Dados da empresa salvos.", m_coerr:"Não foi possível salvar. Tente novamente.", m_cotype:"Use uma imagem PNG, JPG ou WEBP.", m_cobig:"A imagem passa de 5 MB. Escolha um arquivo menor.",
     acc_t:"Dados de acesso", pw_t:"Trocar senha", pw_new:"Nova senha (mínimo de 8 caracteres)", pw_conf:"Repita a nova senha", pw_save:"Salvar nova senha",
     help_q:"Dúvidas sobre os seus números?", help_wa:"Fale com a Aurea no WhatsApp",
     v_new:"Abrir em nova aba", v_dl:"Baixar",
@@ -226,6 +246,7 @@ window.PAGE_DICT = {
     m_nofiles:"Reports for this period haven't been published yet.",
     others:"Other documents", empty:"There are no reports in your folder yet. As soon as this month's report is ready, it will show up here.",
     n_docs1:"1 report", n_docs:"{n} reports", no_data:"No data",
+    co_t:"Your company", co_name:"Company name", co_logo:"Logo", co_none:"No logo", co_pick:"Choose image", co_rm:"Remove logo", co_save:"Save", co_hint:"PNG, JPG or WEBP, up to 5 MB. Your company name and logo appear in the top-right corner of the portal.", m_cook:"Company details saved.", m_coerr:"We couldn't save your changes. Please try again.", m_cotype:"Please use a PNG, JPG or WEBP image.", m_cobig:"The image is larger than 5 MB. Please choose a smaller file.",
     acc_t:"Sign-in details", pw_t:"Change password", pw_new:"New password (at least 8 characters)", pw_conf:"Repeat the new password", pw_save:"Save new password",
     help_q:"Questions about your numbers?", help_wa:"Message Aurea on WhatsApp",
     v_new:"Open in new tab", v_dl:"Download",
