@@ -529,6 +529,36 @@ body.app-mode{background:#F3EADC}
 .acc-card{max-width:560px}
 .acc-card form{padding:0;background:none}
 
+/* Minha conta: duas colunas (dados à esquerda, transações à direita) */
+.acc-grid{display:grid;grid-template-columns:minmax(0,560px) minmax(0,1fr);gap:18px;align-items:start}
+.acc-col{display:flex;flex-direction:column;gap:18px;min-width:0}
+.tx-card{min-width:0;max-width:760px}
+.tx-plan{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px;margin:-2px 0 14px;padding:12px 14px;background:#F8F1E6;border-left:3px solid var(--gold);border-radius:6px}
+.tx-plan-l{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--brown)}
+.tx-plan b{font-size:16px}
+.tx-plan-r{font-size:14px;color:var(--muted)}
+.tx-chart svg{display:block;width:100%;height:auto}
+.tx-chart .base{stroke:#8E877B;stroke-width:1}
+.tx-chart .ax{font:12px var(--sans);fill:var(--muted)}
+.tx-chart .tb.in{fill:#1baf7a}.tx-chart .tb.out{fill:#eb6834}
+.tx-chart .tv{font:700 12.5px var(--sans);fill:var(--ink);paint-order:stroke;stroke:#FFFDF9;stroke-width:4px;stroke-linejoin:round}
+.tx-chart .tv.out{fill:#B9461A}
+.tx-chart .tx-na{font:600 14px var(--sans);fill:#B3AA9C}
+.tx-chart .tx-lim{stroke:#D23B2F;stroke-width:1.6;stroke-dasharray:6 4}
+.tx-chart .tx-lim-t{font:600 11.5px var(--sans);fill:#D23B2F}
+.tx-legend{margin-top:10px;row-gap:6px}
+.lg.tx-in{background:#1baf7a}.lg.tx-out{background:#eb6834}
+.lg.tx-lim{width:16px;height:0;border-radius:0;border-top:2px dashed #D23B2F}
+.tx-status{display:flex;align-items:center;gap:12px;margin-top:16px;padding:12px 14px;border-radius:8px;background:rgba(235,104,52,.1);font-size:14.5px;line-height:1.45}
+.tx-status.ok{background:rgba(27,175,122,.1)}
+.tx-status.alert{background:rgba(235,104,52,.18);font-weight:600}
+.tx-dots{display:flex;gap:5px;flex:none}
+.tx-dots i{width:11px;height:11px;border-radius:50%;border:2px solid #eb6834;background:transparent}
+.tx-dots i.on{background:#eb6834}
+.tx-rule{margin:14px 0 0}
+.tx-empty{margin:4px 0 0}
+@media (max-width:1100px){ .acc-grid{grid-template-columns:1fr} .tx-card{order:-1;max-width:560px} }
+
 /* Visualizador sobreposto */
 .doc-viewer{position:fixed;inset:0;z-index:120;display:grid;place-items:center;padding:24px}
 .doc-viewer[hidden]{display:none}

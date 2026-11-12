@@ -8,6 +8,9 @@ const DATA_FOLDER = "dados";        // dentro da pasta do cliente: exports do Qu
 const SUMMARY_TABLE = "resumo_mensal";
 const PROFILE_TABLE = "perfil_cliente";
 const ADMIN_TABLE = "admins";             // e-mails da Aurea que podem ver todas as contas (só leitura)  // nome da empresa e logo que o cliente define em Minha conta  // opcional: notas do mês e valores manuais
+const TX_TABLE = "transacoes_mensal";     // quantidade de transações por mês (gravada pela automação mensal)
+const PLAN_TABLE = "plano_cliente";       // plano atual do cliente; as faixas vêm da tabela "planos"
+const TX_MONTHS = 6, TX_RULE = 3;         // meses no gráfico; meses seguidos fora da faixa para ajustar o plano
 
 const $ = id => document.getElementById(id);
 const T = k => (window.PAGE_DICT[currentLang] || window.PAGE_DICT.pt)[k] || k;
@@ -24,7 +27,7 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
   const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, autoRefreshToken: true } });
 
   // ---------- Estado ----------
-  let folder = "", data = {}, others = [];
+  let folder = "", data = {}, others = [], tx = { meses: {}, plano: null };
   let page = "dash", selYear = null, selPeriod = "ytd", repYear = null, repMonth = null, showTable = false;
 
   // ---------- Formatação ----------
@@ -140,6 +143,20 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
         d.num = { receita: rc, despesas: dp, lucro: r.lucro_liquido != null ? +r.lucro_liquido : (rc != null && dp != null ? rc - dp : null) };
       }
     });
+    await loadTx();
+  }
+
+  // Transações por mês + plano atual (se as tabelas ainda não existirem, o cartão mostra o aviso de vazio)
+  async function loadTx() {
+    tx = { meses: {}, plano: null };
+    try {
+      const [t, p] = await Promise.all([
+        sb.from(TX_TABLE).select("mes,quantidade").eq("cliente_email", folder),
+        sb.from(PLAN_TABLE).select("plano, planos(nome,minimo,maximo)").eq("cliente_email", folder).maybeSingle()
+      ]);
+      if (!t.error) (t.data || []).forEach(r => { if (/^\d{4}-\d{2}$/.test(r.mes) && r.quantidade != null) tx.meses[r.mes] = +r.quantidade; });
+      if (!p.error && p.data && p.data.planos) { const f = p.data.planos; tx.plano = { nome: f.nome, min: f.minimo, max: f.maximo }; }
+    } catch (e) { /* sem dados de transações */ }
   }
 
   const years = () => [...new Set(Object.keys(data).map(k => k.slice(0, 4)))].sort().reverse();
@@ -153,6 +170,7 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     ["dash", "reports", "account"].forEach(x => { if (x !== p) $("p-" + x).hidden = true; });
     if (p === "dash") renderDash(); if (p === "reports") renderReports();
     reveal($("p-" + p));
+    if (p === "account") renderTx();   // depois de aparecer, para o gráfico medir a largura certa
     window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
   }
   document.querySelectorAll(".nav-btn").forEach(b => b.addEventListener("click", () => swap(() => go(b.dataset.page))));
@@ -298,6 +316,68 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     $("tbl").innerHTML = `<table><thead><tr><th>${T("th_month")}</th><th>${T("k_rev")}</th><th>${T("k_exp")}</th><th>${T("k_net")}</th></tr></thead><tbody>${rows}</tbody></table>`;
   }
   $("tbl-toggle").addEventListener("click", () => { showTable = !showTable; renderTable(Object.keys(data).filter(k => k.startsWith(selYear) && data[k].num).sort()); });
+
+  // ---------- Minha conta: transações por mês e faixa do plano ----------
+  const nFmt = n => new Intl.NumberFormat(locale()).format(n);
+  const lastClosed = () => { const d = new Date(); return prevKey(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`); };
+  const txSide = q => !tx.plano || q == null ? 0 : (tx.plano.max != null && q > tx.plano.max) ? 1 : (tx.plano.min > 0 && q < tx.plano.min) ? -1 : 0;
+  function renderTx() {
+    const ks = []; for (let k = lastClosed(), i = 0; i < TX_MONTHS; i++, k = prevKey(k)) ks.unshift(k);
+    const has = ks.some(k => tx.meses[k] != null), pl = tx.plano;
+    $("tx-empty").hidden = has;
+    ["tx-chart", "tx-legend"].forEach(id => $(id).hidden = !has);
+    $("tx-status").hidden = !has || !pl;
+    $("tx-lg-lim").hidden = !pl; $("tx-legend").querySelector(".tx-out").parentElement.hidden = !pl;
+
+    // Plano e faixa
+    $("tx-plan").hidden = !pl;
+    if (pl) {
+      $("tx-plan-name").textContent = pl.nome;
+      $("tx-plan-range").textContent = (pl.max == null ? T("tx_from") : pl.min > 0 ? T("tx_range") : T("tx_upto")).replace("{a}", nFmt(pl.min)).replace("{b}", nFmt(pl.max));
+    }
+    if (!has) { $("tx-chart").innerHTML = ""; return; }
+
+    // Meses seguidos fora da faixa, do mês mais recente com dados para trás
+    if (pl) {
+      let i = ks.length - 1; while (i >= 0 && tx.meses[ks[i]] == null) i--;
+      const side = txSide(tx.meses[ks[i]]); let n = 0;
+      if (side) while (i >= 0 && tx.meses[ks[i]] != null && txSide(tx.meses[ks[i]]) === side) { n++; i--; }
+      const st = $("tx-status");
+      st.classList.toggle("ok", !side); st.classList.toggle("alert", n >= TX_RULE);
+      $("tx-dots").hidden = !side;
+      $("tx-dots").innerHTML = Array.from({ length: TX_RULE }, (_, j) => `<i class="${j < n ? "on" : ""}"></i>`).join("");
+      $("tx-status-text").textContent = !side ? T("tx_ok") : T(side > 0 ? (n >= TX_RULE ? "tx_up3" : "tx_up") : (n >= TX_RULE ? "tx_down3" : "tx_down")).replace("{n}", n);
+    }
+
+    // Gráfico de barras com as linhas da faixa
+    const box = $("tx-chart");
+    const W = Math.max(280, Math.round(box.clientWidth || 520)), H = W < 420 ? 210 : 240, L = 6, R = pl ? 62 : 6, Tp = 24, B = 28;
+    const vals = ks.map(k => tx.meses[k]).filter(v => v != null);
+    const ref = pl ? [pl.min > 0 ? pl.min : 0, pl.max != null ? pl.max : 0] : [];
+    const top = Math.max(10, ...vals, ...ref) * 1.15;
+    const yy = v => Tp + (1 - v / top) * (H - Tp - B);
+    const cw = (W - L - R) / ks.length, bw = Math.min(46, cw * 0.58);
+    let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${T("tx_aria")}">`, labels = "";
+    s += `<line class="base" x1="${L}" x2="${W - R}" y1="${yy(0)}" y2="${yy(0)}"/>`;
+    ks.forEach((k, i) => {
+      const [y, m] = k.split("-").map(Number), cx = L + cw * i + cw / 2, q = tx.meses[k];
+      const lab = mName(y, m, "short").slice(0, 3) + (m === 1 || i === 0 ? ` ${String(y).slice(2)}` : "");
+      s += `<text class="ax" x="${cx}" y="${H - 8}" text-anchor="middle">${lab}</text>`;
+      if (q == null) { s += `<g><title>${mTitle(k)}: ${T("tx_none")}</title><text class="tx-na" x="${cx}" y="${yy(0) - 8}" text-anchor="middle">—</text></g>`; return; }
+      const y0 = yy(0), h = Math.max(2, y0 - yy(q)), r = Math.min(5, h / 2, bw / 2), x = cx - bw / 2;
+      const cls = txSide(q) ? "out" : "in";
+      s += `<g><title>${mTitle(k)}: ${q === 1 ? T("tx_n1") : T("tx_n").replace("{n}", nFmt(q))}</title>`
+        + `<path class="tb ${cls}" d="M${x},${y0} V${y0 - h + r} Q${x},${y0 - h} ${x + r},${y0 - h} H${x + bw - r} Q${x + bw},${y0 - h} ${x + bw},${y0 - h + r} V${y0} Z"/>`
+        + `</g>`;
+      labels += `<text class="tv ${cls}" x="${cx}" y="${y0 - h - 7}" text-anchor="middle">${nFmt(q)}</text>`;  // números por cima das linhas
+    });
+    if (pl) {
+      const lim = (v, key) => `<line class="tx-lim" x1="${L}" x2="${W - R + 4}" y1="${yy(v)}" y2="${yy(v)}"/><text class="tx-lim-t" x="${W - R + 8}" y="${yy(v) + 4}">${T(key).replace("{n}", nFmt(v))}</text>`;
+      if (pl.max != null) s += lim(pl.max, "tx_max");
+      if (pl.min > 0) s += lim(pl.min, "tx_min");
+    }
+    box.innerHTML = s + labels + "</svg>";
+  }
 
   // ---------- Relatórios ----------
   function renderReports() {
@@ -534,5 +614,9 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
   document.querySelectorAll(".lang button").forEach(b => b.addEventListener("click", relang));
   markLang();
 
-  let rz; window.addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => { if (page === "dash" && !$("v-dash").hidden && numYears().length) renderChart(Object.keys(data).filter(k => k.startsWith(selYear) && data[k].num).sort()); }, 150); });
+  let rz; window.addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => {
+    if ($("v-dash").hidden) return;
+    if (page === "dash" && numYears().length) renderChart(Object.keys(data).filter(k => k.startsWith(selYear) && data[k].num).sort());
+    if (page === "account") renderTx();
+  }, 150); });
 }

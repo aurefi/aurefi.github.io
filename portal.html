@@ -141,6 +141,8 @@
       <!-- ===== Minha conta ===== -->
       <div class="app-page" id="p-account" hidden>
         <p class="adm-note" id="adm-note" hidden></p>
+        <div class="acc-grid">
+        <div class="acc-col">
         <div class="pcard acc-card" id="co-card">
           <div class="card-head"><h2 data-i18n="co_t">Sua empresa</h2></div>
           <form id="co-form" novalidate>
@@ -174,6 +176,30 @@
             <button class="btn btn-gold sm" type="submit" data-i18n="pw_save">Salvar nova senha</button>
             <p class="msg" id="pw-msg" role="status"></p>
           </form>
+        </div>
+        </div>
+
+        <!-- Transações por mês e faixa do plano -->
+        <div class="pcard tx-card" id="tx-card">
+          <div class="card-head"><h2 data-i18n="tx_t">Transações por mês</h2></div>
+          <div class="tx-plan" id="tx-plan" hidden>
+            <span class="tx-plan-l" data-i18n="tx_plan">Seu plano</span>
+            <b id="tx-plan-name"></b>
+            <span class="tx-plan-r" id="tx-plan-range"></span>
+          </div>
+          <div class="tx-chart" id="tx-chart"></div>
+          <div class="legend tx-legend" id="tx-legend">
+            <span><i class="lg tx-in"></i><span data-i18n="tx_in">Dentro da faixa</span></span>
+            <span><i class="lg tx-out"></i><span data-i18n="tx_out">Fora da faixa</span></span>
+            <span id="tx-lg-lim"><i class="lg tx-lim"></i><span data-i18n="tx_lim">Limites da faixa</span></span>
+          </div>
+          <div class="tx-status" id="tx-status" hidden>
+            <div class="tx-dots" id="tx-dots" aria-hidden="true"></div>
+            <p id="tx-status-text"></p>
+          </div>
+          <p class="co-hint tx-rule" id="tx-rule" data-i18n="tx_rule">O plano acompanha a quantidade de transações. Se o seu volume ficar acima ou abaixo da faixa por 3 meses seguidos, o plano é ajustado para a faixa correspondente.</p>
+          <p class="muted tx-empty" id="tx-empty" hidden data-i18n="tx_empty">A contagem de transações aparece aqui a partir do primeiro mês fechado.</p>
+        </div>
         </div>
         <p class="help"><span data-i18n="help_q">Dúvidas sobre os seus números?</span> <a class="wa-link" href="https://wa.me/13259565160" target="_blank" rel="noopener" data-i18n="help_wa">Fale com a Aurea no WhatsApp</a>.</p>
       </div>
@@ -229,7 +255,17 @@ window.PAGE_DICT = {
     m_fill:"Preencha e-mail e senha.", m_bad:"E-mail ou senha incorretos.", m_wait:"Entrando...",
     m_err:"Não foi possível carregar os dados. Tente novamente em instantes.",
     m_open:"Abrir", m_short:"A senha precisa ter pelo menos 8 caracteres.", m_diff:"As senhas não são iguais.",
-    m_pwok:"Senha alterada com sucesso.", m_pwerr:"Não foi possível alterar a senha. Tente novamente.", noprev:"sem comparação"
+    m_pwok:"Senha alterada com sucesso.", m_pwerr:"Não foi possível alterar a senha. Tente novamente.", noprev:"sem comparação",
+    tx_t:"Transações por mês", tx_plan:"Seu plano", tx_in:"Dentro da faixa", tx_out:"Fora da faixa", tx_lim:"Limites da faixa",
+    tx_upto:"Até {b} transações/mês", tx_range:"{a} a {b} transações/mês", tx_from:"{a} ou mais transações/mês",
+    tx_max:"máx. {n}", tx_min:"mín. {n}", tx_none:"sem dados", tx_n1:"1 transação", tx_n:"{n} transações",
+    tx_ok:"No último mês, o volume ficou dentro da faixa do seu plano.",
+    tx_up:"{n} de 3 meses seguidos acima da faixa.", tx_down:"{n} de 3 meses seguidos abaixo da faixa.",
+    tx_up3:"{n} meses seguidos acima da faixa. Pela regra, o plano passa para a faixa de cima.",
+    tx_down3:"{n} meses seguidos abaixo da faixa. Pela regra, o plano passa para a faixa de baixo.",
+    tx_rule:"O plano acompanha a quantidade de transações. Se o seu volume ficar acima ou abaixo da faixa por 3 meses seguidos, o plano é ajustado para a faixa correspondente.",
+    tx_empty:"A contagem de transações aparece aqui a partir do primeiro mês fechado.",
+    tx_aria:"Transações dos últimos 6 meses"
   },
   en: {
     page_title:"Client Portal · Aurea Financial",
@@ -257,7 +293,17 @@ window.PAGE_DICT = {
     m_fill:"Please enter your email and password.", m_bad:"Incorrect email or password.", m_wait:"Signing in...",
     m_err:"We couldn't load your data. Please try again in a moment.",
     m_open:"Open", m_short:"The password must have at least 8 characters.", m_diff:"The passwords don't match.",
-    m_pwok:"Password changed successfully.", m_pwerr:"We couldn't change your password. Please try again.", noprev:"no comparison"
+    m_pwok:"Password changed successfully.", m_pwerr:"We couldn't change your password. Please try again.", noprev:"no comparison",
+    tx_t:"Transactions per month", tx_plan:"Your plan", tx_in:"Within range", tx_out:"Outside range", tx_lim:"Plan range limits",
+    tx_upto:"Up to {b} transactions/month", tx_range:"{a} to {b} transactions/month", tx_from:"{a} or more transactions/month",
+    tx_max:"max {n}", tx_min:"min {n}", tx_none:"no data", tx_n1:"1 transaction", tx_n:"{n} transactions",
+    tx_ok:"Last month, your volume was within your plan's range.",
+    tx_up:"{n} of 3 consecutive months above the range.", tx_down:"{n} of 3 consecutive months below the range.",
+    tx_up3:"{n} consecutive months above the range. Under the rule, your plan moves up to the next range.",
+    tx_down3:"{n} consecutive months below the range. Under the rule, your plan moves down to the previous range.",
+    tx_rule:"Your plan follows your number of transactions. If your volume stays above or below your range for 3 consecutive months, the plan is adjusted to the matching range.",
+    tx_empty:"Your transaction count will show up here after your first closed month.",
+    tx_aria:"Transactions over the last 6 months"
   }
 };
 </script>
