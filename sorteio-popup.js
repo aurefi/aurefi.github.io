@@ -196,7 +196,7 @@
       }).catch(() => {});
       // Medição (se os códigos estiverem ativos no main.js)
       if (window.fbq) fbq("track", "Lead", { content_name: "Sorteio novembro 2026" });
-      if (window.gtag) gtag("event", "generate_lead", { event_category: "sorteio" });
+      if (window.gtag) gtag("event", "sorteio_signup", { campanha: "sorteio_nov_2026" });
     } catch (err) {
       status.textContent = "Não foi possível enviar agora. Tente de novo em instantes ou mande \"SORTEIO\" no nosso WhatsApp.";
     } finally { btn.disabled = false; }

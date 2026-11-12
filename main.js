@@ -20,12 +20,38 @@ if (GOOGLE_TAG_ID || GA_ID) {
   window.dataLayer = window.dataLayer || [];
   window.gtag = function(){ dataLayer.push(arguments); };
   gtag("js", new Date());
+  // Tráfego interno: abra o site uma vez com ?interno=1 em cada aparelho seu (?interno=0 desfaz)
+  let interno = false;
+  try {
+    const qi = new URLSearchParams(location.search).get("interno");
+    if (qi === "1") localStorage.setItem("aurea_interno", "1");
+    if (qi === "0") localStorage.removeItem("aurea_interno");
+    interno = localStorage.getItem("aurea_interno") === "1";
+  } catch(e) {}
+  // Idioma em que a pessoa está vendo o site (mesma regra do bloco "Idioma" mais abaixo)
+  let gaLang = "pt";
+  try {
+    const sl = localStorage.getItem("aurea_lang");
+    if (sl) gaLang = sl; else if (!(navigator.language || "").toLowerCase().startsWith("pt")) gaLang = "en";
+  } catch(e) {}
+  const ul = new URLSearchParams(location.search).get("lang");
+  if (ul === "en" || ul === "pt") gaLang = ul;
+  gtag("set", "user_properties", { site_lang: gaLang });
+  gtag("set", { content_group: document.body.dataset.page === "portal" ? "portal" : "site" });
   if (GOOGLE_TAG_ID) gtag("config", GOOGLE_TAG_ID);
-  if (GA_ID) gtag("config", GA_ID);
+  if (GA_ID) gtag("config", GA_ID, interno ? { traffic_type: "internal" } : {});
   if (isThanks) {
     if (GOOGLE_TAG_ID && GOOGLE_CONVERSION_LABEL) gtag("event", "conversion", { send_to: GOOGLE_TAG_ID + "/" + GOOGLE_CONVERSION_LABEL });
-    if (GA_ID) gtag("event", "generate_lead");
+    const via = new URLSearchParams(location.search).get("via") || "desconhecido";
+    if (GA_ID) gtag("event", "generate_lead", { method: via, site_lang: gaLang });
   }
+  // Cliques em qualquer link de WhatsApp (botão flutuante, página de contato, portal)
+  document.addEventListener("click", e => {
+    const a = e.target.closest('a[href*="wa.me/"]');
+    if (!a) return;
+    const onde = a.closest("footer, .wa") ? "botao_flutuante" : (document.body.dataset.page || "home");
+    gtag("event", "whatsapp_click", { link_location: onde, transport_type: "beacon" });
+  });
 }
 if (META_PIXEL_ID) {
   !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -180,7 +206,10 @@ try {
 const urlLang = new URLSearchParams(location.search).get("lang");
 if (urlLang === "en" || urlLang === "pt") start = urlLang;
 setLang(start);
-document.querySelectorAll(".lang button").forEach(b => b.addEventListener("click", () => setLang(b.dataset.lang)));
+document.querySelectorAll(".lang button").forEach(b => b.addEventListener("click", () => {
+  setLang(b.dataset.lang);
+  if (window.gtag) { gtag("set", "user_properties", { site_lang: b.dataset.lang }); gtag("event", "language_change", { site_lang: b.dataset.lang }); }
+}));
 
 // ===== Menu do celular e cabeçalho ao rolar =====
 const menu = document.getElementById("menu");
