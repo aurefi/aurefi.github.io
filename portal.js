@@ -10,7 +10,9 @@ const PROFILE_TABLE = "perfil_cliente";
 const ADMIN_TABLE = "admins";             // e-mails da Aurea que podem ver todas as contas (só leitura)  // nome da empresa e logo que o cliente define em Minha conta  // opcional: notas do mês e valores manuais
 const TX_TABLE = "transacoes_mensal";     // quantidade de transações por mês (gravada pela automação mensal)
 const PLAN_TABLE = "plano_cliente";       // plano atual do cliente; as faixas vêm da tabela "planos"
-const TX_MONTHS = 6, TX_RULE = 3;         // meses no gráfico; meses seguidos fora da faixa para ajustar o plano
+const TX_MONTHS = 6, TX_RULE = 3;
+const DUV_TABLE = "duvidas";              // dúvidas de transações do mês (aba Pendências), publicadas pelos scripts da Aurea
+const REC_MAX = 10 * 1024 * 1024;         // recibo: até 10 MB         // meses no gráfico; meses seguidos fora da faixa para ajustar o plano
 
 const $ = id => document.getElementById(id);
 const T = k => (window.PAGE_DICT[currentLang] || window.PAGE_DICT.pt)[k] || k;
@@ -27,7 +29,7 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
   const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, autoRefreshToken: true } });
 
   // ---------- Estado ----------
-  let folder = "", data = {}, others = [], tx = { meses: {}, plano: null };
+  let folder = "", data = {}, others = [], tx = { meses: {}, plano: null }, duv = [], pdMes = null, pdAberta = {};
   let page = "dash", selYear = null, selPeriod = "ytd", repYear = null, repMonth = null, showTable = false;
 
   // ---------- Formatação ----------
@@ -144,6 +146,7 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
       }
     });
     await loadTx();
+    await loadDuvidas();
   }
 
   // Transações por mês + plano atual (se as tabelas ainda não existirem, o cartão mostra o aviso de vazio)
@@ -166,9 +169,10 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
   function go(p) {
     page = p;
     document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("on", b.dataset.page === p));
-    $("app-title").textContent = T({ dash: "nav_dash", reports: "nav_reports", account: "nav_account" }[p]);
-    ["dash", "reports", "account"].forEach(x => { if (x !== p) $("p-" + x).hidden = true; });
-    if (p === "dash") renderDash(); if (p === "reports") renderReports();
+    $("app-title").textContent = T({ dash: "nav_dash", reports: "nav_reports", pend: "nav_pend", account: "nav_account" }[p]);
+    ["dash", "reports", "pend", "account"].forEach(x => { if (x !== p) $("p-" + x).hidden = true; });
+    if (p === "dash") renderDash(); if (p === "reports") renderReports(); if (p === "pend") renderPend();
+    pendBadge();
     reveal($("p-" + p));
     if (p === "account") renderTx();   // depois de aparecer, para o gráfico medir a largura certa
     window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
@@ -378,6 +382,156 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     }
     box.innerHTML = s + labels + "</svg>";
   }
+
+  // ---------- Pendências: dúvidas de transações do mês ----------
+  async function loadDuvidas() {
+    duv = [];
+    try {
+      const r = await sb.from(DUV_TABLE)
+        .select("id,mes,conta,data_transacao,descricao,valor,pergunta,palpite,opcoes,pede_recibo,prazo,resposta,resposta_texto,recibo_path,respondido_em,status")
+        .eq("cliente_email", folder).order("data_transacao", { ascending: true });
+      if (!r.error) duv = r.data || [];
+    } catch (e) { /* tabela ainda não criada */ }
+    const meses = pdMeses();
+    if (!meses.includes(pdMes)) pdMes = meses.find(m => pdAbertas(m).length) || meses[0] || null;
+  }
+  const hojeISO = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; };
+  const pdVencida = x => hojeISO() > x.prazo;
+  const pdFechada = x => pdVencida(x) || !["pendente", "respondida"].includes(x.status);
+  const pdRespondida = x => !!x.resposta && (!x.pede_recibo || !!x.recibo_path);
+  const pdMeses = () => [...new Set(duv.map(x => x.mes))].sort().reverse();
+  const pdAbertas = m => duv.filter(x => (!m || x.mes === m) && !pdFechada(x) && !pdRespondida(x));
+  const dataCurta = s => { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d).toLocaleDateString(locale(), { day: "2-digit", month: "short" }).replace(".", ""); };
+  const dataLonga = s => { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d).toLocaleDateString(locale(), { day: "2-digit", month: "2-digit", year: "numeric" }); };
+  const money2 = v => new Intl.NumberFormat(locale(), { style: "currency", currency: "USD" }).format(Math.abs(v));
+  const escH = t => String(t == null ? "" : t).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const somenteLeitura = () => document.body.classList.contains("admin-view");
+
+  function pendBadge() {
+    const abertas = pdAbertas(null), n = abertas.length, nb = $("nav-pend-n");
+    nb.hidden = !n; nb.textContent = n;
+    const al = $("pend-alert");
+    al.hidden = !n || somenteLeitura();
+    if (n) {
+      const prazo = abertas.map(x => x.prazo).sort()[0];
+      $("pend-alert-t").textContent = n === 1 ? T("pa_t1") : T("pa_tn").replace("{n}", n);
+      $("pend-alert-d").textContent = " " + T("pa_d").replace("{d}", dataLonga(prazo));
+    }
+  }
+
+  function renderPend() {
+    const meses = pdMeses(), ro = somenteLeitura();
+    $("pend-adm").hidden = !ro;
+    $("pd-empty").hidden = !!meses.length;
+    $("pd-head").hidden = !meses.length;
+    $("pd-months").hidden = meses.length < 2;
+    if (!meses.length) { $("pd-list").innerHTML = ""; return; }
+    $("pd-months").innerHTML = meses.map(m => { const a = pdAbertas(m).length; return `<button type="button" data-pdmes="${m}" class="${m === pdMes ? "on" : ""}">${mTitle(m)}${a ? `<i>${a}</i>` : ""}</button>`; }).join("");
+
+    const itens = duv.filter(x => x.mes === pdMes);
+    const total = itens.length, feitas = itens.filter(pdRespondida).length, faltam = total - feitas;
+    const prazo = itens.map(x => x.prazo).sort().slice(-1)[0], vencido = itens.every(pdFechada);
+    $("pd-count").textContent = (faltam === 0 || vencido ? T("pd_answered").replace("{a}", feitas) : T("pd_left").replace("{a}", faltam)).replace("{n}", total);
+    $("pd-prazo").textContent = "· " + T(vencido ? "pd_prazo_fim" : "pd_prazo").replace("{d}", dataLonga(prazo));
+    $("pd-bar").style.width = (total ? Math.round(feitas / total * 100) : 0) + "%";
+    $("pd-done").hidden = !(faltam === 0 || vencido);
+    $("pd-done").textContent = vencido ? T("pd_closed") : T("pd_done");
+    $("pd-help").hidden = vencido || faltam === 0 || ro;
+
+    // sem resposta primeiro (por data); respondidas no fim, em cinza
+    const ord = itens.slice().sort((a, b) => (pdRespondida(a) - pdRespondida(b)) || a.data_transacao.localeCompare(b.data_transacao));
+    $("pd-list").innerHTML = ord.map(x => pdCard(x, ro)).join("");
+  }
+
+  function pdCard(x, ro) {
+    const fechada = pdFechada(x), resp = pdRespondida(x), editando = !!pdAberta[x.id] && !fechada && !ro;
+    const opcoes = (Array.isArray(x.opcoes) ? x.opcoes : []).filter(o => o !== x.palpite);
+    const respTxt = x.resposta === "confirmado" ? T("pd_yes_ans").replace("{p}", x.palpite || "") : x.resposta === "outro" ? x.resposta_texto : x.resposta;
+    let corpo = "";
+    if (x.resposta && !editando && pdAberta[x.id] !== "outro") {
+      corpo = `<div class="pd-ans"><span>${T("pd_your")}: <b>${escH(respTxt)}</b></span>${!fechada && !ro ? `<button type="button" class="ed" data-pdedit="${x.id}">${T("pd_edit")}</button>` : ""}</div>`;
+    } else if (fechada || ro) {
+      corpo = `<span class="pd-est">${T(fechada ? "pd_est" : "pd_noans")}</span>`;
+    } else if (pdAberta[x.id] === "outro") {
+      corpo = `<div class="pd-other"><textarea maxlength="500" id="pdt-${x.id}" placeholder="${T("pd_other_ph")}">${escH(x.resposta === "outro" ? x.resposta_texto : "")}</textarea>
+        <div class="row"><button type="button" class="sv" data-pdsave="${x.id}">${T("pd_save")}</button><button type="button" class="cc" data-pdcancel="${x.id}">${T("pd_cancel")}</button></div></div>`;
+    } else {
+      corpo = `<div class="pd-btns">
+        ${x.palpite ? `<button type="button" class="yes" data-pdans="${x.id}" data-v="confirmado">${T("pd_yes")}</button>` : ""}
+        ${opcoes.map(o => `<button type="button" data-pdans="${x.id}" data-v="${escH(o)}">${escH(o)}</button>`).join("")}
+        <button type="button" data-pdother="${x.id}">${T("pd_other")}</button>
+        ${x.resposta ? `<button type="button" data-pdcancel="${x.id}">${T("pd_cancel")}</button>` : ""}</div>`;
+    }
+    let rec = "";
+    if (x.recibo_path) rec = `<div class="pd-rec"><span class="ok">${T("pd_rec_ok")}</span> <a href="#" data-pdview="${x.id}">${T("pd_rec_view")}</a>${!fechada && !ro ? ` <button type="button" data-pdrec="${x.id}">${T("pd_rec_change")}</button>` : ""}</div>`;
+    else if (!fechada && !ro && !(resp && !x.pede_recibo)) rec = `<div class="pd-rec${x.pede_recibo ? " req" : ""}"><button type="button" data-pdrec="${x.id}">${T(x.pede_recibo ? "pd_rec_req" : "pd_rec")}</button></div>`;
+    const falta = x.resposta && x.pede_recibo && !x.recibo_path && !fechada ? `<p class="pd-warn">${T("pd_rec_missing")}</p>` : "";
+    return `<div class="pd-card${resp ? " done" : ""}" id="pd-${x.id}">
+      <div class="pd-top"><span>${dataCurta(x.data_transacao)} · ${escH(x.conta)}</span>
+        <span class="pd-val">${x.valor < 0 ? "-" : "+"}${money2(x.valor)}<small>${T(x.valor < 0 ? "pd_out" : "pd_in")}</small></span></div>
+      <div class="pd-desc">${escH(x.descricao)}</div>
+      <p class="pd-q">${escH(x.pergunta)}</p>
+      ${x.palpite && !(x.resposta && !editando) ? `<div class="pd-guess">${T("pd_guess")}: <b>${escH(x.palpite)}</b></div>` : ""}
+      ${corpo}${rec}${falta}<p class="pd-msg" id="pdm-${x.id}" role="status"></p>
+    </div>`;
+  }
+
+  async function pdSalvar(id, campos) {
+    const x = duv.find(d => d.id === id); if (!x) return;
+    const msg = $("pdm-" + id); if (msg) msg.textContent = T("pd_saving");
+    document.querySelectorAll(`#pd-${CSS.escape(id)} button`).forEach(b => b.disabled = true);
+    const { data: row, error } = await sb.from(DUV_TABLE).update(campos).eq("id", id)
+      .select("id,mes,conta,data_transacao,descricao,valor,pergunta,palpite,opcoes,pede_recibo,prazo,resposta,resposta_texto,recibo_path,respondido_em,status").single();
+    if (error) {
+      renderPend();
+      const m = $("pdm-" + id); if (m) m.textContent = /prazo|fechada/.test(error.message || "") ? T("pd_e_prazo") : T("pd_e_save");
+      return false;
+    }
+    Object.assign(x, row); delete pdAberta[id];
+    renderPend(); pendBadge();
+    return true;
+  }
+
+  let pdRecId = null;
+  $("p-pend").addEventListener("click", async e => {
+    const b = e.target.closest("button, a"); if (!b) return;
+    const d = b.dataset;
+    if (d.pdmes) { pdMes = d.pdmes; pdAberta = {}; renderPend(); return; }
+    if (d.pdview) {
+      e.preventDefault();
+      const x = duv.find(z => z.id === d.pdview); if (!x || !x.recibo_path) return;
+      const w = window.open("about:blank", "_blank");   // abre antes do await para o celular não bloquear
+      const { data: s } = await sb.storage.from(BUCKET).createSignedUrl(x.recibo_path, 600);
+      if (w) { if (s && s.signedUrl) w.location.href = s.signedUrl; else w.close(); }
+      return;
+    }
+    if (somenteLeitura()) return;
+    if (d.pdans) { pdSalvar(d.pdans, { resposta: d.v, resposta_texto: null }); return; }
+    if (d.pdother) { pdAberta[d.pdother] = "outro"; renderPend(); const t = $("pdt-" + d.pdother); if (t) t.focus(); return; }
+    if (d.pdedit) { pdAberta[d.pdedit] = true; renderPend(); return; }
+    if (d.pdcancel) { delete pdAberta[d.pdcancel]; renderPend(); return; }
+    if (d.pdsave) {
+      const t = ($("pdt-" + d.pdsave).value || "").trim();
+      if (!t) { $("pdt-" + d.pdsave).focus(); return; }
+      pdSalvar(d.pdsave, { resposta: "outro", resposta_texto: t.slice(0, 500) }); return;
+    }
+    if (d.pdrec) { pdRecId = d.pdrec; $("pd-file").value = ""; $("pd-file").click(); }
+  });
+  $("pd-file").addEventListener("change", async e => {
+    const f = e.target.files[0], id = pdRecId; e.target.value = ""; pdRecId = null;
+    if (!f || !id) return;
+    const x = duv.find(z => z.id === id), msg = $("pdm-" + id);
+    let ext = (f.name.split(".").pop() || "").toLowerCase();
+    if (ext === "jpeg") ext = "jpg";
+    if (!["jpg", "png", "heic", "heif", "pdf"].includes(ext)) { if (msg) msg.textContent = T("pd_e_type"); return; }
+    if (f.size > REC_MAX) { if (msg) msg.textContent = T("pd_e_big"); return; }
+    if (msg) msg.textContent = T("pd_rec_sending");
+    const path = `${folder}/recibos/${x.mes}/${id}.${ext}`;
+    const tipo = f.type || (ext === "pdf" ? "application/pdf" : ext === "png" ? "image/png" : ext === "jpg" ? "image/jpeg" : "image/heic");
+    const up = await sb.storage.from(BUCKET).upload(path, f, { upsert: true, contentType: tipo, cacheControl: "60" });
+    if (up.error) { if (msg) msg.textContent = T("pd_e_up"); return; }
+    pdSalvar(id, { recibo_path: path });
+  });
 
   // ---------- Relatórios ----------
   function renderReports() {
