@@ -37,6 +37,7 @@
 .pd-card.done{background:#F6F1EA;border-color:#E6DCCD}
 .pd-card.done .pd-desc,.pd-card.done .pd-val{color:#6A645A}
 .pd-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;font-size:13.5px;color:var(--muted)}
+.pd-due{display:inline-block;margin-top:4px;font-size:12.5px;font-weight:700;color:#B9461A}
 .pd-val{font-size:18px;font-weight:800;color:var(--ink);white-space:nowrap;text-align:right}
 .pd-val small{display:block;font-size:11.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
 .pd-desc{font-size:16px;font-weight:700;margin:4px 0 10px;word-break:break-word}
@@ -320,7 +321,7 @@ window.PAGE_DICT = {
     forgot:"Esqueceu a senha ou ainda não tem acesso?", forgot_link:"Fale com a Aurea no WhatsApp",
     nav_dash:"Painel", nav_reports:"Relatórios", nav_account:"Minha conta", nav_pend:"Pendências",
     pa_go:"Responder", pa_t1:"1 dúvida para responder", pa_tn:"{n} dúvidas para responder", pa_d:"Leva poucos minutos. Prazo: {d}.",
-    pd_left:"Faltam {a} de {n}", pd_answered:"{a} de {n} respondidas", pd_prazo:"prazo {d}", pd_prazo_fim:"prazo encerrado em {d}",
+    pd_left:"Faltam {a} de {n}", pd_due:"Responder até {d}", pd_answered:"{a} de {n} respondidas", pd_prazo:"prazo {d}", pd_prazo_fim:"prazo encerrado em {d}",
     pd_help:"Toque em \"Sim\" quando o nosso palpite estiver certo. Cada resposta é salva na hora.",
     pd_done:"Tudo respondido. Obrigado! Não tem mais nada este mês.",
     pd_closed:"O prazo deste mês terminou. O que ficou sem resposta foi classificado pelo histórico e aparece na nota do mês.",
@@ -372,7 +373,7 @@ window.PAGE_DICT = {
     forgot:"Forgot your password or don't have access yet?", forgot_link:"Message Aurea on WhatsApp",
     nav_dash:"Dashboard", nav_reports:"Reports", nav_account:"My account", nav_pend:"Pending",
     pa_go:"Answer", pa_t1:"1 question to answer", pa_tn:"{n} questions to answer", pa_d:"It only takes a few minutes. Due: {d}.",
-    pd_left:"{a} of {n} left", pd_answered:"{a} of {n} answered", pd_prazo:"due {d}", pd_prazo_fim:"closed on {d}",
+    pd_left:"{a} of {n} left", pd_due:"Answer by {d}", pd_answered:"{a} of {n} answered", pd_prazo:"due {d}", pd_prazo_fim:"closed on {d}",
     pd_help:"Tap \"Yes\" when our guess is right. Each answer is saved right away.",
     pd_done:"All done. Thank you! Nothing else for this month.",
     pd_closed:"This month's deadline has passed. Anything left unanswered was classified based on history and is noted in the monthly note.",
@@ -420,6 +421,6 @@ window.PAGE_DICT = {
 <script src="main.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<script src="portal.js?v=20261117"></script>
+<script src="portal.js?v=20261117c"></script>
 </body>
 </html>

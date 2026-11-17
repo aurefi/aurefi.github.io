@@ -430,7 +430,10 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
 
     const itens = duv.filter(x => x.mes === pdMes);
     const total = itens.length, feitas = itens.filter(pdRespondida).length, faltam = total - feitas;
-    const prazo = itens.map(x => x.prazo).sort().slice(-1)[0], vencido = itens.every(pdFechada);
+    const abertas = itens.filter(x => !pdFechada(x) && !pdRespondida(x)), vencido = itens.every(pdFechada);
+    // prazo do topo: o mais próximo entre as que faltam; sem nenhuma faltando, o último do mês
+    const prazo = (abertas.length ? abertas.map(x => x.prazo).sort()[0] : itens.map(x => x.prazo).sort().slice(-1)[0]);
+    pdVariosPrazos = new Set(itens.filter(x => !pdFechada(x)).map(x => x.prazo)).size > 1;
     $("pd-count").textContent = (faltam === 0 || vencido ? T("pd_answered").replace("{a}", feitas) : T("pd_left").replace("{a}", faltam)).replace("{n}", total);
     $("pd-prazo").textContent = "· " + T(vencido ? "pd_prazo_fim" : "pd_prazo").replace("{d}", dataLonga(prazo));
     $("pd-bar").style.width = (total ? Math.round(feitas / total * 100) : 0) + "%";
@@ -443,6 +446,7 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     $("pd-list").innerHTML = ord.map(x => pdCard(x, ro)).join("");
   }
 
+  let pdVariosPrazos = false;
   function pdCard(x, ro) {
     const fechada = pdFechada(x), resp = pdRespondida(x), editando = !!pdAberta[x.id] && !fechada && !ro;
     const opcoes = (Array.isArray(x.opcoes) ? x.opcoes : []).filter(o => o !== x.palpite);
@@ -467,7 +471,7 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     else if (!fechada && !ro && !(resp && !x.pede_recibo)) rec = `<div class="pd-rec${x.pede_recibo ? " req" : ""}"><button type="button" data-pdrec="${x.id}">${T(x.pede_recibo ? "pd_rec_req" : "pd_rec")}</button></div>`;
     const falta = x.resposta && x.pede_recibo && !x.recibo_path && !fechada ? `<p class="pd-warn">${T("pd_rec_missing")}</p>` : "";
     return `<div class="pd-card${resp ? " done" : ""}" id="pd-${x.id}">
-      <div class="pd-top"><span>${dataCurta(x.data_transacao)} · ${escH(x.conta)}</span>
+      <div class="pd-top"><span>${dataCurta(x.data_transacao)} · ${escH(x.conta)}${pdVariosPrazos && !fechada && !resp ? `<br><b class="pd-due">${T("pd_due").replace("{d}", dataCurta(x.prazo))}</b>` : ""}</span>
         <span class="pd-val">${x.valor < 0 ? "-" : "+"}${money2(x.valor)}<small>${T(x.valor < 0 ? "pd_out" : "pd_in")}</small></span></div>
       <div class="pd-desc">${escH(x.descricao)}</div>
       <p class="pd-q">${escH(x.pergunta)}</p>
@@ -476,8 +480,28 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     </div>`;
   }
 
+  // Aviso por e-mail para a Aurea quando o cliente responde a última dúvida aberta do mês.
+  // Discreto: só o cliente, o mês e a quantidade (as respostas ficam no portal). Não bloqueia nada se falhar.
+  function pdAvisarAurea(mes) {
+    const chave = (typeof WEB3FORMS_KEY !== "undefined") ? WEB3FORMS_KEY : "";
+    if (!chave || somenteLeitura()) return;
+    const itens = duv.filter(d => d.mes === mes), nome = perfil.nome || folder;
+    const comRecibo = itens.filter(d => d.recibo_path).length;
+    fetch("https://api.web3forms.com/submit", {
+      method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({
+        access_key: chave, from_name: "Aurea portal",
+        subject: `Aurea Financial ✧ Pendências respondidas: ${nome} (${mes})`,
+        message: `${nome} respondeu todas as pendências abertas de ${mes} no portal.\n\n`
+          + `Cliente: ${nome}\nLogin: ${folder}\nDúvidas do mês: ${itens.length} (com recibo: ${comRecibo})\n\n`
+          + `Para ver as respostas: https://aureafi.com/portal.html (Ver como cliente) ou, no Mac, python3 ler_respostas.py <cliente> ${mes}`
+      })
+    }).catch(() => {});
+  }
+
   async function pdSalvar(id, campos) {
     const x = duv.find(d => d.id === id); if (!x) return;
+    const abertasAntes = pdAbertas(x.mes).length;
     const msg = $("pdm-" + id); if (msg) msg.textContent = T("pd_saving");
     document.querySelectorAll(`#pd-${CSS.escape(id)} button`).forEach(b => b.disabled = true);
     const { data: row, error } = await sb.from(DUV_TABLE).update(campos).eq("id", id)
@@ -489,6 +513,7 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     }
     Object.assign(x, row); delete pdAberta[id];
     renderPend(); pendBadge();
+    if (abertasAntes > 0 && pdAbertas(x.mes).length === 0) pdAvisarAurea(x.mes);
     return true;
   }
 
