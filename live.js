@@ -23,37 +23,40 @@
   const $ = id => document.getElementById(id);
   const jaNoSorteio = !!store.get("aurea_sorteio_ok");   // inscrito pelo popup do sorteio neste navegador
 
-  // ===== Textos que dependem da configuração e do horário =====
-  if (CONVIDADO) { $("lv-guest-name").textContent = CONVIDADO; $("lv-guest").hidden = false; }
-  if (LINK_TRANSMISSAO) {
-    const where = $("lv-where");
-    where.textContent = "Ao vivo no YouTube: ";
-    const a = document.createElement("a");
-    a.href = LINK_TRANSMISSAO; a.target = "_blank"; a.rel = "noopener"; a.textContent = "abrir a transmissão";
-    where.append(a);
-    $("lv-watch").href = LINK_TRANSMISSAO;
-    $("lv-watch").hidden = fase === "antes";
-  }
-  const aviso = $("lv-notice");
-  if (fase === "aovivo") {
-    $("lv-tag").textContent = "Ao vivo agora"; $("lv-tag").classList.add("ao-vivo");
-    aviso.textContent = LINK_TRANSMISSAO ? "A live está acontecendo agora no YouTube." : "A live está acontecendo agora. Inscreva-se para receber o link.";
-    aviso.hidden = false;
-  } else if (fase === "depois") {
-    $("lv-tag").textContent = "A live já aconteceu";
-    aviso.textContent = "A live já aconteceu. Inscreva-se para receber a gravação por e-mail.";
-    aviso.hidden = false;
-    document.querySelectorAll("[data-open-live]").forEach(b => b.textContent = "Quero receber a gravação");
-  }
+  try {
+    // ===== Textos que dependem da configuração e do horário =====
+    if (CONVIDADO) { $("lv-guest-name").textContent = CONVIDADO; $("lv-guest").hidden = false; }
+    if (LINK_TRANSMISSAO) {
+      const where = $("lv-where");
+      where.textContent = "Ao vivo no YouTube: ";
+      const a = document.createElement("a");
+      a.href = LINK_TRANSMISSAO; a.target = "_blank"; a.rel = "noopener"; a.textContent = "abrir a transmissão";
+      where.append(a);
+      $("lv-watch").href = LINK_TRANSMISSAO;
+      $("lv-watch").hidden = fase === "antes";
+    }
+    const aviso = $("lv-notice");
+    if (fase === "aovivo") {
+      $("lv-tag").textContent = "Ao vivo agora"; $("lv-tag").classList.add("ao-vivo");
+      aviso.textContent = LINK_TRANSMISSAO ? "A live está acontecendo agora no YouTube." : "A live está acontecendo agora. Inscreva-se para receber o link.";
+      aviso.hidden = false;
+    } else if (fase === "depois") {
+      $("lv-tag").textContent = "A live já aconteceu";
+      aviso.textContent = "A live já aconteceu. Inscreva-se para receber a gravação por e-mail.";
+      aviso.hidden = false;
+      document.querySelectorAll("[data-open-live]").forEach(b => b.textContent = "Quero receber a gravação");
+    }
 
-  // Contagem regressiva simples no hero
-  function contar() {
-    const el = $("lv-count"), ms = LIVE_INICIO - new Date();
-    if (ms <= 0) { el.textContent = ""; return; }
-    const d = Math.floor(ms / 864e5), h = Math.floor(ms / 36e5) % 24, m = Math.floor(ms / 6e4) % 60;
-    el.innerHTML = d > 0 ? `Faltam <b>${d} ${d === 1 ? "dia" : "dias"}</b> e <b>${h}h</b>` : `Começa em <b>${h}h ${String(m).padStart(2, "0")}min</b>`;
-  }
-  if (fase === "antes") { contar(); setInterval(contar, 30000); }
+    // Contagem regressiva simples no hero
+    function contar() {
+      const el = $("lv-count"), ms = LIVE_INICIO - new Date();
+      if (ms <= 0) { el.textContent = ""; return; }
+      const d = Math.floor(ms / 864e5), h = Math.floor(ms / 36e5) % 24, m = Math.floor(ms / 6e4) % 60;
+      el.innerHTML = d > 0 ? `Faltam <b>${d} ${d === 1 ? "dia" : "dias"}</b> e <b>${h}h</b>` : `Começa em <b>${h}h ${String(m).padStart(2, "0")}min</b>`;
+    }
+    if (fase === "antes") { contar(); setInterval(contar, 30000); }
+
+  } catch (e) { console.error("live.js (textos):", e); }
 
   // ===== Agenda (Google e arquivo .ics para Apple e Outlook) =====
   const utc = d => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
@@ -61,9 +64,10 @@
   const DETALHES = "Os 3 relatórios financeiros que deixam seu caminho claro. Live gratuita no YouTube, com sorteio ao vivo de 2 meses grátis de bookkeeping." +
     (LINK_TRANSMISSAO ? "\n\nTransmissão: " + LINK_TRANSMISSAO : "\n\nO link chega por e-mail.") + "\n\nhttps://aureafi.com/live";
   const LOCAL = LINK_TRANSMISSAO || "YouTube (link por e-mail)";
-  $("lv-gcal").href = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+  const GCAL = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
     "&text=" + encodeURIComponent(TITULO) + "&dates=" + utc(LIVE_INICIO) + "/" + utc(LIVE_FIM) +
     "&details=" + encodeURIComponent(DETALHES) + "&location=" + encodeURIComponent(LOCAL);
+  if ($("lv-gcal")) $("lv-gcal").href = GCAL;
   function baixarIcs() {
     const esc = s => s.replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\n/g, "\\n");
     const ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Aurea Financial//Live//PT", "CALSCALE:GREGORIAN", "METHOD:PUBLISH",
@@ -142,7 +146,7 @@
         <h3 id="live-ok-title">Inscrição confirmada!</h3>
         <p id="live-ok-text"></p>
         <div class="lv-ok-actions">
-          <a class="btn btn-dark" id="lv-gcal-ok" href="${$("lv-gcal").href}" target="_blank" rel="noopener">Adicionar ao Google Agenda</a>
+          <a class="btn btn-dark" id="lv-gcal-ok" href="${GCAL}" target="_blank" rel="noopener">Adicionar ao Google Agenda</a>
           <button type="button" class="btn btn-line" data-live-ics>Adicionar ao Apple ou Outlook</button>
         </div>
       </div>

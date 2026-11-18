@@ -20,8 +20,10 @@
 <link rel="stylesheet" href="styles.css">
 <style>
   /* Só desta página (prefixo lv-, para não conflitar com o resto do site) */
-  .lv-hero{background:radial-gradient(120% 90% at 85% 15%,#2B4A5A 0%,var(--ink) 55%);color:var(--cream-2);padding:72px 0 88px;overflow:hidden}
-  .lv-hero .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center}
+  .lv-hero{position:relative;overflow:hidden;background:var(--ink) url("img/live-fundo.jpg") 50% 78%/cover no-repeat;color:var(--cream-2);min-height:clamp(560px,46vw,720px);display:flex;align-items:center;padding:72px 0}
+  .lv-hero::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(19,31,28,.94) 0%,rgba(19,31,28,.86) 32%,rgba(19,31,28,.35) 60%,rgba(19,31,28,0) 80%)}
+  .lv-hero .wrap{position:relative;z-index:1;width:100%}
+  .lv-hero .wrap > div{max-width:600px}
   .lv-tag{display:inline-block;background:var(--gold);color:var(--ink);font:800 12px var(--sans);letter-spacing:.16em;text-transform:uppercase;padding:6px 12px;margin-bottom:20px}
   .lv-tag.ao-vivo{background:#C8452F;color:#fff}
   .lv-hero h1{font-weight:800;font-size:clamp(2.6rem,6vw,5rem);line-height:1;letter-spacing:-.03em}
@@ -34,7 +36,6 @@
   .lv-hero .ctas{margin-top:32px;display:flex;flex-wrap:wrap;gap:14px;align-items:center}
   .lv-count{font-size:15px;color:var(--soft)}
   .lv-count b{color:var(--cream-2)}
-  .lv-poster{border-radius:10px;box-shadow:0 30px 80px rgba(0,0,0,.45);width:100%;max-width:460px;justify-self:end}
   .lv-en{background:var(--cream-2);border-bottom:1px solid var(--line);padding:12px 0;font-size:15px;color:var(--muted);text-align:center}
 
   .lv-sec{padding:88px 0}
@@ -111,9 +112,8 @@
   .lv-pill:hover{background:var(--cream-2)}
 
   @media (max-width:900px){
-    .lv-hero{padding:48px 0 64px}
-    .lv-hero .wrap{grid-template-columns:1fr;gap:40px}
-    .lv-poster{justify-self:center;max-width:300px}
+    .lv-hero{min-height:0;padding:56px 0 64px;background-position:55% 80%}
+    .lv-hero::before{background:linear-gradient(180deg,rgba(19,31,28,.88) 0%,rgba(19,31,28,.7) 55%,rgba(19,31,28,.4) 100%)}
     .lv-paths,.lv-learn,.lv-raffle{grid-template-columns:1fr}
     .lv-raffle{gap:28px}
     .lv-who{grid-template-columns:1fr 1fr}
@@ -121,6 +121,7 @@
     .lv-host img{max-width:320px}
   }
   @media (max-width:520px){
+    .lv-hero{background-image:url("img/live-fundo-720.jpg")}
     .lv-sec{padding:64px 0}
     .lv-hero .ctas .btn{width:100%;justify-content:center}
     .lv-who{grid-template-columns:1fr}
@@ -161,7 +162,6 @@
           <span class="lv-count" id="lv-count" aria-live="polite"></span>
         </div>
       </div>
-      <img class="lv-poster" src="img/live-capa.jpg" srcset="img/live-capa-540.jpg 540w, img/live-capa.jpg 1080w" sizes="(max-width:900px) 90vw, 460px" width="1080" height="1350" alt="Arte da live Tempestade ou céu azul: um empreiteiro diante de uma placa, com um caminho de tempestade à esquerda e um caminho de sol à direita.">
     </div>
   </section>
 
@@ -325,6 +325,6 @@ window.PAGE_DICT = {
 };
 </script>
 <script src="main.js"></script>
-<script src="live.js"></script>
+<script src="live.js?v=3"></script>
 </body>
 </html>
