@@ -330,6 +330,8 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
   function renderTx() {
     const ks = []; for (let k = lastClosed(), i = 0; i < TX_MONTHS; i++, k = prevKey(k)) ks.unshift(k);
     const has = ks.some(k => tx.meses[k] != null), pl = tx.plano;
+    // Sem plano e sem contagem (ex.: Export, que soma na Extreme): o cartão nem aparece
+    $("tx-card").hidden = !has && !pl && !Object.keys(tx.meses).length;
     $("tx-empty").hidden = has;
     ["tx-chart", "tx-legend"].forEach(id => $(id).hidden = !has);
     $("tx-status").hidden = !has || !pl;
@@ -415,8 +417,8 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
   function alBadge() {
     const ro = somenteLeitura(), nv = alertas.filter(a => !a.visto_em), nr = nv.filter(alVermelho).length, ny = nv.length - nr;
     const r = $("nav-al-red"), y = $("nav-al-yel");
-    r.hidden = ro || !nr; r.textContent = nr; r.title = T("al_red_t").replace("{n}", nr);
-    y.hidden = ro || !ny; y.textContent = ny; y.title = T("al_yel_t").replace("{n}", ny);
+    r.hidden = !nr; r.textContent = nr; r.title = T("al_red_t").replace("{n}", nr);
+    y.hidden = !ny; y.textContent = ny; y.title = T("al_yel_t").replace("{n}", ny);
   }
   function renderAlertas() {
     const ro = somenteLeitura(), card = $("al-card");
@@ -428,8 +430,8 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     if (!alertas.length) return;
     const naoVistos = alertas.filter(a => !a.visto_em), nr = naoVistos.filter(alVermelho).length, ny = naoVistos.length - nr;
     const red = $("al-n-red"), yel = $("al-n-yel");
-    red.hidden = ro || !nr; red.textContent = nr; red.title = T("al_red_t").replace("{n}", nr);
-    yel.hidden = ro || !ny; yel.textContent = ny; yel.title = T("al_yel_t").replace("{n}", ny);
+    red.hidden = !nr; red.textContent = nr; red.title = T("al_red_t").replace("{n}", nr);
+    yel.hidden = !ny; yel.textContent = ny; yel.title = T("al_yel_t").replace("{n}", ny);
     $("al-list").innerHTML = novos.map(a => alItem(a, ro)).join("");
     $("al-list").hidden = !novos.length;
     $("al-more").hidden = !vistos.length;

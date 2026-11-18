@@ -43,7 +43,8 @@
 .pd-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;font-size:13.5px;color:var(--muted)}
 .al-card{max-width:760px;margin:0 0 18px;padding:18px 20px}
 .al-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.al-av{flex:none;width:38px;height:38px;border-radius:50%;background:var(--ink);color:var(--gold);font:700 18px/38px var(--serif,Georgia,serif);text-align:center;box-shadow:0 0 0 2px #E9DCC9}
+.al-av{flex:none;width:38px;height:38px;border-radius:50%;background:var(--ink);color:var(--gold);display:grid;place-items:center;box-shadow:0 0 0 2px #E9DCC9}
+.al-av svg{width:20px;height:20px;fill:currentColor;stroke:none}
 .al-who{flex:1;min-width:0}
 .al-who h2{margin:0;font-size:18px;line-height:1.2}
 .al-who small{display:block;font-size:12.5px;color:var(--muted)}
@@ -156,7 +157,7 @@
           <span data-i18n="nav_pend">Pendências</span><b class="nav-n" id="nav-pend-n" hidden></b>
         </button>
         <button type="button" class="nav-btn" data-page="estella">
-          <span class="nav-av" aria-hidden="true">E</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.5l-5.4 3 1.2-6L3.3 9.3l6.1-.7z" stroke-linejoin="round"/></svg>
           <span data-i18n="nav_estella">Estella</span><b class="nav-n red" id="nav-al-red" hidden></b><b class="nav-n yellow" id="nav-al-yel" hidden></b>
         </button>
         <button type="button" class="nav-btn" data-page="account">
@@ -261,7 +262,7 @@
         <p class="adm-note" id="al-adm" hidden data-i18n="al_adm">Modo administrador: você vê se o cliente já leu cada recado.</p>
         <div class="pcard al-card" id="al-card">
           <div class="al-head">
-            <span class="al-av" aria-hidden="true">E</span>
+            <span class="al-av" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.5l-5.4 3 1.2-6L3.3 9.3l6.1-.7z" stroke-linejoin="round"/></svg></span>
             <div class="al-who"><h2 data-i18n="al_t">Recados da Estella</h2><small data-i18n="al_sub">Assistente virtual da Aurea</small></div>
             <span class="al-n red" id="al-n-red" hidden></span><span class="al-n yellow" id="al-n-yel" hidden></span>
           </div>
@@ -472,6 +473,6 @@ window.PAGE_DICT = {
 <script src="main.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<script src="portal.js?v=20261118c"></script>
+<script src="portal.js?v=20261118f"></script>
 </body>
 </html>
