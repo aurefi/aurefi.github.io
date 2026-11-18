@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Automação do Instagram</title>
+<style>
+  :root{
+    --bg:#f6f5f2; --card:#fff; --ink:#1d1d1f; --muted:#6b6b70; --line:#e6e4df;
+    --brand:#b08d3c; --brand-ink:#fff; --ok:#1f8a4c; --warn:#b26a00; --bad:#c0392b; --soft:#f1ede3;
+    --r:14px; --shadow:0 1px 2px rgba(0,0,0,.04),0 4px 16px rgba(0,0,0,.05);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+  button,input,textarea,select{font:inherit;color:inherit}
+  [hidden]{display:none !important}
+  .wrap{max-width:1100px;margin:0 auto;padding:16px}
+  header.top{position:sticky;top:0;z-index:5;background:rgba(246,245,242,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  header.top .wrap{display:flex;align-items:center;gap:12px;padding:10px 16px}
+  .acct{display:flex;align-items:center;gap:10px;font-weight:600}
+  .acct img{width:34px;height:34px;border-radius:50%;object-fit:cover;background:var(--soft)}
+  .acct-sel{font-weight:700;border:0;background:transparent;padding:0 18px 0 0;cursor:pointer;font-size:15px;max-width:60vw}
+  .acct small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+  .spacer{flex:1}
+  nav.tabs{display:flex;gap:4px;margin:16px 0}
+  nav.tabs button{border:0;background:none;padding:8px 14px;border-radius:999px;cursor:pointer;color:var(--muted);font-weight:600}
+  nav.tabs button.on{background:var(--ink);color:#fff}
+  .btn{border:1px solid var(--line);background:var(--card);padding:9px 14px;border-radius:10px;cursor:pointer;font-weight:600;white-space:nowrap}
+  .btn:hover{border-color:#cfccc4}
+  .btn.primary{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+  .btn.danger{color:var(--bad)}
+  .btn.small{padding:6px 10px;font-size:13px}
+  .btn:disabled{opacity:.5;cursor:default}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+  .auto{display:flex;flex-direction:column;overflow:hidden}
+  .auto-head{display:flex;gap:12px;padding:14px}
+  .thumb{width:64px;height:64px;border-radius:10px;object-fit:cover;background:var(--soft);flex:none;display:grid;place-items:center;color:var(--muted);font-size:11px;text-align:center}
+  .auto-title{font-weight:700;margin:0 0 2px}
+  .cap{color:var(--muted);font-size:13px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;padding:0 14px 10px}
+  .chip{background:var(--soft);border-radius:999px;padding:2px 10px;font-size:12px;font-weight:600}
+  .chip.any{background:#eef3ff}
+  .funnel{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line)}
+  .funnel div{padding:10px 8px;text-align:center;border-right:1px solid var(--line)}
+  .funnel div:last-child{border-right:0}
+  .funnel b{display:block;font-size:18px}
+  .funnel span{font-size:11px;color:var(--muted)}
+  .funnel em{font-style:normal;font-size:11px;color:var(--ok);display:block}
+  .auto-foot{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:auto;padding:10px 14px;border-top:1px solid var(--line);background:#fcfbf9}
+  .switch{position:relative;width:40px;height:22px;flex:none}
+  .switch input{opacity:0;width:0;height:0}
+  .switch span{position:absolute;inset:0;background:#ccc;border-radius:999px;transition:.2s;cursor:pointer}
+  .switch span:before{content:"";position:absolute;width:18px;height:18px;left:2px;top:2px;background:#fff;border-radius:50%;transition:.2s}
+  .switch input:checked+span{background:var(--ok)}
+  .switch input:checked+span:before{transform:translateX(18px)}
+  .empty{padding:40px 20px;text-align:center;color:var(--muted)}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  /* login */
+  .login{max-width:380px;margin:12vh auto;padding:28px}
+  .login h1{font-size:20px;margin:0 0 4px}
+  label{display:block;font-weight:600;font-size:13px;margin:14px 0 6px}
+  label .hint{font-weight:400;color:var(--muted)}
+  input[type=text],input[type=email],input[type=password],input[type=url],input[type=number],textarea,select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff}
+  textarea{min-height:76px;resize:vertical}
+  input:focus,textarea:focus,select:focus{outline:2px solid rgba(176,141,60,.35);border-color:var(--brand)}
+  .err{color:var(--bad);font-size:13px;margin-top:10px}
+  .muted{color:var(--muted)}
+  .count{font-size:11px;color:var(--muted);text-align:right;margin-top:2px}
+  /* modal */
+  .modal{position:fixed;inset:0;background:rgba(20,20,20,.45);display:flex;align-items:flex-start;justify-content:center;padding:4vh 12px;z-index:20;overflow:auto}
+  .sheet{width:100%;max-width:980px;background:var(--bg);border-radius:18px;overflow:hidden}
+  .sheet-head{display:flex;align-items:center;gap:10px;padding:14px 18px;background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:2}
+  .sheet-head h2{margin:0;font-size:17px;flex:1}
+  .sheet-body{padding:18px}
+  .editor{display:grid;grid-template-columns:1fr 320px;gap:18px}
+  .step{padding:16px 18px;margin-bottom:14px}
+  .step h3{margin:0 0 4px;font-size:15px;display:flex;align-items:center;gap:8px}
+  .step h3 i{font-style:normal;background:var(--ink);color:#fff;border-radius:50%;width:22px;height:22px;display:inline-grid;place-items:center;font-size:12px}
+  .step p.sub{margin:0 0 6px;color:var(--muted);font-size:13px}
+  .posts{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:8px;max-height:280px;overflow:auto;padding:2px}
+  .post{position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;border:2px solid transparent;cursor:pointer;background:var(--soft);padding:0}
+  .post img{width:100%;height:100%;object-fit:cover;display:block}
+  .post.on{border-color:var(--brand)}
+  .post.any{display:grid;place-items:center;font-size:12px;font-weight:700;color:var(--muted);text-align:center;padding:6px}
+  .post .tag{position:absolute;left:4px;bottom:4px;background:rgba(0,0,0,.6);color:#fff;font-size:10px;padding:1px 6px;border-radius:6px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  /* preview */
+  .phone{position:sticky;top:76px;background:#fff;border:1px solid var(--line);border-radius:26px;padding:14px;box-shadow:var(--shadow)}
+  .phone .ph-top{font-weight:700;font-size:13px;text-align:center;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:10px}
+  .bubble{background:#efefef;border-radius:18px;padding:10px 12px;font-size:13px;margin:8px 0;white-space:pre-wrap;max-width:92%}
+  .bubble.me{background:#3b5bfd;color:#fff;margin-left:auto;border-bottom-right-radius:6px}
+  .bubble .bbtn{display:block;margin-top:8px;background:#fff;color:#1d1d1f;text-align:center;border-radius:10px;padding:7px;font-weight:600;font-size:12px}
+  .ph-note{font-size:11px;color:var(--muted);text-align:center;margin:10px 0 2px}
+  /* tables */
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:12px;color:var(--muted);font-weight:600;background:#fcfbf9;position:sticky;top:0}
+  .tbl{max-height:65vh;overflow:auto}
+  .st{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:var(--soft)}
+  .st.ok{background:#e4f4ea;color:var(--ok)} .st.warn{background:#fff1dc;color:var(--warn)} .st.bad{background:#fbe5e2;color:var(--bad)}
+  .code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;background:var(--soft);padding:8px 10px;border-radius:8px;word-break:break-all;flex:1}
+  .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:10px;font-size:14px;z-index:50;box-shadow:var(--shadow)}
+  .alert{padding:12px 14px;border-radius:12px;background:#fff1dc;color:#6b4300;font-size:13px;margin-bottom:14px}
+  @media (max-width:820px){
+    .editor{grid-template-columns:1fr}
+    .phone{position:static}
+    .two{grid-template-columns:1fr}
+    .modal{padding:0}
+    .sheet{border-radius:0;min-height:100vh}
+    .grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<section id="loginView" hidden>
+  <form class="card login" id="loginForm">
+    <h1>Automação do Instagram</h1>
+    <p class="muted" style="margin:0">Entre com o seu login do Supabase.</p>
+    <label for="lEmail">E-mail</label>
+    <input id="lEmail" type="email" autocomplete="username" required>
+    <label for="lPass">Senha</label>
+    <input id="lPass" type="password" autocomplete="current-password" required>
+    <button class="btn primary" style="width:100%;margin-top:18px" type="submit">Entrar</button>
+    <div class="err" id="loginErr"></div>
+  </form>
+</section>
+
+<!-- ============ APP ============ -->
+<section id="appView" hidden>
+  <header class="top">
+    <div class="wrap">
+      <div class="acct"><img id="acctPic" alt=""><div><select id="acctSel" class="acct-sel" title="Trocar de conta"></select><span id="acctName" hidden></span><small id="acctSub"></small></div></div>
+      <div class="spacer"></div>
+      <button class="btn small" id="logoutBtn">Sair</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="alert" id="acctAlert" hidden></div>
+    <div class="row">
+      <nav class="tabs" id="tabs">
+        <button data-tab="autos" class="on">Automações</button>
+        <button data-tab="activity">Atividade</button>
+        <button data-tab="settings">Configuração</button>
+      </nav>
+      <div class="spacer"></div>
+      <button class="btn primary" id="newBtn">Nova automação</button>
+    </div>
+
+    <section id="tab-autos"><div class="grid" id="autoList"></div></section>
+
+    <section id="tab-activity" hidden>
+      <div class="card tbl"><table><thead><tr><th>Quando</th><th>Evento</th><th>Detalhe</th></tr></thead><tbody id="eventRows"></tbody></table></div>
+    </section>
+
+    <section id="tab-settings" hidden>
+      <div class="card step">
+        <h3>Contas do Instagram</h3>
+        <p class="sub">Cada conta tem as próprias automações. Troque de conta pelo nome no topo da página.</p>
+        <div id="acctList"></div>
+        <details style="margin-top:12px">
+          <summary style="cursor:pointer;font-weight:600">Adicionar outra conta</summary>
+          <p class="sub" style="margin-top:8px">Na Meta (app Aurea Automacao), a conta precisa ser Instagram Tester e estar em "2. Generate access tokens". Copie de lá o número da conta e o token.</p>
+          <label for="nIgId">ID da conta <span class="hint">(número que começa com 1784)</span></label>
+          <input id="nIgId" type="text" inputmode="numeric" autocomplete="off">
+          <label for="nToken">Token</label>
+          <textarea id="nToken" autocomplete="off" spellcheck="false" style="min-height:60px"></textarea>
+          <button class="btn primary" id="addAcctBtn" style="margin-top:10px">Adicionar conta</button>
+          <div class="err" id="acctErr"></div>
+        </details>
+      </div>
+      <div class="card step">
+        <h3>Endereço do webhook</h3>
+        <p class="sub">Cole este endereço na Meta (API do Instagram &gt; Configurar webhooks), junto com o seu Verify Token.</p>
+        <div class="row"><div class="code" id="whUrl"></div><button class="btn small" id="copyWh">Copiar</button></div>
+      </div>
+      <div class="card step">
+        <h3>Eventos da conta</h3>
+        <p class="sub">Liga o envio de comentários, mensagens e cliques de botão para este app. Use uma vez depois de configurar o webhook, ou se os eventos pararem de chegar.</p>
+        <button class="btn" id="subBtn">Ativar eventos na conta</button>
+      </div>
+      <div class="card step">
+        <h3>Token de acesso</h3>
+        <p class="sub" id="tokenInfo"></p>
+        <button class="btn" id="refreshBtn">Renovar agora</button>
+      </div>
+    </section>
+  </main>
+</section>
+
+<!-- ============ EDITOR ============ -->
+<div class="modal" id="editor" hidden>
+  <div class="sheet">
+    <div class="sheet-head">
+      <h2 id="edTitle">Nova automação</h2>
+      <button class="btn small" data-close>Cancelar</button>
+      <button class="btn small primary" id="saveBtn">Salvar</button>
+    </div>
+    <div class="sheet-body editor">
+      <div>
+        <div class="card step">
+          <h3><i>1</i> Post</h3>
+          <p class="sub">Escolha o post ou reel, ou deixe valendo para qualquer post.</p>
+          <div class="posts" id="postGrid"></div>
+          <div class="row" style="margin-top:8px"><button class="btn small" id="moreMedia" hidden>Carregar mais posts</button></div>
+          <label for="fName">Nome da automação <span class="hint">(só para você)</span></label>
+          <input id="fName" type="text" placeholder="Ex.: Manual de bookkeeping">
+        </div>
+
+        <div class="card step">
+          <h3><i>2</i> Palavra-chave</h3>
+          <p class="sub">Quem comentar uma destas palavras recebe a DM. Separe por vírgula. Acento e maiúscula não importam. Em branco: qualquer comentário.</p>
+          <input id="fKeywords" type="text" placeholder="manual, guia">
+          <label class="row" style="font-weight:400"><input id="fDm" type="checkbox"> A palavra mandada por DM também dispara</label>
+          <label for="fPublic">Resposta pública no comentário <span class="hint">(uma por linha; o sistema sorteia uma. Em branco: não responde)</span></label>
+          <textarea id="fPublic" placeholder="Te mandei na DM!&#10;Acabei de te enviar, confere a DM"></textarea>
+        </div>
+
+        <div class="card step">
+          <h3><i>3</i> Primeira mensagem</h3>
+          <p class="sub">Vai como resposta privada ao comentário. A pessoa precisa tocar no botão (ou responder) para você poder mandar o link.</p>
+          <textarea id="fOpening" maxlength="640" placeholder="Oi! Que bom que você quer o manual. Toque no botão abaixo que eu te envio agora."></textarea>
+          <div class="count" data-count="fOpening"></div>
+          <label style="font-weight:400;margin-top:14px;display:flex;gap:8px;align-items:flex-start"><input id="fDirect" type="checkbox" style="margin-top:3px"> <span><b>Link direto:</b> mandar o link já nesta mensagem. Funciona mesmo sem a revisão da Meta, mas não tem lembrete.</span></label>
+          <div id="buttonWrap">
+            <label for="fButton">Texto do botão <span class="hint">(até 20 caracteres)</span></label>
+            <input id="fButton" type="text" maxlength="20" value="Quero">
+          </div>
+        </div>
+
+        <div class="card step">
+          <h3><i>4</i> Entrega do material</h3>
+          <div id="linkTextWrap"><textarea id="fLinkText" maxlength="640" placeholder="Aqui está o seu manual:"></textarea>
+          <div class="count" data-count="fLinkText"></div></div>
+          <div class="two">
+            <div><label for="fUrl">Link</label><input id="fUrl" type="url" placeholder="https://..."></div>
+            <div><label for="fLinkBtn">Texto do botão</label><input id="fLinkBtn" type="text" maxlength="20" value="Abrir"></div>
+          </div>
+        </div>
+
+        <div class="card step" id="followStep">
+          <h3><i>5</i> Lembrete para quem não abriu</h3>
+          <p class="sub">Vai só para quem recebeu o link e não abriu, e só dentro das 24 horas que a Meta permite. Em branco: sem lembrete.</p>
+          <textarea id="fFollow" maxlength="640" placeholder="Conseguiu abrir o manual? O link continua aqui embaixo."></textarea>
+          <div class="count" data-count="fFollow"></div>
+          <label for="fDelay">Enviar depois de</label>
+          <select id="fDelay">
+            <option value="30">30 minutos</option><option value="60">1 hora</option><option value="120" selected>2 horas</option>
+            <option value="240">4 horas</option><option value="480">8 horas</option><option value="720">12 horas</option><option value="1200">20 horas</option>
+          </select>
+        </div>
+        <label class="row" style="font-weight:400;margin:0 4px 20px"><input id="fActive" type="checkbox" checked> Automação ligada</label>
+        <div class="err" id="edErr"></div>
+      </div>
+
+      <aside>
+        <div class="phone">
+          <div class="ph-top">Prévia da conversa</div>
+          <div class="bubble me" id="pvComment">manual</div>
+          <div class="bubble"><span id="pvOpening"></span><span class="bbtn" id="pvBtn"></span></div>
+          <div id="pvStep2"><div class="ph-note">a pessoa toca no botão</div>
+          <div class="bubble"><span id="pvLink"></span><span class="bbtn" id="pvLinkBtn"></span></div></div>
+          <div id="pvFollowWrap"><div class="ph-note" id="pvDelay"></div><div class="bubble"><span id="pvFollow"></span><span class="bbtn" id="pvFollowBtn"></span></div></div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PESSOAS ============ -->
+<div class="modal" id="people" hidden>
+  <div class="sheet">
+    <div class="sheet-head"><h2 id="peopleTitle">Pessoas</h2><button class="btn small" data-close>Fechar</button></div>
+    <div class="sheet-body"><div class="card tbl"><table>
+      <thead><tr><th>Pessoa</th><th>Comentário</th><th>Etapa</th><th>Lembrete</th><th>Quando</th></tr></thead>
+      <tbody id="peopleRows"></tbody>
+    </table></div></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+/* ================= CONFIGURAÇÃO ================= */
+const SUPABASE_URL = "https://eslputtmlufvxhdanczy.supabase.co";
+const SUPABASE_KEY = "sb_publishable_-7TaudR-eu2t1e8L6qfgmw_i4cg6Ksa"; // chave pública (pode ficar no site)
+const API = SUPABASE_URL + "/functions/v1/ig/api";
+/* ================================================= */
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const fmt = (d) => d ? new Date(d).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) : "";
+const pct = (a, b) => b ? Math.round((a / b) * 100) + "%" : "";
+
+let session = null, autos = [], media = [], mediaAfter = null, editing = null, selMedia = null;
+let accounts = [], account = null;
+try { account = localStorage.getItem("ig_account") || null; } catch {}
+
+function toast(msg) { const t = $("toast"); t.textContent = msg; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => t.hidden = true, 2800); }
+
+async function call(path, opts = {}) {
+  if (account && !path.startsWith("/accounts")) path += (path.includes("?") ? "&" : "?") + "account=" + encodeURIComponent(account);
+  const res = await fetch(API + path, {
+    ...opts,
+    headers: { "Content-Type": "application/json", apikey: SUPABASE_KEY, Authorization: "Bearer " + session.access_token, ...(opts.headers || {}) },
+  });
+  const data = await res.json().catch(() => ({}));
+  if (res.status === 401) { await sb.auth.signOut(); showLogin("Seu e-mail não tem acesso a este painel."); throw new Error("401"); }
+  if (!res.ok) throw new Error(data.error || "Erro " + res.status);
+  return data;
+}
+
+/* ---------- login ---------- */
+function showLogin(msg = "") { $("appView").hidden = true; $("loginView").hidden = false; $("loginErr").textContent = msg; }
+$("loginForm").onsubmit = async (e) => {
+  e.preventDefault(); $("loginErr").textContent = "";
+  const { data, error } = await sb.auth.signInWithPassword({ email: $("lEmail").value.trim(), password: $("lPass").value });
+  if (error) { $("loginErr").textContent = "E-mail ou senha incorretos."; return; }
+  session = data.session; start();
+};
+$("logoutBtn").onclick = async () => { await sb.auth.signOut(); session = null; showLogin(); };
+sb.auth.onAuthStateChange((_ev, s) => { if (s) session = s; });
+
+/* ---------- abas ---------- */
+$("tabs").onclick = (e) => {
+  const b = e.target.closest("button"); if (!b) return;
+  document.querySelectorAll("#tabs button").forEach((x) => x.classList.toggle("on", x === b));
+  for (const t of ["autos", "activity", "settings"]) $("tab-" + t).hidden = t !== b.dataset.tab;
+  $("newBtn").hidden = b.dataset.tab !== "autos";
+  if (b.dataset.tab === "activity") loadEvents();
+};
+document.querySelectorAll("[data-close]").forEach((b) => b.onclick = () => b.closest(".modal").hidden = true);
+
+/* ---------- início ---------- */
+async function start() {
+  $("loginView").hidden = true; $("appView").hidden = false;
+  await loadAccounts();
+  loadStatus();
+  loadAutos();
+}
+
+async function loadAccounts() {
+  try { accounts = await call("/accounts"); } catch (e) { if (e.message !== "401") toast(e.message); return; }
+  if (!accounts.some((a) => a.ig_id === account)) account = accounts[0]?.ig_id || null;
+  $("acctSel").innerHTML = accounts.map((a) => `<option value="${esc(a.ig_id)}" ${a.ig_id === account ? "selected" : ""}>@${esc(a.username || a.ig_id)}</option>`).join("");
+  $("acctList").innerHTML = accounts.map((a) => `<div class="row" style="padding:8px 0;border-bottom:1px solid var(--line)">
+      ${a.profile_picture_url ? `<img src="${esc(a.profile_picture_url)}" alt="" style="width:28px;height:28px;border-radius:50%">` : ""}
+      <b>@${esc(a.username || "?")}</b><span class="muted" style="font-size:12px">${esc(a.ig_id || "")}${a.primary ? " · principal" : ""}</span>
+      <div class="spacer"></div>${a.primary ? "" : `<button class="btn small danger" data-rmacct="${esc(a.ig_id)}">Remover</button>`}</div>`).join("");
+}
+$("acctSel").onchange = () => {
+  account = $("acctSel").value;
+  try { localStorage.setItem("ig_account", account); } catch {}
+  media = []; mediaAfter = null;
+  loadStatus(); loadAutos();
+  if (!$("tab-activity").hidden) loadEvents();
+};
+$("addAcctBtn").onclick = async () => {
+  $("acctErr").textContent = "";
+  $("addAcctBtn").disabled = true;
+  try {
+    const r = await call("/accounts", { method: "POST", body: JSON.stringify({ ig_id: $("nIgId").value.trim(), access_token: $("nToken").value.trim() }) });
+    $("nIgId").value = ""; $("nToken").value = "";
+    toast("Conta @" + (r.username || r.ig_id) + " adicionada" + (r.subscribed ? "" : ". Ligue a Webhook Subscription dela na Meta."));
+    account = r.ig_id; try { localStorage.setItem("ig_account", account); } catch {}
+    media = []; await loadAccounts(); loadStatus(); loadAutos();
+  } catch (e) { $("acctErr").textContent = e.message; }
+  $("addAcctBtn").disabled = false;
+};
+$("acctList").onclick = async (e) => {
+  const id = e.target.dataset.rmacct; if (!id) return;
+  const a = accounts.find((x) => x.ig_id === id);
+  if (!confirm(`Remover @${a?.username || id}? As automações e o histórico dessa conta também serão apagados.`)) return;
+  try { await call("/accounts/" + id, { method: "DELETE" }); toast("Conta removida"); account = null; await loadAccounts(); loadStatus(); loadAutos(); }
+  catch (err) { toast(err.message); }
+};
+
+async function loadStatus() {
+  try {
+    const s = await call("/status");
+    const a = s.account || {};
+    $("acctName").textContent = a.username ? "@" + a.username : "Conta não conectada";
+    if (s.accountError) $("acctPic").removeAttribute("src");
+    $("acctSub").textContent = s.lastEvent ? "Último evento: " + fmt(s.lastEvent.created_at) : "Nenhum evento recebido ainda";
+    if (a.profile_picture_url) $("acctPic").src = a.profile_picture_url; else $("acctPic").removeAttribute("src");
+    $("acctAlert").hidden = !s.accountError;
+    if (s.accountError) $("acctAlert").textContent = "Não consegui falar com o Instagram: " + s.accountError + ". Confira o token em Configuração.";
+    $("whUrl").textContent = s.webhookUrl;
+    $("refreshBtn").hidden = s.loginMode === "unified";
+    $("tokenInfo").textContent = s.loginMode === "unified" ? "Token de usuário do sistema (Unified login): não expira, não precisa renovar."
+      : s.tokenExpiresAt
+      ? "Renovado em " + fmt(s.tokenRefreshedAt) + ". Vale até " + fmt(s.tokenExpiresAt) + ". A renovação é automática a cada 20 dias."
+      : "Usando o token inicial. A renovação automática começa sozinha; o botão força agora (só funciona com token de mais de 24h).";
+  } catch (e) { if (e.message !== "401") toast(e.message); }
+}
+
+/* ---------- lista de automações ---------- */
+async function loadAutos() {
+  try { autos = await call("/automations"); } catch (e) { if (e.message !== "401") toast(e.message); return; }
+  const list = $("autoList");
+  if (!autos.length) {
+    list.innerHTML = `<div class="card empty" style="grid-column:1/-1"><b>Nenhuma automação ainda.</b><br>Crie a primeira: escolha um post, a palavra e o material que a pessoa vai receber.</div>`;
+    return;
+  }
+  list.innerHTML = autos.map((a) => {
+    const kws = (a.keywords || "").split(",").map((k) => k.trim()).filter(Boolean);
+    const chips = kws.length ? kws.map((k) => `<span class="chip">${esc(k)}</span>`).join("") : `<span class="chip any">qualquer comentário</span>`;
+    const thumb = a.media_id === "*" ? `<div class="thumb">Todos os posts</div>` : a.media_thumb ? `<img class="thumb" src="${esc(a.media_thumb)}" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'thumb',textContent:'Post'}))">` : `<div class="thumb">Post</div>`;
+    return `<article class="card auto">
+      <div class="auto-head">${thumb}<div style="min-width:0">
+        <p class="auto-title">${esc(a.name || "Sem nome")}</p>
+        <div class="cap">${esc(a.media_id === "*" ? "Vale para qualquer post ou reel" : a.media_caption || "Post sem legenda")}</div>
+        ${a.media_permalink ? `<a href="${esc(a.media_permalink)}" target="_blank" rel="noopener" style="font-size:12px;color:var(--brand)">Ver post</a>` : ""}
+      </div></div>
+      <div class="chips">${chips}${a.dm_trigger ? `<span class="chip any">também por DM</span>` : ""}${a.direct_link ? `<span class="chip any">link direto</span>` : ""}</div>
+      <div class="funnel">
+        <div><b>${a.dms}</b><span>DMs enviadas</span></div>
+        <div><b>${a.clicked}</b><span>Pediram o link</span><em>${pct(a.clicked, a.dms)}</em></div>
+        <div><b>${a.opened}</b><span>Abriram</span><em>${pct(a.opened, a.clicked)}</em></div>
+        <div><b>${a.followups}</b><span>Lembretes</span></div>
+      </div>
+      <div class="auto-foot">
+        <label class="switch" title="${a.active ? "Ligada" : "Desligada"}"><input type="checkbox" data-toggle="${a.id}" ${a.active ? "checked" : ""}><span></span></label>
+        ${a.failed ? `<span style="font-size:12px;color:var(--bad)">${a.failed} falha(s)</span>` : ""}
+        <div class="spacer"></div>
+        <button class="btn small" data-people="${a.id}">Pessoas</button>
+        <button class="btn small" data-edit="${a.id}">Editar</button>
+        <button class="btn small danger" data-del="${a.id}">Excluir</button>
+      </div>
+    </article>`;
+  }).join("");
+}
+
+$("autoList").addEventListener("click", async (e) => {
+  const t = e.target;
+  if (t.dataset.edit) openEditor(autos.find((a) => a.id == t.dataset.edit));
+  if (t.dataset.people) openPeople(autos.find((a) => a.id == t.dataset.people));
+  if (t.dataset.del) {
+    const a = autos.find((x) => x.id == t.dataset.del);
+    if (!confirm(`Excluir "${a.name || "esta automação"}"? O histórico de pessoas dela também será apagado.`)) return;
+    try { await call("/automations/" + a.id, { method: "DELETE" }); toast("Automação excluída"); loadAutos(); } catch (err) { toast(err.message); }
+  }
+});
+$("autoList").addEventListener("change", async (e) => {
+  const id = e.target.dataset.toggle; if (!id) return;
+  try { await call("/automations/" + id, { method: "PUT", body: JSON.stringify({ active: e.target.checked }) }); toast(e.target.checked ? "Ligada" : "Desligada"); loadAutos(); }
+  catch (err) { toast(err.message); e.target.checked = !e.target.checked; }
+});
+
+/* ---------- editor ---------- */
+$("newBtn").onclick = () => openEditor(null);
+
+async function openEditor(a) {
+  editing = a;
+  $("edTitle").textContent = a ? "Editar automação" : "Nova automação";
+  $("edErr").textContent = "";
+  $("fName").value = a?.name || "";
+  $("fKeywords").value = a?.keywords || "";
+  $("fDm").checked = !!a?.dm_trigger;
+  $("fPublic").value = a?.public_replies || "";
+  $("fOpening").value = a?.opening_text || "";
+  $("fButton").value = a?.button_title || "Quero";
+  $("fDirect").checked = !!a?.direct_link;
+  $("fLinkText").value = a?.link_text || "";
+  $("fUrl").value = a?.link_url || "";
+  $("fLinkBtn").value = a?.link_button_title || "Abrir";
+  $("fFollow").value = a?.followup_text || "";
+  $("fDelay").value = String(a?.followup_delay_min || 120);
+  if (![...$("fDelay").options].some((o) => o.value === $("fDelay").value)) $("fDelay").add(new Option(a.followup_delay_min + " minutos", a.followup_delay_min, true, true));
+  $("fActive").checked = a ? !!a.active : true;
+  selMedia = a ? { id: a.media_id, caption: a.media_caption, thumb: a.media_thumb, permalink: a.media_permalink } : null;
+  $("editor").hidden = false;
+  preview();
+  if (!media.length) await loadMedia(); else renderPosts();
+}
+
+async function loadMedia(more = false) {
+  if (!more) $("postGrid").innerHTML = `<div class="muted" style="grid-column:1/-1">Carregando posts...</div>`;
+  try {
+    const r = await call("/media" + (more && mediaAfter ? "?after=" + encodeURIComponent(mediaAfter) : ""));
+    media = more ? media.concat(r.data || []) : (r.data || []);
+    mediaAfter = r.paging?.next ? r.paging?.cursors?.after : null;
+  } catch (e) { if (e.message !== "401") $("postGrid").innerHTML = `<div class="err" style="grid-column:1/-1">Não consegui carregar os posts: ${esc(e.message)}</div>`; return; }
+  renderPosts();
+}
+$("moreMedia").onclick = () => loadMedia(true);
+
+function renderPosts() {
+  const cur = selMedia?.id;
+  const items = [`<button type="button" class="post any ${cur === "*" ? "on" : ""}" data-media="*">Qualquer post</button>`];
+  if (cur && cur !== "*" && !media.some((m) => m.id === cur))
+    items.push(`<button type="button" class="post on" data-media="${esc(cur)}">${selMedia.thumb ? `<img src="${esc(selMedia.thumb)}" alt="">` : ""}<span class="tag">atual</span></button>`);
+  for (const m of media) {
+    const img = m.thumbnail_url || m.media_url;
+    const kind = m.media_product_type === "REELS" ? "Reel" : m.media_type === "CAROUSEL_ALBUM" ? "Carrossel" : m.media_type === "VIDEO" ? "Vídeo" : "";
+    items.push(`<button type="button" class="post ${cur === m.id ? "on" : ""}" data-media="${esc(m.id)}" title="${esc((m.caption || "").slice(0, 120))}">${img ? `<img src="${esc(img)}" alt="" loading="lazy">` : ""}${kind ? `<span class="tag">${kind}</span>` : ""}</button>`);
+  }
+  $("postGrid").innerHTML = items.join("");
+  $("moreMedia").hidden = !mediaAfter;
+}
+$("postGrid").onclick = (e) => {
+  const b = e.target.closest("[data-media]"); if (!b) return;
+  const id = b.dataset.media;
+  if (id === "*") selMedia = { id: "*" };
+  else {
+    const m = media.find((x) => x.id === id);
+    if (m) selMedia = { id, caption: m.caption || "", thumb: m.thumbnail_url || m.media_url || "", permalink: m.permalink || "" };
+  }
+  renderPosts();
+};
+
+function preview() {
+  const direct = $("fDirect").checked;
+  $("buttonWrap").hidden = direct; $("linkTextWrap").hidden = direct; $("followStep").hidden = direct; $("pvStep2").hidden = direct;
+  const kw = $("fKeywords").value.split(",")[0].trim();
+  $("pvComment").textContent = kw || "Que legal!";
+  $("pvOpening").textContent = $("fOpening").value || "Sua primeira mensagem aparece aqui.";
+  $("pvBtn").textContent = direct ? ($("fLinkBtn").value || "Abrir") : ($("fButton").value || "Quero");
+  $("pvLink").textContent = $("fLinkText").value || "Mensagem com o material.";
+  $("pvLinkBtn").textContent = $("fLinkBtn").value || "Abrir";
+  $("pvFollowWrap").hidden = direct || !$("fFollow").value.trim();
+  $("pvFollow").textContent = $("fFollow").value;
+  $("pvFollowBtn").textContent = $("fLinkBtn").value || "Abrir";
+  $("pvDelay").textContent = "se não abrir em " + $("fDelay").selectedOptions[0].text;
+  document.querySelectorAll("[data-count]").forEach((c) => c.textContent = $(c.dataset.count).value.length + "/640");
+}
+document.querySelectorAll("#editor input, #editor textarea, #editor select").forEach((el) => el.addEventListener("input", preview));
+
+$("saveBtn").onclick = async () => {
+  const err = (m) => { $("edErr").textContent = m; };
+  if (!selMedia) return err("Escolha um post (ou \"Qualquer post\").");
+  if (!$("fOpening").value.trim()) return err("Escreva a primeira mensagem.");
+  const direct = $("fDirect").checked;
+  if (!direct && !$("fLinkText").value.trim()) return err("Escreva a mensagem de entrega do material.");
+  if (!/^https:\/\//i.test($("fUrl").value.trim())) return err("O link precisa começar com https://");
+  if (selMedia.id === "*" && !$("fKeywords").value.trim() && !confirm("Sem palavra-chave e valendo para todos os posts, QUALQUER comentário vai gerar DM. Continuar?")) return;
+  const body = {
+    name: $("fName").value, media_id: selMedia.id,
+    media_caption: selMedia.id === "*" ? null : (selMedia.caption || "").slice(0, 500),
+    media_thumb: selMedia.id === "*" ? null : selMedia.thumb || null,
+    media_permalink: selMedia.id === "*" ? null : selMedia.permalink || null,
+    keywords: $("fKeywords").value, dm_trigger: $("fDm").checked, public_replies: $("fPublic").value,
+    opening_text: $("fOpening").value, button_title: $("fButton").value || "Quero",
+    link_text: $("fLinkText").value, link_url: $("fUrl").value, link_button_title: $("fLinkBtn").value || "Abrir",
+    followup_text: direct ? "" : $("fFollow").value, followup_delay_min: Number($("fDelay").value), active: $("fActive").checked,
+    direct_link: direct,
+  };
+  $("saveBtn").disabled = true;
+  try {
+    if (editing) await call("/automations/" + editing.id, { method: "PUT", body: JSON.stringify(body) });
+    else await call("/automations", { method: "POST", body: JSON.stringify(body) });
+    $("editor").hidden = true; toast("Automação salva"); loadAutos();
+  } catch (e) { err(e.message); }
+  $("saveBtn").disabled = false;
+};
+
+/* ---------- pessoas ---------- */
+const STAGE = {
+  pending: ["Processando", ""], dm_sent: ["Recebeu a DM", "warn"], link_sent: ["Recebeu o link", "ok"], failed: ["Falhou", "bad"],
+};
+const FOLLOW = { sent: ["Enviado", "ok"], skipped_clicked: ["Não precisou", ""], skipped_window: ["Fora das 24h", "warn"], failed: ["Falhou", "bad"] };
+async function openPeople(a) {
+  $("peopleTitle").textContent = "Pessoas: " + (a.name || "automação");
+  $("peopleRows").innerHTML = `<tr><td colspan="5" class="muted">Carregando...</td></tr>`;
+  $("people").hidden = false;
+  try {
+    const rows = await call(`/automations/${a.id}/runs`);
+    $("peopleRows").innerHTML = rows.length ? rows.map((r) => {
+      let [st, cls] = STAGE[r.status] || [r.status, ""];
+      if (r.link_clicked_at) { st = "Abriu o link"; cls = "ok"; }
+      const f = r.followup_status ? FOLLOW[r.followup_status] || [r.followup_status, ""] : r.link_clicked_at && r.followup_due_at ? ["Não precisou", ""] : [r.followup_due_at ? "Agendado " + fmt(r.followup_due_at) : "", ""];
+      const who = r.username ? `<a href="https://instagram.com/${esc(r.username)}" target="_blank" rel="noopener">@${esc(r.username)}</a>` : `<span class="muted">${r.source === "dm" ? "via DM" : "sem nome"}</span>`;
+      return `<tr><td>${who}</td><td>${esc((r.comment_text || "").slice(0, 120))}</td>
+        <td><span class="st ${cls}">${esc(st)}</span>${r.error ? `<div class="muted" style="font-size:11px">${esc(r.error.slice(0, 140))}</div>` : ""}</td>
+        <td>${f[0] ? `<span class="st ${f[1]}">${esc(f[0])}</span>` : ""}</td><td>${fmt(r.created_at)}</td></tr>`;
+    }).join("") : `<tr><td colspan="5" class="muted">Ninguém passou por esta automação ainda.</td></tr>`;
+  } catch (e) { if (e.message !== "401") $("peopleRows").innerHTML = `<tr><td colspan="5" class="err">${esc(e.message)}</td></tr>`; }
+}
+
+/* ---------- atividade ---------- */
+const KIND = {
+  comment: "Comentário recebido", message: "Mensagem recebida", postback: "Tocou no botão", token_refreshed: "Token renovado",
+  skip_repeat_commenter: "Comentou de novo (ignorado)", private_reply_failed: "Falha na DM", private_reply_template_failed: "Botão recusado, enviou texto",
+  link_send_failed: "Falha ao enviar link", link_template_failed: "Botão do link recusado, enviou texto", public_reply_failed: "Falha na resposta pública",
+  followup_failed: "Falha no lembrete", token_refresh_error: "Erro ao renovar token", invalid_signature: "Assinatura inválida",
+  error_comment: "Erro ao processar comentário", error_messaging: "Erro ao processar mensagem", dm_trigger_failed: "Falha no gatilho por DM",
+};
+async function loadEvents() {
+  try {
+    const ev = await call("/events");
+    $("eventRows").innerHTML = ev.length ? ev.map((e) => {
+      let d = e.detail || ""; try { const o = JSON.parse(d); if (o.account) { const ac = accounts.find((x) => x.ig_id === o.account); o.account = ac?.username ? "@" + ac.username : o.account; } d = Object.entries(o).map(([k, v]) => `${k}: ${typeof v === "object" ? JSON.stringify(v) : v}`).join(" · "); } catch {}
+      const bad = /fail|error|invalid/.test(e.kind);
+      return `<tr><td style="white-space:nowrap">${fmt(e.created_at)}</td><td><span class="st ${bad ? "bad" : ""}">${esc(KIND[e.kind] || e.kind)}</span></td><td>${esc(d.slice(0, 300))}</td></tr>`;
+    }).join("") : `<tr><td colspan="3" class="muted">Nenhum evento ainda. Comente num post com automação para testar.</td></tr>`;
+  } catch (e) { if (e.message !== "401") toast(e.message); }
+}
+
+/* ---------- configuração ---------- */
+$("copyWh").onclick = () => { navigator.clipboard.writeText($("whUrl").textContent); toast("Copiado"); };
+$("subBtn").onclick = async () => { try { await call("/subscribe", { method: "POST" }); toast("Eventos ativados na conta"); } catch (e) { toast(e.message); } };
+$("refreshBtn").onclick = async () => {
+  try { const r = await call("/refresh-token", { method: "POST" }); toast(r.result === "refreshed" ? "Token renovado" : "Não deu para renovar agora. Veja em Atividade."); loadStatus(); }
+  catch (e) { toast(e.message); }
+};
+
+/* ---------- boot ---------- */
+(async () => {
+  const { data } = await sb.auth.getSession();
+  session = data.session;
+  if (session) start(); else showLogin();
+})();
+</script>
+</body>
+</html>
