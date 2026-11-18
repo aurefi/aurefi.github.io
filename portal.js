@@ -12,7 +12,8 @@ const TX_TABLE = "transacoes_mensal";     // quantidade de transações por mês
 const PLAN_TABLE = "plano_cliente";       // plano atual do cliente; as faixas vêm da tabela "planos"
 const TX_MONTHS = 6, TX_RULE = 3;
 const DUV_TABLE = "duvidas";              // dúvidas de transações do mês (aba Pendências), publicadas pelos scripts da Aurea
-const REC_MAX = 10 * 1024 * 1024;         // recibo: até 10 MB         // meses no gráfico; meses seguidos fora da faixa para ajustar o plano
+const REC_MAX = 10 * 1024 * 1024;         // recibo: até 10 MB
+const AL_TABLE = "alertas";               // alertas do Painel (sem resposta), publicados pelo script da Aurea         // meses no gráfico; meses seguidos fora da faixa para ajustar o plano
 
 const $ = id => document.getElementById(id);
 const T = k => (window.PAGE_DICT[currentLang] || window.PAGE_DICT.pt)[k] || k;
@@ -147,6 +148,7 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     });
     await loadTx();
     await loadDuvidas();
+    await loadAlertas();
   }
 
   // Transações por mês + plano atual (se as tabelas ainda não existirem, o cartão mostra o aviso de vazio)
@@ -171,7 +173,7 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("on", b.dataset.page === p));
     $("app-title").textContent = T({ dash: "nav_dash", reports: "nav_reports", pend: "nav_pend", account: "nav_account" }[p]);
     ["dash", "reports", "pend", "account"].forEach(x => { if (x !== p) $("p-" + x).hidden = true; });
-    if (p === "dash") renderDash(); if (p === "reports") renderReports(); if (p === "pend") renderPend();
+    if (p === "dash") { renderDash(); renderAlertas(); } if (p === "reports") renderReports(); if (p === "pend") renderPend();
     pendBadge();
     reveal($("p-" + p));
     if (p === "account") renderTx();   // depois de aparecer, para o gráfico medir a largura certa
@@ -382,6 +384,60 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     }
     box.innerHTML = s + labels + "</svg>";
   }
+
+  // ---------- Alertas do Painel (avisos sem resposta) ----------
+  let alertas = [], alVerVistos = false;
+  async function loadAlertas() {
+    alertas = [];
+    try {
+      const r = await sb.from(AL_TABLE).select("id,chave,nivel,titulo,texto,valor,vence_em,ativo_ate,criado_em,visto_em,resolvido_em")
+        .eq("cliente_email", folder).is("resolvido_em", null).order("criado_em", { ascending: false });
+      if (!r.error) alertas = (r.data || []).filter(a => !a.ativo_ate || a.ativo_ate >= hojeISO());
+    } catch (e) { /* tabela ainda não criada */ }
+  }
+  // Vermelho = alerta: nível "atencao" ou vencimento a 3 dias ou menos (ou vencido). Amarelo = recado.
+  const alDias = a => a.vence_em ? Math.round((Date.parse(a.vence_em + "T12:00:00") - Date.parse(hojeISO() + "T12:00:00")) / 864e5) : null;
+  const alVermelho = a => a.nivel !== "info" || (a.vence_em != null && alDias(a) <= 3);
+  const alPrazo = a => { const n = alDias(a); if (n == null) return "";
+    const t = n < 0 ? T("al_dp").replace("{n}", -n) : n === 0 ? T("al_d0") : n === 1 ? T("al_d1") : T("al_dn").replace("{n}", n);
+    return `<span class="al-due">${t} · ${dataCurta(a.vence_em)}</span>`; };
+  const alOrdem = (x, y) => (alVermelho(y) - alVermelho(x)) || ((x.vence_em || "9999") < (y.vence_em || "9999") ? -1 : (x.vence_em || "9999") > (y.vence_em || "9999") ? 1 : 0) || (y.criado_em || "").localeCompare(x.criado_em || "");
+  function alItem(a, ro) {
+    const dt = a.visto_em ? new Date(a.visto_em).toLocaleDateString(locale(), { day: "2-digit", month: "2-digit" }) : "";
+    const lado = ro
+      ? `<small>${a.visto_em ? T("al_cli_seen").replace("{d}", dt) : T("al_cli_new")}</small>`
+      : (a.visto_em ? `<small>${T("al_seen_on").replace("{d}", dt)}</small>` : `<button type="button" data-alok="${a.id}">${T("al_ok")}</button>`);
+    return `<div class="al-item ${alVermelho(a) ? "red" : "yellow"} ${a.visto_em ? "seen" : ""}">
+      <div class="al-body"><b>${escH(a.titulo)}</b>${a.texto ? `<p>${escH(a.texto)}</p>` : ""}${alPrazo(a)}</div>
+      <div class="al-side">${a.valor != null ? `<span class="al-val">${a.valor < 0 ? "-" : ""}${money2(a.valor)}</span>` : ""}${lado}</div></div>`;
+  }
+  function renderAlertas() {
+    const ro = somenteLeitura(), card = $("al-card");
+    // na visão do admin, todos ficam na lista principal, com a informação de visto
+    const lista = alertas.slice().sort(alOrdem);
+    const novos = lista.filter(a => ro || !a.visto_em), vistos = ro ? [] : lista.filter(a => a.visto_em);
+    card.hidden = !alertas.length;
+    if (!alertas.length) return;
+    const naoVistos = alertas.filter(a => !a.visto_em), nr = naoVistos.filter(alVermelho).length, ny = naoVistos.length - nr;
+    const red = $("al-n-red"), yel = $("al-n-yel");
+    red.hidden = ro || !nr; red.textContent = nr; red.title = T("al_red_t").replace("{n}", nr);
+    yel.hidden = ro || !ny; yel.textContent = ny; yel.title = T("al_yel_t").replace("{n}", ny);
+    $("al-list").innerHTML = novos.map(a => alItem(a, ro)).join("");
+    $("al-list").hidden = !novos.length;
+    $("al-more").hidden = !vistos.length;
+    $("al-more").textContent = alVerVistos ? T("al_hide") : T("al_seen_n").replace("{n}", vistos.length);
+    $("al-seen").hidden = !vistos.length || !alVerVistos;
+    $("al-seen").innerHTML = vistos.map(a => alItem(a, ro)).join("");
+  }
+  $("al-card").addEventListener("click", async e => {
+    if (e.target.closest("#al-more")) { alVerVistos = !alVerVistos; renderAlertas(); return; }
+    const b = e.target.closest("[data-alok]"); if (!b || somenteLeitura()) return;
+    const a = alertas.find(x => x.id === b.dataset.alok); if (!a) return;
+    b.disabled = true;
+    const { data: row, error } = await sb.from(AL_TABLE).update({ visto_em: new Date().toISOString() }).eq("id", a.id).select("visto_em").single();
+    if (error) { b.disabled = false; b.textContent = T("al_e"); return; }
+    a.visto_em = row.visto_em; renderAlertas();
+  });
 
   // ---------- Pendências: dúvidas de transações do mês ----------
   async function loadDuvidas() {

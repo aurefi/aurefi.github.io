@@ -37,6 +37,33 @@
 .pd-card.done{background:#F6F1EA;border-color:#E6DCCD}
 .pd-card.done .pd-desc,.pd-card.done .pd-val{color:#6A645A}
 .pd-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;font-size:13.5px;color:var(--muted)}
+.al-card{max-width:1100px;margin:0 0 18px;padding:18px 20px}
+.al-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.al-av{flex:none;width:38px;height:38px;border-radius:50%;background:var(--ink);color:var(--gold);font:700 18px/38px var(--serif,Georgia,serif);text-align:center;box-shadow:0 0 0 2px #E9DCC9}
+.al-who{flex:1;min-width:0}
+.al-who h2{margin:0;font-size:18px;line-height:1.2}
+.al-who small{display:block;font-size:12.5px;color:var(--muted)}
+.al-n{min-width:24px;height:24px;padding:0 8px;border-radius:999px;font:800 12.5px/24px var(--sans);text-align:center}
+.al-n.red{background:#D23B2F;color:#fff}
+.al-n.yellow{background:#F2C230;color:#3A2A00}
+.al-list{display:flex;flex-direction:column;gap:10px}
+.al-item{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border-radius:10px;background:#FDECEA;border-left:4px solid #D23B2F}
+.al-item.yellow{background:#FFF7DD;border-left-color:#F2C230}
+.al-due{display:inline-block;margin-top:5px;padding:2px 8px;border-radius:6px;font-size:12.5px;font-weight:700;background:rgba(210,59,47,.12);color:#A3271D}
+.al-item.yellow .al-due{background:rgba(242,194,48,.25);color:#6B4E00}
+.al-item.seen .al-due{background:#EEE8DF;color:#6A645A}
+.al-item.seen{background:#F6F1EA;border-left-color:#CFC5B5;color:#6A645A}
+.al-body{flex:1;min-width:0}
+.al-body b{display:block;font-size:15.5px;line-height:1.35}
+.al-body p{margin:3px 0 0;font-size:14px;color:var(--muted);line-height:1.45}
+.al-side{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex:none}
+.al-val{font-weight:800;font-size:16px;white-space:nowrap}
+.al-side button{min-height:40px;padding:0 14px;border:1px solid var(--ink);border-radius:8px;background:#fff;font:600 13.5px var(--sans);color:var(--ink);cursor:pointer}
+.al-side button:disabled{opacity:.6}
+.al-side small{font-size:12.5px;color:var(--muted);text-align:right}
+.al-more{margin-top:10px;border:0;background:none;padding:6px 0;font:600 14px var(--sans);color:var(--brown);text-decoration:underline;cursor:pointer}
+.al-seen{margin-top:6px}
+@media (max-width:520px){ .al-item{flex-wrap:wrap} .al-side{width:100%;flex-direction:row;align-items:center;justify-content:space-between} .al-side button{min-height:44px} }
 .pd-due{display:inline-block;margin-top:4px;font-size:12.5px;font-weight:700;color:#B9461A}
 .pd-val{font-size:18px;font-weight:800;color:var(--ink);white-space:nowrap;text-align:right}
 .pd-val small{display:block;font-size:11.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
@@ -152,6 +179,16 @@
           <span class="pa-txt"><b id="pend-alert-t"></b><span id="pend-alert-d"></span></span>
           <span class="pa-go" data-i18n="pa_go">Responder</span>
         </button>
+        <div class="pcard al-card" id="al-card" hidden>
+          <div class="al-head">
+            <span class="al-av" aria-hidden="true">E</span>
+            <div class="al-who"><h2 data-i18n="al_t">Recados da Estella</h2><small data-i18n="al_sub">Assistente virtual da Aurea</small></div>
+            <span class="al-n red" id="al-n-red" hidden></span><span class="al-n yellow" id="al-n-yel" hidden></span>
+          </div>
+          <div class="al-list" id="al-list"></div>
+          <button type="button" class="al-more" id="al-more" hidden></button>
+          <div class="al-list al-seen" id="al-seen" hidden></div>
+        </div>
         <div class="filters">
           <label class="sel"><span data-i18n="f_year">Ano</span><select id="f-year"></select></label>
           <label class="sel"><span data-i18n="f_period">Período</span><select id="f-period"></select></label>
@@ -321,7 +358,7 @@ window.PAGE_DICT = {
     forgot:"Esqueceu a senha ou ainda não tem acesso?", forgot_link:"Fale com a Aurea no WhatsApp",
     nav_dash:"Painel", nav_reports:"Relatórios", nav_account:"Minha conta", nav_pend:"Pendências",
     pa_go:"Responder", pa_t1:"1 dúvida para responder", pa_tn:"{n} dúvidas para responder", pa_d:"Leva poucos minutos. Prazo: {d}.",
-    pd_left:"Faltam {a} de {n}", pd_due:"Responder até {d}", pd_answered:"{a} de {n} respondidas", pd_prazo:"prazo {d}", pd_prazo_fim:"prazo encerrado em {d}",
+    pd_left:"Faltam {a} de {n}", al_t:"Recados da Estella", al_sub:"Assistente virtual da Aurea", al_red_t:"{n} alerta(s) não visto(s)", al_yel_t:"{n} recado(s) não visto(s)", al_d0:"Vence hoje", al_d1:"Vence amanhã", al_dn:"Vence em {n} dias", al_dp:"Venceu há {n} dia(s)", al_ok:"Ok, entendi", al_seen_n:"Vistos ({n})", al_hide:"Esconder vistos", al_seen_on:"Visto em {d}", al_cli_seen:"Cliente viu em {d}", al_cli_new:"Cliente ainda não viu", al_e:"Não foi possível salvar. Tente de novo.", pd_due:"Responder até {d}", pd_answered:"{a} de {n} respondidas", pd_prazo:"prazo {d}", pd_prazo_fim:"prazo encerrado em {d}",
     pd_help:"Toque em \"Sim\" quando o nosso palpite estiver certo. Cada resposta é salva na hora.",
     pd_done:"Tudo respondido. Obrigado! Não tem mais nada este mês.",
     pd_closed:"O prazo deste mês terminou. O que ficou sem resposta foi classificado pelo histórico e aparece na nota do mês.",
@@ -373,7 +410,7 @@ window.PAGE_DICT = {
     forgot:"Forgot your password or don't have access yet?", forgot_link:"Message Aurea on WhatsApp",
     nav_dash:"Dashboard", nav_reports:"Reports", nav_account:"My account", nav_pend:"Pending",
     pa_go:"Answer", pa_t1:"1 question to answer", pa_tn:"{n} questions to answer", pa_d:"It only takes a few minutes. Due: {d}.",
-    pd_left:"{a} of {n} left", pd_due:"Answer by {d}", pd_answered:"{a} of {n} answered", pd_prazo:"due {d}", pd_prazo_fim:"closed on {d}",
+    pd_left:"{a} of {n} left", al_t:"Notes from Estella", al_sub:"Aurea's virtual assistant", al_red_t:"{n} unseen alert(s)", al_yel_t:"{n} unseen note(s)", al_d0:"Due today", al_d1:"Due tomorrow", al_dn:"Due in {n} days", al_dp:"Overdue by {n} day(s)", al_ok:"Got it", al_seen_n:"Seen ({n})", al_hide:"Hide seen", al_seen_on:"Seen on {d}", al_cli_seen:"Client saw it on {d}", al_cli_new:"Client hasn't seen it yet", al_e:"We couldn't save it. Please try again.", pd_due:"Answer by {d}", pd_answered:"{a} of {n} answered", pd_prazo:"due {d}", pd_prazo_fim:"closed on {d}",
     pd_help:"Tap \"Yes\" when our guess is right. Each answer is saved right away.",
     pd_done:"All done. Thank you! Nothing else for this month.",
     pd_closed:"This month's deadline has passed. Anything left unanswered was classified based on history and is noted in the monthly note.",
@@ -421,6 +458,6 @@ window.PAGE_DICT = {
 <script src="main.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<script src="portal.js?v=20261117c"></script>
+<script src="portal.js?v=20261118b"></script>
 </body>
 </html>
