@@ -37,6 +37,25 @@ header.scrolled .brand img{height:84px}
 .menu a{font-family:var(--serif);font-weight:600;font-size:19px;text-decoration:none;position:relative}
 .menu a::after{content:"";position:absolute;left:0;bottom:-4px;width:0;height:1px;background:var(--ink);transition:width .25s}
 .menu a:hover::after,.menu a.current::after{width:100%}
+/* Menu sem quebra de linha: em telas médias o menu encolhe em vez de quebrar */
+.menu a{white-space:nowrap}
+.menu li{flex:none}
+@media (min-width:901px) and (max-width:1360px){
+  .nav{gap:18px}
+  .menu{gap:22px}
+  .menu a{font-size:17px}
+  .menu .portal-link{padding:7px 12px;font-size:15px}
+  .brand img{height:110px}
+  header.scrolled .brand img{height:76px}
+}
+@media (min-width:901px) and (max-width:1120px){
+  .menu{gap:16px}
+  .menu a{font-size:16px}
+  .menu .portal-link{padding:6px 10px;font-size:14px;gap:6px}
+  .brand img{height:92px}
+  header.scrolled .brand img{height:68px}
+  .lang button{padding:6px 9px;gap:5px}
+}
 .right{display:flex;align-items:center;gap:16px}
 .lang{display:flex;border:1px solid var(--ink);border-radius:999px;overflow:hidden}
 .lang button{background:none;border:0;padding:6px 12px;font:600 12px var(--sans);letter-spacing:.08em;cursor:pointer;color:var(--ink);display:flex;align-items:center;gap:6px}
