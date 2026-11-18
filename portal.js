@@ -171,10 +171,10 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
   function go(p) {
     page = p;
     document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("on", b.dataset.page === p));
-    $("app-title").textContent = T({ dash: "nav_dash", reports: "nav_reports", pend: "nav_pend", account: "nav_account" }[p]);
-    ["dash", "reports", "pend", "account"].forEach(x => { if (x !== p) $("p-" + x).hidden = true; });
-    if (p === "dash") { renderDash(); renderAlertas(); } if (p === "reports") renderReports(); if (p === "pend") renderPend();
-    pendBadge();
+    $("app-title").textContent = T({ dash: "nav_dash", reports: "nav_reports", pend: "nav_pend", estella: "al_t", account: "nav_account" }[p]);
+    ["dash", "reports", "pend", "estella", "account"].forEach(x => { if (x !== p) $("p-" + x).hidden = true; });
+    if (p === "dash") renderDash(); if (p === "reports") renderReports(); if (p === "pend") renderPend(); if (p === "estella") renderAlertas();
+    pendBadge(); alBadge();
     reveal($("p-" + p));
     if (p === "account") renderTx();   // depois de aparecer, para o gráfico medir a largura certa
     window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
@@ -411,8 +411,16 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
       <div class="al-body"><b>${escH(a.titulo)}</b>${a.texto ? `<p>${escH(a.texto)}</p>` : ""}${alPrazo(a)}</div>
       <div class="al-side">${a.valor != null ? `<span class="al-val">${a.valor < 0 ? "-" : ""}${money2(a.valor)}</span>` : ""}${lado}</div></div>`;
   }
+  // Números no menu: vermelho = alertas não vistos, amarelo = recados não vistos (não aparecem no modo admin)
+  function alBadge() {
+    const ro = somenteLeitura(), nv = alertas.filter(a => !a.visto_em), nr = nv.filter(alVermelho).length, ny = nv.length - nr;
+    const r = $("nav-al-red"), y = $("nav-al-yel");
+    r.hidden = ro || !nr; r.textContent = nr; r.title = T("al_red_t").replace("{n}", nr);
+    y.hidden = ro || !ny; y.textContent = ny; y.title = T("al_yel_t").replace("{n}", ny);
+  }
   function renderAlertas() {
     const ro = somenteLeitura(), card = $("al-card");
+    $("al-adm").hidden = !ro; $("al-empty").hidden = !!alertas.length;
     // na visão do admin, todos ficam na lista principal, com a informação de visto
     const lista = alertas.slice().sort(alOrdem);
     const novos = lista.filter(a => ro || !a.visto_em), vistos = ro ? [] : lista.filter(a => a.visto_em);
@@ -436,7 +444,7 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     b.disabled = true;
     const { data: row, error } = await sb.from(AL_TABLE).update({ visto_em: new Date().toISOString() }).eq("id", a.id).select("visto_em").single();
     if (error) { b.disabled = false; b.textContent = T("al_e"); return; }
-    a.visto_em = row.visto_em; renderAlertas();
+    a.visto_em = row.visto_em; renderAlertas(); alBadge();
   });
 
   // ---------- Pendências: dúvidas de transações do mês ----------
