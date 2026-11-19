@@ -1,7 +1,7 @@
 /* Aurea Financial — popup de inscrição do sorteio (2 meses de bookkeeping grátis) */
 (function () {
   // ===== Configuração =====
-  const FIM_INSCRICOES = new Date("2026-11-25T19:45:00-06:00"); // 25/11, 19h45 (horário central), logo antes do sorteio na live
+  const FIM_INSCRICOES = new Date("2026-11-25T19:15:00-06:00"); // 25/11, 7:15pm (horário central), quando a live começa
   const SB_URL = "https://eslputtmlufvxhdanczy.supabase.co";
   const SB_KEY = "sb_publishable_-7TaudR-eu2t1e8L6qfgmw_i4cg6Ksa";   // chave publishable (pública)
   const TABELA = "sorteio_inscricoes";
@@ -34,7 +34,7 @@
         <h3 id="sorteio-title">2 meses de bookkeeping grátis</h3>
         <p>Para empresas de construção, limpeza e manutenção nos EUA: QuickBooks organizado, banco e cartões conciliados e relatórios todo mês em português e inglês.</p>
         <div class="sorteio-dates">
-          <span><b>Inscrições até 25/11, 19h45 CT</b></span>
+          <span><b>Inscrições até 25/11, 7:15pm CT</b></span>
           <span>Sorteio em 25/11, ao vivo no final da nossa live do YouTube (começa às 7:15pm CT)</span>
         </div>
       </div>

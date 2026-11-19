@@ -3,7 +3,7 @@
 const BANNER = {
   ativo: true,
   inicio: "2026-11-01T00:00:00-06:00",      // aparece a partir de...
-  fim:    "2026-11-25T19:45:00-06:00",      // ...e sai do ar sozinho depois daqui (também é o alvo da contagem). 25/11, 19h45 CT: fim das inscrições do sorteio
+  fim:    "2026-11-25T19:15:00-06:00",      // ...e sai do ar sozinho depois daqui (também é o alvo da contagem). 25/11, 7:15pm CT: fim das inscrições do sorteio (hora em que a live começa)
   imagem: "img/banner-sorteio.jpg",
   posicao: "70% 50%",                        // ponto da imagem que fica visível ao cortar (horizontal vertical)
   idiomas: ["pt"],                           // ["pt"], ["en"] ou ["pt","en"]

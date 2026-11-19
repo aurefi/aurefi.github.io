@@ -3,7 +3,7 @@
   // ===== Configuração =====
   const LIVE_INICIO = new Date("2026-11-25T19:15:00-06:00");   // 25/11, 7:15pm CT
   const LIVE_FIM = new Date("2026-11-25T20:00:00-06:00");      // fim previsto (35 a 45 min)
-  const FIM_SORTEIO = new Date("2026-11-25T19:45:00-06:00");   // depois disso, o formulário não oferece mais o sorteio
+  const FIM_SORTEIO = new Date("2026-11-25T19:15:00-06:00");   // depois disso, o formulário não oferece mais o sorteio
   const LINK_TRANSMISSAO = "";   // link do YouTube (ex.: https://youtube.com/live/xxxx). Vazio: a página diz que o link chega por e-mail
   const CONVIDADO = "";          // nome do convidado especial. Vazio: a linha não aparece
   const REGULAMENTO = "sorteio.html";
