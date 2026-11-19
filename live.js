@@ -1,12 +1,14 @@
 /* Aurea Financial — página da live (live.html): popup de inscrição, agenda e horários */
 (function () {
   // ===== Configuração =====
-  const LIVE_INICIO = new Date("2026-11-25T18:00:00-06:00");   // 25/11, 6pm CT
-  const LIVE_FIM = new Date("2026-11-25T18:45:00-06:00");      // fim previsto (35 a 45 min)
-  const FIM_SORTEIO = new Date("2026-11-25T18:30:00-06:00");   // depois disso, o formulário não oferece mais o sorteio
+  const LIVE_INICIO = new Date("2026-11-25T19:15:00-06:00");   // 25/11, 7:15pm CT
+  const LIVE_FIM = new Date("2026-11-25T20:00:00-06:00");      // fim previsto (35 a 45 min)
+  const FIM_SORTEIO = new Date("2026-11-25T19:45:00-06:00");   // depois disso, o formulário não oferece mais o sorteio
   const LINK_TRANSMISSAO = "";   // link do YouTube (ex.: https://youtube.com/live/xxxx). Vazio: a página diz que o link chega por e-mail
   const CONVIDADO = "";          // nome do convidado especial. Vazio: a linha não aparece
   const REGULAMENTO = "sorteio.html";
+  const ABRIR_SOZINHO = true;    // o popup abre sozinho ao entrar na página
+  const ESPERA_MS = 1500;        // ...depois de 1,5 segundo
 
   const SB_URL = "https://eslputtmlufvxhdanczy.supabase.co";
   const SB_KEY = "sb_publishable_-7TaudR-eu2t1e8L6qfgmw_i4cg6Ksa";   // chave publishable (pública)
@@ -111,8 +113,8 @@
         <h3 id="live-title">${titulo}</h3>
         <p>${intro}</p>
         <div class="sorteio-dates">
-          <span><b>Quarta, 25/11 · 6pm CT</b></span>
-          <span>7pm ET · 5pm MT · 4pm PT · ao vivo no YouTube</span>
+          <span><b>Quarta, 25/11 · 7:15pm CT</b></span>
+          <span>8:15pm ET · 6:15pm MT · 5:15pm PT · ao vivo no YouTube</span>
         </div>
       </div>
 
@@ -213,6 +215,7 @@
     if (window.gtag) gtag("event", "live_form_open", { fase });
   }
   function fechar() {
+    try { sessionStorage.setItem("aurea_live_fechado", "1"); } catch (e) {}
     modal.classList.remove("open"); document.body.classList.remove("modal-open");
     setTimeout(() => { modal.hidden = true; if (ultimoFoco && ultimoFoco.focus) ultimoFoco.focus(); }, 200);
   }
@@ -222,7 +225,7 @@
     $("live-ok-title").textContent = jaInscrito ? "Você já está inscrito!" : "Inscrição confirmada!";
     $("live-ok-text").textContent = fase === "depois"
       ? "O link da gravação chega no seu e-mail."
-      : "O link da live chega no seu e-mail antes de quarta, 25/11, às 6pm CT. Coloque na agenda para não esquecer.";
+      : "O link da live chega no seu e-mail antes de quarta, 25/11, às 7:15pm CT. Coloque na agenda para não esquecer.";
     if (fase === "depois") document.querySelector(".lv-ok-actions").hidden = true;
   }
   document.addEventListener("click", e => {
@@ -233,7 +236,12 @@
 
   // Link direto: aureafi.com/live?inscricao ou aureafi.com/live#inscricao abre o formulário
   let qs = location.search.slice(1); try { qs = decodeURIComponent(qs); } catch (e) {}
-  if (/(^|[?&])inscri(cao|ção)(=|&|$)/.test(qs) || location.hash === "#inscricao") setTimeout(abrir, 400);
+  const viaLink = /(^|[?&])inscri(cao|ção)(=|&|$)/.test(qs) || location.hash === "#inscricao";
+  // Abre sozinho ao entrar na página (1,5 s), para quem ainda não se inscreveu e não fechou o popup nesta visita
+  let fechouNestaVisita = false;
+  try { fechouNestaVisita = sessionStorage.getItem("aurea_live_fechado") === "1"; } catch (e) {}
+  if (viaLink) setTimeout(abrir, 400);
+  else if (ABRIR_SOZINHO && !store.get("aurea_live_ok") && !fechouNestaVisita) setTimeout(() => { if (modal.hidden) abrir(); }, ESPERA_MS);
 
   // Botão fixo de inscrição, depois que o hero sai da tela
   const hero = document.querySelector(".lv-hero");

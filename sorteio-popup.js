@@ -1,7 +1,7 @@
 /* Aurea Financial — popup de inscrição do sorteio (2 meses de bookkeeping grátis) */
 (function () {
   // ===== Configuração =====
-  const FIM_INSCRICOES = new Date("2026-11-25T23:59:59-06:00"); // 25/11, 23h59 (horário central)
+  const FIM_INSCRICOES = new Date("2026-11-25T19:45:00-06:00"); // 25/11, 19h45 (horário central), logo antes do sorteio na live
   const SB_URL = "https://eslputtmlufvxhdanczy.supabase.co";
   const SB_KEY = "sb_publishable_-7TaudR-eu2t1e8L6qfgmw_i4cg6Ksa";   // chave publishable (pública)
   const TABELA = "sorteio_inscricoes";
@@ -34,8 +34,8 @@
         <h3 id="sorteio-title">2 meses de bookkeeping grátis</h3>
         <p>Para empresas de construção, limpeza e manutenção nos EUA: QuickBooks organizado, banco e cartões conciliados e relatórios todo mês em português e inglês.</p>
         <div class="sorteio-dates">
-          <span><b>Inscrições até 25/11</b></span>
-          <span>Sorteio em 26/11, ao vivo no Instagram @aureafinancial</span>
+          <span><b>Inscrições até 25/11, 19h45 CT</b></span>
+          <span>Sorteio em 25/11, ao vivo no final da nossa live do YouTube (começa às 7:15pm CT)</span>
         </div>
       </div>
 
@@ -55,6 +55,7 @@
         <input type="text" name="empresa_site" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
         <label class="s-check"><input type="checkbox" id="s-aceite" required> <span>Li e aceito o <a href="sorteio.html" target="_blank" rel="noopener">regulamento do sorteio</a>.</span></label>
         <button class="btn btn-gold" type="submit">Quero participar</button>
+        <a class="btn btn-line s-live" href="live?inscricao">Inscrever na live</a>
         <p class="form-status" id="s-status" role="status"></p>
         <p class="form-note">Quem se inscreve também recebe a Black Friday da Aurea antes de todo mundo. Não é preciso comprar nada para participar. Veja o <a href="sorteio.html" target="_blank" rel="noopener">regulamento completo</a>.</p>
       </form>
@@ -62,8 +63,8 @@
       <div class="sorteio-ok" id="sorteio-ok" hidden>
         <div class="check-ok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
         <h3 id="sorteio-ok-title">Inscrição confirmada!</h3>
-        <p id="sorteio-ok-text">O sorteio é em 26/11, às 20h (horário central), ao vivo no Instagram @aureafinancial. Boa sorte!</p>
-        <a class="btn btn-dark" href="https://www.instagram.com/aureafinancial/" target="_blank" rel="noopener">Seguir no Instagram</a>
+        <p id="sorteio-ok-text">O sorteio é em 25/11, ao vivo no final da nossa live do YouTube, que começa às 7:15pm (horário central). Inscreva-se na live para receber o link. Boa sorte!</p>
+        <a class="btn btn-dark" href="live?inscricao">Quero assistir à live</a>
       </div>
     </div>
   </div>

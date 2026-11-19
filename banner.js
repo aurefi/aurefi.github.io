@@ -3,19 +3,20 @@
 const BANNER = {
   ativo: true,
   inicio: "2026-11-01T00:00:00-06:00",      // aparece a partir de...
-  fim:    "2026-11-25T23:59:59-06:00",      // ...e sai do ar sozinho depois daqui (também é o alvo da contagem)
+  fim:    "2026-11-25T19:45:00-06:00",      // ...e sai do ar sozinho depois daqui (também é o alvo da contagem). 25/11, 19h45 CT: fim das inscrições do sorteio
   imagem: "img/banner-sorteio.jpg",
   posicao: "70% 50%",                        // ponto da imagem que fica visível ao cortar (horizontal vertical)
   idiomas: ["pt"],                           // ["pt"], ["en"] ou ["pt","en"]
   paginas: ["home"],                         // páginas onde aparece (data-page do <body>)
   contagem: true,                            // mostra "Faltam X dias..."
   acao: "sorteio",                           // "sorteio" abre o popup; ou um link, ex.: "services.html"
+  acao2: "live?inscricao",                             // segundo botão (link). Vazio: só um botão
   pt: { tag: "Sorteio", titulo: "2 meses de bookkeeping", destaque: "grátis",
-        texto: "Para empresas de construção, limpeza e manutenção nos EUA. Inscrições até 25/11, sorteio em 26/11 ao vivo no Instagram.",
-        botao: "Quero participar", faltam: "Faltam", encerra: "Últimas horas" },
+        texto: "Para empresas de construção, limpeza e manutenção nos EUA. Sorteio em 25/11, ao vivo no final da nossa live do YouTube, que começa às 7:15pm CT.",
+        botao: "Quero participar", botao2: "Inscrever na live", faltam: "Faltam", encerra: "Últimas horas" },
   en: { tag: "Giveaway", titulo: "2 months of bookkeeping", destaque: "free",
-        texto: "For construction, cleaning and maintenance businesses in the U.S. Enter by Nov 25, drawing on Nov 26 live on Instagram.",
-        botao: "Enter now", faltam: "Ends in", encerra: "Final hours" }
+        texto: "For construction, cleaning and maintenance businesses in the U.S. Drawing on Nov 25, live at the end of our YouTube stream, which starts at 7:15pm CT.",
+        botao: "Enter now", botao2: "Register for the live", faltam: "Ends in", encerra: "Final hours" }
 };
 
 (function () {
@@ -35,6 +36,7 @@ const BANNER = {
       <p class="pb-text" id="pb-texto"></p>
       <div class="pb-row">
         <a class="btn pb-btn" id="pb-btn" href="${b.acao === "sorteio" ? "sorteio.html" : b.acao}" ${b.acao === "sorteio" ? "data-open-sorteio" : ""}></a>
+        ${b.acao2 ? `<a class="btn pb-btn2" id="pb-btn2" href="${b.acao2}"></a>` : ""}
         <span class="pb-count" id="pb-count" ${b.contagem ? "" : "hidden"}></span>
       </div>
     </div>
@@ -53,6 +55,8 @@ const BANNER = {
     document.getElementById("pb-destaque").textContent = t.destaque;
     document.getElementById("pb-texto").textContent = t.texto;
     document.getElementById("pb-btn").textContent = t.botao;
+    const btn2 = document.getElementById("pb-btn2");
+    if (btn2) btn2.textContent = t.botao2 || "";
     if (b.contagem) {
       const ms = new Date(b.fim) - new Date();
       if (ms <= 0) { el.hidden = true; return; }
