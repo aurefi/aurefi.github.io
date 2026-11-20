@@ -7,8 +7,8 @@
   // Vagas que ainda restam. Atualizar à mão a cada venda.
   // Setup grátis e o mês de extras não têm limite de vagas, por isso não têm contador.
   const VAGAS = {
-    catchup: 9,     // Catch-up de 2026 pelo preço de 2 mensalidades
-    cyber: 9        // Plano anual da Cyber Monday (12 pelo preço de 10)
+    catchup: 8,     // Catch-up de 2026 pelo preço de 2 mensalidades
+    cyber: 8        // Plano anual da Cyber Monday (12 pelo preço de 10)
   };
   const ATUALIZADO = "";   // ex.: "20/11, 10h". Vazio: a linha "Atualizado em" não aparece
 
