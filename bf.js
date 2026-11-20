@@ -3,14 +3,12 @@
   // ===== Configuração =====
   const FIM = new Date("2026-11-30T23:59:59-06:00");            // fim da oferta: 30/11, 23h59 CT
   const CYBER_INICIO = new Date("2026-11-30T00:00:00-06:00");   // Cyber Monday: 30/11, o dia todo
-  const VAGAS_TOTAL = 10;        // vagas de cada promoção
-  // Vagas que ainda restam em cada promoção. Atualizar à mão quando alguém fechar.
+  const VAGAS_TOTAL = 10;        // vagas de cada contador
+  // Vagas que ainda restam. Atualizar à mão a cada venda.
+  // Setup grátis e o mês de extras não têm limite de vagas, por isso não têm contador.
   const VAGAS = {
-    catchup: 09,    // Catch-up de 2026 pelo preço de 2 mensalidades
-    setup: 10,      // Setup grátis
-    extras: 10,     // 1 mês grátis de 2 extras
-    fundador: 10,   // Preço de Cliente Fundador
-    cyber: 09       // Cyber Monday: plano anual, 12 pelo preço de 10 (só em 30/11)
+    catchup: 9,     // Catch-up de 2026 pelo preço de 2 mensalidades
+    cyber: 9        // Plano anual da Cyber Monday (12 pelo preço de 10)
   };
   const ATUALIZADO = "";   // ex.: "20/11, 10h". Vazio: a linha "Atualizado em" não aparece
 
@@ -18,6 +16,11 @@
   const agora = new Date();
   const fase = agora > FIM ? "encerrada" : agora >= CYBER_INICIO ? "cyber" : "oferta";
   document.body.classList.add("bf-fase-" + fase);
+
+  // O aviso "Black Friday encerrada" fica guardado num <template> e só entra na página depois de 30/11, 23h59 CT
+  if (fase === "encerrada") {
+    document.querySelectorAll("template[data-bf-fim]").forEach(t => t.replaceWith(t.content.cloneNode(true)));
+  }
 
   // Na Cyber Monday, o bloco do plano anual vira o topo da página (em cada idioma)
   if (fase === "cyber") {

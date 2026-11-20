@@ -7,9 +7,9 @@
      Quando for divulgada ao público, apagar a linha abaixo. -->
 <meta name="robots" content="noindex, nofollow">
 <title>Black Friday 2026 · Aurea Financial</title>
-<meta name="description" content="Black Friday da Aurea Financial: seu 2026 inteiro (janeiro a novembro) organizado pelo preço de 2 mensalidades. Setup grátis e Preço de Cliente Fundador. Só 10 vagas em cada promoção, até 30/11.">
+<meta name="description" content="Black Friday da Aurea Financial: seu 2026 inteiro (janeiro a novembro) organizado pelo preço de 2 mensalidades. Setup grátis e Preço de Cliente Fundador. Só 10 vagas no catch-up, até 30/11.">
 <meta property="og:title" content="Black Friday Aurea · Atrasou. Organizou. Respirou.">
-<meta property="og:description" content="Seu 2026 inteiro (janeiro a novembro) organizado pelo preço de 2 mensalidades. Só 10 vagas em cada promoção, até 30/11.">
+<meta property="og:description" content="Seu 2026 inteiro (janeiro a novembro) organizado pelo preço de 2 mensalidades. Só 10 vagas no catch-up, até 30/11.">
 <meta property="og:url" content="https://aureafi.com/blackfriday">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://aureafi.com/img/bf-og.jpg">
@@ -95,9 +95,10 @@
   .bf-cyber .bf-example{background:rgba(255,255,255,.06);border:1px solid rgba(201,162,78,.5);border-radius:10px;padding:24px}
   .bf-cyber .bf-example small{display:block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--bf-gold);margin-bottom:10px}
   .bf-cyber .bf-example .sum{font:700 30px/1.15 "Oswald",Impact,sans-serif;color:#fff}
-  .bf-cyber .bf-example .sum span{color:var(--bf-gold)}
+  .bf-cyber .bf-example .sum span{color:var(--bf-gold);white-space:nowrap}
   .bf-cyber .bf-example p{font-size:15px;margin-top:10px}
   .bf-cyber .bf-btn{margin-top:24px}
+  .bf-cyber .bf-early{margin-top:14px;background:rgba(201,162,78,.14);border-left:3px solid var(--bf-gold);padding:12px 16px;color:#F5EEDC;font-weight:600;font-size:17px;border-radius:0 6px 6px 0}
   .bf-hoje{display:none}
   body.bf-fase-cyber .bf-hoje{display:block}
   body.bf-fase-cyber a.bf-hoje{display:inline-flex}
@@ -119,10 +120,10 @@
   .bf-slots h2{color:#fff}
   .bf-slots .bf-kicker{color:var(--bf-gold)}
   .bf-slots .bf-intro{color:#D9D4C4}
-  .bf-slot-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:32px;list-style:none}
-  .bf-slot .quando{display:block;margin-top:6px;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--bf-gold)}
+  .bf-slot-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:32px;list-style:none;max-width:860px}
+  .bf-slot .quando{display:block;margin:8px 0 18px;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--bf-gold)}
   .bf-slot{background:rgba(255,255,255,.05);border:1px solid rgba(201,162,78,.35);border-top:4px solid var(--bf-gold);border-radius:8px;padding:24px 22px;display:flex;flex-direction:column}
-  .bf-slot b{display:block;font-size:16.5px;line-height:1.3;color:#F5EEDC;margin-bottom:16px}
+  .bf-slot b{display:block;font-size:18px;line-height:1.3;color:#F5EEDC}
   .bf-slot .num{margin-top:auto;font:700 54px/1 "Oswald",Impact,sans-serif;color:var(--bf-gold)}
   .bf-slot .de{margin-top:6px;font-size:15px;color:#D9D4C4}
   .bf-slot .bar{margin-top:16px;height:6px;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden}
@@ -132,8 +133,7 @@
   .bf-slot.esgotado{opacity:.55}
   .bf-slot.esgotado .num{font-size:30px;color:#F5EEDC;padding:12px 0 6px}
   .bf-slots-upd{margin-top:16px;font-size:14px;color:#BFB9A6}
-  @media (max-width:1180px){.bf-slot-grid{grid-template-columns:repeat(3,1fr)}}
-  @media (max-width:900px){.bf-slot-grid{grid-template-columns:1fr 1fr}.bf-slot[data-promo="cyber"]{grid-column:1 / -1}}
+  @media (max-width:640px){.bf-slot-grid{grid-template-columns:1fr}}
   @media (max-width:520px){.bf-slot{padding:18px 16px}.bf-slot .num{font-size:44px}.bf-slot b{font-size:15.5px}}
 
   /* Fechamento */
@@ -197,7 +197,7 @@
 <div data-show="pt">
 
   <!-- Oferta encerrada (aparece sozinha depois de 30/11, 23h59 CT) -->
-  <section class="bf-fim">
+  <template data-bf-fim="pt"><section class="bf-fim">
     <div class="wrap">
       <span class="bf-badge">BLACK FRIDAY ENCERRADA</span>
       <h2 class="bf-serif" style="margin-top:22px;font-size:clamp(2rem,5vw,3rem)">A oferta da Black Friday terminou</h2>
@@ -207,7 +207,7 @@
         <a class="bf-btn dark" href="services.html">Ver os serviços</a>
       </div>
     </div>
-  </section>
+  </section></template>
 
   <!-- Topo -->
   <section class="bf-hero bf-so-oferta" id="bf-hero-pt">
@@ -217,12 +217,12 @@
       <p class="bf-sub">Seu 2026 inteiro (janeiro a novembro) organizado pelo preço de 2 mensalidades.</p>
       <p class="bf-support">Se 2026 virou uma sacola de recibos, a gente organiza tudo para você chegar em abril com tudo pronto.</p>
       <a class="bf-btn" data-pos="topo" href="https://wa.me/13259565160?text=Oi%2C%20quero%20minha%20vaga%20da%20Black%20Friday" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.3-.8-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg>Quero minha vaga no WhatsApp</a>
-      <p class="bf-vagas" data-bf-vagas="pt">Só 10 vagas em cada promoção.</p>
+      <p class="bf-vagas" data-bf-vagas="pt">Só 10 vagas no catch-up e 10 no plano anual da Cyber Monday.</p>
       <div class="bf-count" data-bf-count aria-live="off">
-        <div><b data-u="d">0</b><span>dias</span></div>
-        <div><b data-u="h">00</b><span>horas</span></div>
-        <div><b data-u="m">00</b><span>min</span></div>
-        <div><b data-u="s">00</b><span>seg</span></div>
+        <div><b data-u="d">–</b><span>dias</span></div>
+        <div><b data-u="h">–</b><span>horas</span></div>
+        <div><b data-u="m">–</b><span>min</span></div>
+        <div><b data-u="s">–</b><span>seg</span></div>
       </div>
       <p class="bf-count-label">A oferta termina em 30/11, às 23h59 (horário central, CT).</p>
     </div>
@@ -245,15 +245,12 @@
   <!-- Vagas por promoção (números no topo do bf.js) -->
   <section class="bf-sec bf-slots bf-so-oferta" data-bf-slots="pt">
     <div class="wrap">
-      <p class="bf-kicker">Vagas por promoção</p>
+      <p class="bf-kicker">Vagas</p>
       <h2>Quantas vagas ainda restam</h2>
-      <p class="bf-intro">Cada promoção tem 10 vagas. Quando acabam, a promoção encerra, mesmo antes de 30/11.</p>
+      <p class="bf-intro">O catch-up e o plano anual da Cyber Monday têm 10 vagas cada. Quando acabam, a promoção encerra, mesmo antes de 30/11. Setup grátis e o mês de extras não têm limite de vagas.</p>
       <ul class="bf-slot-grid">
-        <li class="bf-slot" data-promo="catchup"><b>Catch-up de 2026 pelo preço de 2 mensalidades</b><span class="num">10</span><span class="de"></span><span class="bar"><i style="width:100%"></i></span></li>
-        <li class="bf-slot" data-promo="setup"><b>Setup grátis</b><span class="num">10</span><span class="de"></span><span class="bar"><i style="width:100%"></i></span></li>
-        <li class="bf-slot" data-promo="extras"><b>1 mês grátis de 2 extras</b><span class="num">10</span><span class="de"></span><span class="bar"><i style="width:100%"></i></span></li>
-        <li class="bf-slot" data-promo="fundador"><b>Preço de Cliente Fundador</b><span class="num">10</span><span class="de"></span><span class="bar"><i style="width:100%"></i></span></li>
-        <li class="bf-slot" data-promo="cyber"><b>Cyber Monday: 12 meses pelo preço de 10<span class="quando">Só em 30/11</span></b><span class="num">10</span><span class="de"></span><span class="bar"><i style="width:100%"></i></span></li>
+        <li class="bf-slot" data-promo="catchup"><b>Catch-up de 2026 pelo preço de 2 mensalidades</b> <span class="quando">Até 30/11</span><span class="num">10</span><span class="de"></span><span class="bar"><i style="width:100%"></i></span></li>
+        <li class="bf-slot" data-promo="cyber"><b>Plano anual da Cyber Monday: 12 meses pelo preço de 10</b> <span class="quando">Público: só em 30/11 · Acesso antecipado: já liberado</span><span class="num">10</span><span class="de"></span><span class="bar"><i style="width:100%"></i></span></li>
       </ul>
       <p class="bf-slots-upd" data-bf-upd hidden></p>
     </div>
@@ -304,12 +301,12 @@
   <section class="bf-sec bf-cyber bf-so-oferta" data-bf-cyber>
     <div class="wrap">
       <div>
-        <p class="bf-kicker bf-antes">Só na segunda, 30/11</p>
+        <p class="bf-kicker bf-antes">Para o público: só na segunda, 30/11</p>
         <p class="bf-kicker bf-hoje">Hoje: Cyber Monday</p>
         <h2>Cyber Monday: 12 meses pelo preço de 10</h2>
+        <p class="bf-early bf-antes">Recebeu nosso e-mail de acesso antecipado? Para você, o plano anual já está liberado até 30/11, às 23:59 CT.</p>
         <p>Plano anual à vista, sobre o Preço de Cliente Fundador. E soma com o catch-up da Black Friday.</p>
-        <p class="bf-antes" style="font-weight:700;color:var(--bf-gold)">Vale só na segunda-feira, 30/11.</p>
-        <a class="bf-btn bf-hoje" data-pos="cyber" href="https://wa.me/13259565160?text=Oi%2C%20quero%20o%20plano%20anual%20da%20Cyber%20Monday" target="_blank" rel="noopener">Quero o plano anual no WhatsApp</a>
+        <a class="bf-btn" data-pos="cyber" href="https://wa.me/13259565160?text=Oi%2C%20quero%20o%20plano%20anual%20da%20Cyber%20Monday" target="_blank" rel="noopener">Quero o plano anual no WhatsApp</a>
       </div>
       <div class="bf-example">
         <small>Exemplo: plano Essential</small>
@@ -341,7 +338,7 @@
         <details><summary>Preciso ficar quanto tempo?</summary><p>Para ter o preço de Black Friday no catch-up, a permanência mínima é de 6 meses no plano mensal.</p></details>
         <details><summary>Abri a empresa há pouco tempo. Serve pra mim?</summary><p>Para empresas com até 6 meses de abertura e menos de 30 transações por mês existe o Startup Plan, que não entra no catch-up. <a href="https://wa.me/13259565160?text=Oi%2C%20quero%20saber%20do%20Startup%20Plan" data-pos="faq_startup" target="_blank" rel="noopener" style="color:var(--bf-gold2);font-weight:700">Chame no WhatsApp</a> para saber mais.</p></details>
         <details><summary>Vocês fazem o imposto?</summary><p>A Aurea faz o bookkeeping e entrega os livros prontos para o seu contador (CPA).</p></details>
-        <details><summary>Quantas vagas são?</summary><p>10 em cada promoção. Cada uma vale até 30/11 às 23h59 CT ou até as vagas dela acabarem. Veja acima quantas ainda restam.</p></details>
+        <details><summary>Quantas vagas são?</summary><p>10 no catch-up e 10 no plano anual da Cyber Monday. Cada um vale até 30/11 às 23h59 CT ou até as vagas acabarem. Setup grátis e o mês de extras não têm limite de vagas. Veja acima quantas ainda restam.</p></details>
       </div>
     </div>
   </section>
@@ -351,14 +348,14 @@
     <div class="wrap">
       <h2 class="bf-serif" style="font-size:clamp(1.9rem,4vw,2.8rem)">Chegue em abril com tudo pronto</h2>
       <a class="bf-btn" data-pos="final" href="https://wa.me/13259565160?text=Oi%2C%20quero%20minha%20vaga%20da%20Black%20Friday" target="_blank" rel="noopener">Quero minha vaga no WhatsApp</a>
-      <p class="bf-vagas" data-bf-vagas="pt">Só 10 vagas em cada promoção.</p>
+      <p class="bf-vagas" data-bf-vagas="pt">Só 10 vagas no catch-up e 10 no plano anual da Cyber Monday.</p>
     </div>
   </section>
 
   <!-- Condições -->
   <section class="bf-terms bf-so-oferta">
     <div class="wrap">
-      <p>Preço do catch-up válido para quem assinar um plano mensal até 30/11/2026, 23:59 CT, com permanência mínima de 6 meses. Catch-up referente a janeiro–novembro de 2026. Setup grátis para contas abertas em 2026. 1 mês grátis de 2 extras nos planos Essential Light, Essential e Professional Light. Plano anual (12 pelo preço de 10) só em 30/11/2026, soma com o catch-up. Limitado a 10 vagas por promoção. O catch-up não se aplica ao Startup Plan.</p>
+      <p>Preço do catch-up válido para quem assinar um plano mensal até 30/11/2026, 23:59 CT, com permanência mínima de 6 meses. Catch-up referente a janeiro–novembro de 2026. Setup grátis para contas abertas em 2026. 1 mês grátis de 2 extras nos planos Essential Light, Essential e Professional Light. Catch-up limitado a 10 vagas. Plano anual (12 pelo preço de 10): para o público, só em 30/11/2026; para quem recebeu o e-mail de acesso antecipado, de 20/11 a 30/11/2026, 23:59 CT. Soma com o catch-up. Limitado a 10 vagas. O catch-up não se aplica ao Startup Plan.</p>
     </div>
   </section>
 </div>
@@ -366,7 +363,7 @@
 <!-- ======================= ENGLISH ======================= -->
 <div data-show="en">
 
-  <section class="bf-fim">
+  <template data-bf-fim="en"><section class="bf-fim">
     <div class="wrap">
       <span class="bf-badge">BLACK FRIDAY HAS ENDED</span>
       <h2 class="bf-serif" style="margin-top:22px;font-size:clamp(2rem,5vw,3rem)">Our Black Friday offer has ended</h2>
@@ -376,7 +373,7 @@
         <a class="bf-btn dark" href="services.html">See our services</a>
       </div>
     </div>
-  </section>
+  </section></template>
 
   <section class="bf-hero bf-so-oferta" id="bf-hero-en">
     <div class="wrap">
@@ -385,12 +382,12 @@
       <p class="bf-sub">Your whole 2026 (January to November) caught up for the price of 2 monthly fees.</p>
       <p class="bf-support">If 2026 turned into a bag of receipts, we will organize everything so you reach April with your books ready.</p>
       <a class="bf-btn" data-pos="topo" href="https://wa.me/13259565160?text=Hi%2C%20I%20want%20my%20Black%20Friday%20spot" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.3-.8-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg>Claim my spot on WhatsApp</a>
-      <p class="bf-vagas" data-bf-vagas="en">Only 10 spots per offer.</p>
+      <p class="bf-vagas" data-bf-vagas="en">Only 10 spots for the catch-up and 10 for the Cyber Monday annual plan.</p>
       <div class="bf-count" data-bf-count aria-live="off">
-        <div><b data-u="d">0</b><span>days</span></div>
-        <div><b data-u="h">00</b><span>hours</span></div>
-        <div><b data-u="m">00</b><span>min</span></div>
-        <div><b data-u="s">00</b><span>sec</span></div>
+        <div><b data-u="d">–</b><span>days</span></div>
+        <div><b data-u="h">–</b><span>hours</span></div>
+        <div><b data-u="m">–</b><span>min</span></div>
+        <div><b data-u="s">–</b><span>sec</span></div>
       </div>
       <p class="bf-count-label">The offer ends on November 30 at 11:59 p.m. Central Time (CT).</p>
     </div>
@@ -412,15 +409,12 @@
   <!-- Vagas por promoção (números no topo do bf.js) -->
   <section class="bf-sec bf-slots bf-so-oferta" data-bf-slots="en">
     <div class="wrap">
-      <p class="bf-kicker">Spots per offer</p>
+      <p class="bf-kicker">Spots</p>
       <h2>How many spots are left</h2>
-      <p class="bf-intro">Each offer has 10 spots. When they run out, that offer ends, even before Nov 30.</p>
+      <p class="bf-intro">The catch-up and the Cyber Monday annual plan have 10 spots each. When they run out, that offer ends, even before Nov 30. Free setup and the free month of add-ons have no spot limit.</p>
       <ul class="bf-slot-grid">
-        <li class="bf-slot" data-promo="catchup"><b>2026 catch-up for the price of 2 monthly fees</b><span class="num">10</span><span class="de"></span><span class="bar"><i style="width:100%"></i></span></li>
-        <li class="bf-slot" data-promo="setup"><b>Free setup</b><span class="num">10</span><span class="de"></span><span class="bar"><i style="width:100%"></i></span></li>
-        <li class="bf-slot" data-promo="extras"><b>1 free month of 2 add-ons</b><span class="num">10</span><span class="de"></span><span class="bar"><i style="width:100%"></i></span></li>
-        <li class="bf-slot" data-promo="fundador"><b>Founding Client pricing</b><span class="num">10</span><span class="de"></span><span class="bar"><i style="width:100%"></i></span></li>
-        <li class="bf-slot" data-promo="cyber"><b>Cyber Monday: 12 months for the price of 10<span class="quando">Nov 30 only</span></b><span class="num">10</span><span class="de"></span><span class="bar"><i style="width:100%"></i></span></li>
+        <li class="bf-slot" data-promo="catchup"><b>2026 catch-up for the price of 2 monthly fees</b> <span class="quando">Through Nov 30</span><span class="num">10</span><span class="de"></span><span class="bar"><i style="width:100%"></i></span></li>
+        <li class="bf-slot" data-promo="cyber"><b>Cyber Monday annual plan: 12 months for the price of 10</b> <span class="quando">Public: Nov 30 only · Early access: already open</span><span class="num">10</span><span class="de"></span><span class="bar"><i style="width:100%"></i></span></li>
       </ul>
       <p class="bf-slots-upd" data-bf-upd hidden></p>
     </div>
@@ -468,12 +462,12 @@
   <section class="bf-sec bf-cyber bf-so-oferta" data-bf-cyber>
     <div class="wrap">
       <div>
-        <p class="bf-kicker bf-antes">Monday, Nov 30 only</p>
+        <p class="bf-kicker bf-antes">Public: Monday, Nov 30 only</p>
         <p class="bf-kicker bf-hoje">Today: Cyber Monday</p>
         <h2>Cyber Monday: 12 months for the price of 10</h2>
+        <p class="bf-early bf-antes">Got our early-access email? The annual plan is already open for you until Nov 30, 11:59 p.m. CT.</p>
         <p>Annual plan paid upfront, on top of Founding Client pricing. And it stacks with the Black Friday catch-up.</p>
-        <p class="bf-antes" style="font-weight:700;color:var(--bf-gold)">Valid on Monday, November 30 only.</p>
-        <a class="bf-btn bf-hoje" data-pos="cyber" href="https://wa.me/13259565160?text=Hi%2C%20I%20want%20the%20Cyber%20Monday%20annual%20plan" target="_blank" rel="noopener">Get the annual plan on WhatsApp</a>
+        <a class="bf-btn" data-pos="cyber" href="https://wa.me/13259565160?text=Hi%2C%20I%20want%20the%20Cyber%20Monday%20annual%20plan" target="_blank" rel="noopener">Get the annual plan on WhatsApp</a>
       </div>
       <div class="bf-example">
         <small>Example: Essential plan</small>
@@ -503,7 +497,7 @@
         <details><summary>How long do I need to stay?</summary><p>To get the Black Friday catch-up price, the minimum commitment is 6 months on the monthly plan.</p></details>
         <details><summary>I just opened my business. Is this for me?</summary><p>For businesses up to 6 months old with fewer than 30 transactions a month, there is the Startup Plan, which is not part of the catch-up offer. <a href="https://wa.me/13259565160?text=Hi%2C%20I%20would%20like%20to%20know%20about%20the%20Startup%20Plan" data-pos="faq_startup" target="_blank" rel="noopener" style="color:var(--bf-gold2);font-weight:700">Message us on WhatsApp</a> to learn more.</p></details>
         <details><summary>Do you file taxes?</summary><p>Aurea does the bookkeeping and hands your CPA books that are ready to go.</p></details>
-        <details><summary>How many spots are there?</summary><p>10 per offer. Each one is valid through November 30 at 11:59 p.m. CT or until its spots are taken. See above how many are left.</p></details>
+        <details><summary>How many spots are there?</summary><p>10 for the catch-up and 10 for the Cyber Monday annual plan. Each is valid through November 30 at 11:59 p.m. CT or until its spots are taken. Free setup and the free month of add-ons have no spot limit. See above how many are left.</p></details>
       </div>
     </div>
   </section>
@@ -512,13 +506,13 @@
     <div class="wrap">
       <h2 class="bf-serif" style="font-size:clamp(1.9rem,4vw,2.8rem)">Reach April with everything ready</h2>
       <a class="bf-btn" data-pos="final" href="https://wa.me/13259565160?text=Hi%2C%20I%20want%20my%20Black%20Friday%20spot" target="_blank" rel="noopener">Claim my spot on WhatsApp</a>
-      <p class="bf-vagas" data-bf-vagas="en">Only 10 spots per offer.</p>
+      <p class="bf-vagas" data-bf-vagas="en">Only 10 spots for the catch-up and 10 for the Cyber Monday annual plan.</p>
     </div>
   </section>
 
   <section class="bf-terms bf-so-oferta">
     <div class="wrap">
-      <p>Catch-up price valid for clients who sign up for a monthly plan by November 30, 2026, 11:59 p.m. CT, with a minimum commitment of 6 months. Catch-up covers January–November 2026. Free setup for accounts opened in 2026. 1 free month of 2 add-ons on the Essential Light, Essential and Professional Light plans. Annual plan (12 for the price of 10) on November 30, 2026 only, stacks with the catch-up. Limited to 10 spots per offer. The catch-up offer does not apply to the Startup Plan.</p>
+      <p>Catch-up price valid for clients who sign up for a monthly plan by November 30, 2026, 11:59 p.m. CT, with a minimum commitment of 6 months. Catch-up covers January–November 2026. Free setup for accounts opened in 2026. 1 free month of 2 add-ons on the Essential Light, Essential and Professional Light plans. Catch-up limited to 10 spots. Annual plan (12 for the price of 10): for the public, on November 30, 2026 only; for those who received the early-access email, from November 20 to November 30, 2026, 11:59 p.m. CT. Stacks with the catch-up. Limited to 10 spots. The catch-up offer does not apply to the Startup Plan.</p>
     </div>
   </section>
 </div>
@@ -540,6 +534,6 @@ window.PAGE_DICT = {
 };
 </script>
 <script src="main.js"></script>
-<script src="bf.js?v=4"></script>
+<script src="bf.js?v=5"></script>
 </body>
 </html>
