@@ -6,11 +6,11 @@
   const VAGAS_TOTAL = 10;        // vagas de cada promoção
   // Vagas que ainda restam em cada promoção. Atualizar à mão quando alguém fechar.
   const VAGAS = {
-    catchup: 10,    // Catch-up de 2026 pelo preço de 2 mensalidades
+    catchup: 09,    // Catch-up de 2026 pelo preço de 2 mensalidades
     setup: 10,      // Setup grátis
     extras: 10,     // 1 mês grátis de 2 extras
     fundador: 10,   // Preço de Cliente Fundador
-    cyber: 10       // Cyber Monday: plano anual, 12 pelo preço de 10 (só em 30/11)
+    cyber: 09       // Cyber Monday: plano anual, 12 pelo preço de 10 (só em 30/11)
   };
   const ATUALIZADO = "";   // ex.: "20/11, 10h". Vazio: a linha "Atualizado em" não aparece
 
