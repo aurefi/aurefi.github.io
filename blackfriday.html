@@ -119,10 +119,11 @@
   .bf-slots h2{color:#fff}
   .bf-slots .bf-kicker{color:var(--bf-gold)}
   .bf-slots .bf-intro{color:#D9D4C4}
-  .bf-slot-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:32px;list-style:none}
+  .bf-slot-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:32px;list-style:none}
+  .bf-slot .quando{display:block;margin-top:6px;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--bf-gold)}
   .bf-slot{background:rgba(255,255,255,.05);border:1px solid rgba(201,162,78,.35);border-top:4px solid var(--bf-gold);border-radius:8px;padding:24px 22px;display:flex;flex-direction:column}
-  .bf-slot b{display:block;font-size:17px;line-height:1.3;color:#F5EEDC;min-height:2.6em}
-  .bf-slot .num{margin-top:16px;font:700 54px/1 "Oswald",Impact,sans-serif;color:var(--bf-gold)}
+  .bf-slot b{display:block;font-size:16.5px;line-height:1.3;color:#F5EEDC;margin-bottom:16px}
+  .bf-slot .num{margin-top:auto;font:700 54px/1 "Oswald",Impact,sans-serif;color:var(--bf-gold)}
   .bf-slot .de{margin-top:6px;font-size:15px;color:#D9D4C4}
   .bf-slot .bar{margin-top:16px;height:6px;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden}
   .bf-slot .bar i{display:block;height:100%;background:var(--bf-gold);border-radius:3px;transition:width .4s}
@@ -131,7 +132,8 @@
   .bf-slot.esgotado{opacity:.55}
   .bf-slot.esgotado .num{font-size:30px;color:#F5EEDC;padding:12px 0 6px}
   .bf-slots-upd{margin-top:16px;font-size:14px;color:#BFB9A6}
-  @media (max-width:900px){.bf-slot-grid{grid-template-columns:1fr 1fr}}
+  @media (max-width:1180px){.bf-slot-grid{grid-template-columns:repeat(3,1fr)}}
+  @media (max-width:900px){.bf-slot-grid{grid-template-columns:1fr 1fr}.bf-slot[data-promo="cyber"]{grid-column:1 / -1}}
   @media (max-width:520px){.bf-slot{padding:18px 16px}.bf-slot .num{font-size:44px}.bf-slot b{font-size:15.5px}}
 
   /* Fechamento */
@@ -234,7 +236,7 @@
       <ol class="bf-gets">
         <li><b>Catch-up de 2026 (jan–nov) pelo preço de 2 mensalidades</b><p>Os meses atrasados do ano organizados pelo valor de 2 mensalidades do plano que você assinar.</p></li>
         <li><b>Setup grátis</b><p>A configuração inicial da sua conta sai por nossa conta.</p></li>
-        <li><b>1 mês grátis de 2 extras à sua escolha</b><p>Reuniões de leitura dos relatórios, emissão de invoices, job costing ou preparação para auditoria do seguro. Nos planos Essential Light, Essential e Professional Light.</p></li>
+        <li><b>1 mês grátis de 2 extras à sua escolha</b><p>Reuniões de leitura dos relatórios, emissão de invoices ou job costing. Nos planos Essential Light, Essential e Professional Light.</p></li>
         <li><b>Preço de Cliente Fundador por 12 meses</b><p>Para quem começar antes de 2027.</p></li>
       </ol>
     </div>
@@ -251,6 +253,7 @@
         <li class="bf-slot" data-promo="setup"><b>Setup grátis</b><span class="num">10</span><span class="de"></span><span class="bar"><i style="width:100%"></i></span></li>
         <li class="bf-slot" data-promo="extras"><b>1 mês grátis de 2 extras</b><span class="num">10</span><span class="de"></span><span class="bar"><i style="width:100%"></i></span></li>
         <li class="bf-slot" data-promo="fundador"><b>Preço de Cliente Fundador</b><span class="num">10</span><span class="de"></span><span class="bar"><i style="width:100%"></i></span></li>
+        <li class="bf-slot" data-promo="cyber"><b>Cyber Monday: 12 meses pelo preço de 10<span class="quando">Só em 30/11</span></b><span class="num">10</span><span class="de"></span><span class="bar"><i style="width:100%"></i></span></li>
       </ul>
       <p class="bf-slots-upd" data-bf-upd hidden></p>
     </div>
@@ -400,7 +403,7 @@
       <ol class="bf-gets">
         <li><b>2026 catch-up (Jan–Nov) for the price of 2 monthly fees</b><p>All the months you are behind, organized for 2 monthly fees of the plan you choose.</p></li>
         <li><b>Free setup</b><p>Your account setup is on us.</p></li>
-        <li><b>1 free month of 2 add-ons of your choice</b><p>Report review meetings, invoicing, job costing or insurance audit preparation. On the Essential Light, Essential and Professional Light plans.</p></li>
+        <li><b>1 free month of 2 add-ons of your choice</b><p>Report review meetings, invoicing or job costing. On the Essential Light, Essential and Professional Light plans.</p></li>
         <li><b>Founding Client pricing for 12 months</b><p>For businesses that start before 2027.</p></li>
       </ol>
     </div>
@@ -417,6 +420,7 @@
         <li class="bf-slot" data-promo="setup"><b>Free setup</b><span class="num">10</span><span class="de"></span><span class="bar"><i style="width:100%"></i></span></li>
         <li class="bf-slot" data-promo="extras"><b>1 free month of 2 add-ons</b><span class="num">10</span><span class="de"></span><span class="bar"><i style="width:100%"></i></span></li>
         <li class="bf-slot" data-promo="fundador"><b>Founding Client pricing</b><span class="num">10</span><span class="de"></span><span class="bar"><i style="width:100%"></i></span></li>
+        <li class="bf-slot" data-promo="cyber"><b>Cyber Monday: 12 months for the price of 10<span class="quando">Nov 30 only</span></b><span class="num">10</span><span class="de"></span><span class="bar"><i style="width:100%"></i></span></li>
       </ul>
       <p class="bf-slots-upd" data-bf-upd hidden></p>
     </div>
@@ -536,6 +540,6 @@ window.PAGE_DICT = {
 };
 </script>
 <script src="main.js"></script>
-<script src="bf.js?v=3"></script>
+<script src="bf.js?v=4"></script>
 </body>
 </html>
