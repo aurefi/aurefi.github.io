@@ -98,6 +98,10 @@
   .bf-cyber .bf-example .sum span{color:var(--bf-gold);white-space:nowrap}
   .bf-cyber .bf-example p{font-size:15px;margin-top:10px}
   .bf-cyber .bf-btn{margin-top:24px}
+  .bf-cyber-tab{grid-column:1 / -1}
+  .bf-cyber .bf-table{margin-top:8px;color:var(--bf-green)}
+  .bf-cyber .bf-table th{background:#0F2A1E;color:var(--bf-gold)}
+  .bf-cyber .bf-note{color:#D9D4C4}
   .bf-cyber .bf-early{margin-top:14px;background:rgba(201,162,78,.14);border-left:3px solid var(--bf-gold);padding:12px 16px;color:#F5EEDC;font-weight:600;font-size:17px;border-radius:0 6px 6px 0}
   .bf-hoje{display:none}
   body.bf-fase-cyber .bf-hoje{display:block}
@@ -313,6 +317,20 @@
         <p class="sum">$3.000 <span>(ano)</span> + $600 <span>(catch-up)</span></p>
         <p>12 meses de Essential a $300/mês pelo preço de 10, mais o catch-up de janeiro a novembro de 2026.</p>
       </div>
+      <div class="bf-cyber-tab">
+        <table class="bf-table">
+          <thead><tr><th>Plano</th><th>Transações/mês</th><th>12 meses no Fundador</th><th>Cyber Monday (à vista)</th><th>Você economiza</th></tr></thead>
+          <tbody>
+          <tr><td>Essential Light</td><td data-label="Transações/mês">até 50</td><td data-label="12 meses no Fundador"><span class="old">$2.400</span></td><td data-label="Cyber Monday (à vista)" class="new">$2.000</td><td data-label="Você economiza" class="save">$400</td></tr>
+          <tr><td>Essential</td><td data-label="Transações/mês">51–100</td><td data-label="12 meses no Fundador"><span class="old">$3.600</span></td><td data-label="Cyber Monday (à vista)" class="new">$3.000</td><td data-label="Você economiza" class="save">$600</td></tr>
+          <tr><td>Professional Light</td><td data-label="Transações/mês">101–200</td><td data-label="12 meses no Fundador"><span class="old">$4.500</span></td><td data-label="Cyber Monday (à vista)" class="new">$3.750</td><td data-label="Você economiza" class="save">$750</td></tr>
+          <tr><td>Professional</td><td data-label="Transações/mês">101–200</td><td data-label="12 meses no Fundador"><span class="old">$5.100</span></td><td data-label="Cyber Monday (à vista)" class="new">$4.250</td><td data-label="Você economiza" class="save">$850</td></tr>
+          <tr><td>Premium</td><td data-label="Transações/mês">201–350</td><td data-label="12 meses no Fundador"><span class="old">$6.900</span></td><td data-label="Cyber Monday (à vista)" class="new">$5.750</td><td data-label="Você economiza" class="save">$1.150</td></tr>
+          <tr><td>Premium Plus</td><td data-label="Transações/mês">351–500</td><td data-label="12 meses no Fundador"><span class="old">$8.700</span></td><td data-label="Cyber Monday (à vista)" class="new">$7.250</td><td data-label="Você economiza" class="save">$1.450</td></tr>
+          </tbody>
+        </table>
+        <p class="bf-note">Plano anual pago à vista: 12 meses pelo preço de 10, sobre o Preço de Cliente Fundador. Acima de 500 transações por mês, sob consulta.</p>
+      </div>
     </div>
   </section>
 
@@ -473,6 +491,20 @@
         <small>Example: Essential plan</small>
         <p class="sum">$3,000 <span>(year)</span> + $600 <span>(catch-up)</span></p>
         <p>12 months of Essential at $300/mo for the price of 10, plus the January to November 2026 catch-up.</p>
+      </div>
+      <div class="bf-cyber-tab">
+        <table class="bf-table">
+          <thead><tr><th>Plan</th><th>Transactions/mo</th><th>12 months at Founding</th><th>Cyber Monday (upfront)</th><th>You save</th></tr></thead>
+          <tbody>
+          <tr><td>Essential Light</td><td data-label="Transactions/mo">up to 50</td><td data-label="12 months at Founding"><span class="old">$2,400</span></td><td data-label="Cyber Monday (upfront)" class="new">$2,000</td><td data-label="You save" class="save">$400</td></tr>
+          <tr><td>Essential</td><td data-label="Transactions/mo">51–100</td><td data-label="12 months at Founding"><span class="old">$3,600</span></td><td data-label="Cyber Monday (upfront)" class="new">$3,000</td><td data-label="You save" class="save">$600</td></tr>
+          <tr><td>Professional Light</td><td data-label="Transactions/mo">101–200</td><td data-label="12 months at Founding"><span class="old">$4,500</span></td><td data-label="Cyber Monday (upfront)" class="new">$3,750</td><td data-label="You save" class="save">$750</td></tr>
+          <tr><td>Professional</td><td data-label="Transactions/mo">101–200</td><td data-label="12 months at Founding"><span class="old">$5,100</span></td><td data-label="Cyber Monday (upfront)" class="new">$4,250</td><td data-label="You save" class="save">$850</td></tr>
+          <tr><td>Premium</td><td data-label="Transactions/mo">201–350</td><td data-label="12 months at Founding"><span class="old">$6,900</span></td><td data-label="Cyber Monday (upfront)" class="new">$5,750</td><td data-label="You save" class="save">$1,150</td></tr>
+          <tr><td>Premium Plus</td><td data-label="Transactions/mo">351–500</td><td data-label="12 months at Founding"><span class="old">$8,700</span></td><td data-label="Cyber Monday (upfront)" class="new">$7,250</td><td data-label="You save" class="save">$1,450</td></tr>
+          </tbody>
+        </table>
+        <p class="bf-note">Annual plan paid upfront: 12 months for the price of 10, on top of Founding Client pricing. Over 500 transactions a month, on request.</p>
       </div>
     </div>
   </section>
