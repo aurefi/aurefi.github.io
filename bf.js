@@ -3,8 +3,15 @@
   // ===== Configuração =====
   const FIM = new Date("2026-11-30T23:59:59-06:00");            // fim da oferta: 30/11, 23h59 CT
   const CYBER_INICIO = new Date("2026-11-30T00:00:00-06:00");   // Cyber Monday: 30/11, o dia todo
-  const VAGAS_TOTAL = 10;
-  const VAGAS_RESTANTES = null;  // null: mostra "Só 10 vagas". Um número (ex.: 7): mostra "Restam 7 de 10 vagas". 0: "Vagas esgotadas"
+  const VAGAS_TOTAL = 10;        // vagas de cada promoção
+  // Vagas que ainda restam em cada promoção. Atualizar à mão quando alguém fechar.
+  const VAGAS = {
+    catchup: 10,    // Catch-up de 2026 pelo preço de 2 mensalidades
+    setup: 10,      // Setup grátis
+    extras: 10,     // 1 mês grátis de 2 extras
+    fundador: 10    // Preço de Cliente Fundador
+  };
+  const ATUALIZADO = "";   // ex.: "20/11, 10h". Vazio: a linha "Atualizado em" não aparece
 
   // ===== Fase da página =====
   const agora = new Date();
@@ -20,17 +27,25 @@
     });
   }
 
-  // ===== Vagas =====
+  // ===== Vagas por promoção =====
   const TXT = {
-    pt: n => n === null ? "Só " + VAGAS_TOTAL + " vagas."
-      : n <= 0 ? "Vagas esgotadas."
-      : `Restam <b>${n}</b> de ${VAGAS_TOTAL} ${n === 1 ? "vaga" : "vagas"}.`,
-    en: n => n === null ? "Only " + VAGAS_TOTAL + " spots."
-      : n <= 0 ? "All spots have been taken."
-      : `Only <b>${n}</b> of ${VAGAS_TOTAL} ${n === 1 ? "spot" : "spots"} left.`
+    pt: { de: n => n === 1 ? "vaga restante de " + VAGAS_TOTAL : "vagas restantes de " + VAGAS_TOTAL, esgotado: "Esgotado", esg_de: "As " + VAGAS_TOTAL + " vagas acabaram", upd: "Atualizado em " },
+    en: { de: n => (n === 1 ? "spot left of " : "spots left of ") + VAGAS_TOTAL, esgotado: "Sold out", esg_de: "All " + VAGAS_TOTAL + " spots are taken", upd: "Updated " }
   };
-  const vagas = (typeof VAGAS_RESTANTES === "number") ? Math.max(0, Math.min(VAGAS_TOTAL, Math.floor(VAGAS_RESTANTES))) : null;
-  document.querySelectorAll("[data-bf-vagas]").forEach(el => { el.innerHTML = TXT[el.dataset.bfVagas](vagas); });
+  document.querySelectorAll("[data-bf-slots]").forEach(sec => {
+    const t = TXT[sec.dataset.bfSlots] || TXT.pt;
+    sec.querySelectorAll("[data-promo]").forEach(card => {
+      const bruto = VAGAS[card.dataset.promo];
+      const n = Math.max(0, Math.min(VAGAS_TOTAL, Math.floor(Number(bruto ?? VAGAS_TOTAL)) || 0));
+      card.classList.toggle("esgotado", n === 0);
+      card.classList.toggle("poucas", n > 0 && n <= 3);
+      card.querySelector(".num").textContent = n === 0 ? t.esgotado : n;
+      card.querySelector(".de").textContent = n === 0 ? t.esg_de : t.de(n);
+      card.querySelector(".bar i").style.width = (n / VAGAS_TOTAL * 100) + "%";
+    });
+    const upd = sec.querySelector("[data-bf-upd]");
+    if (ATUALIZADO && upd) { upd.textContent = t.upd + ATUALIZADO + "."; upd.hidden = false; }
+  });
 
   // ===== Contagem regressiva até 30/11, 23h59 CT =====
   const contadores = [...document.querySelectorAll("[data-bf-count]")];
