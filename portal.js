@@ -149,6 +149,7 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     await loadTx();
     await loadDuvidas();
     await loadAlertas();
+    await loadInd();
   }
 
   // Transações por mês + plano atual (se as tabelas ainda não existirem, o cartão mostra o aviso de vazio)
@@ -169,11 +170,12 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
 
   // ---------- Navegação ----------
   function go(p) {
+    if (p === "ind" && !parceiro) p = "dash";   // aba só existe para parceiros
     page = p;
     document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("on", b.dataset.page === p));
-    $("app-title").textContent = T({ dash: "nav_dash", reports: "nav_reports", pend: "nav_pend", estella: "al_t", account: "nav_account" }[p]);
-    ["dash", "reports", "pend", "estella", "account"].forEach(x => { if (x !== p) $("p-" + x).hidden = true; });
-    if (p === "dash") renderDash(); if (p === "reports") renderReports(); if (p === "pend") renderPend(); if (p === "estella") renderAlertas();
+    $("app-title").textContent = T({ dash: "nav_dash", reports: "nav_reports", pend: "nav_pend", estella: "al_t", ind: "ind_t", account: "nav_account" }[p]);
+    ["dash", "reports", "pend", "estella", "ind", "account"].forEach(x => { if (x !== p) $("p-" + x).hidden = true; });
+    if (p === "dash") renderDash(); if (p === "reports") renderReports(); if (p === "pend") renderPend(); if (p === "estella") renderAlertas(); if (p === "ind") renderInd();
     pendBadge(); alBadge();
     reveal($("p-" + p));
     if (p === "account") renderTx();   // depois de aparecer, para o gráfico medir a largura certa
@@ -472,6 +474,79 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
   const money2 = v => new Intl.NumberFormat(locale(), { style: "currency", currency: "USD" }).format(Math.abs(v));
   const escH = t => String(t == null ? "" : t).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const somenteLeitura = () => document.body.classList.contains("admin-view");
+
+  // ---------- Indicações (só quem é parceiro: parceiros.email = login do portal) ----------
+  let parceiro = null, indicacoes = [];
+  const IND_COLS = "id,parceiro_slug,nome,criado_em,status,servico_fechado,data_fechamento,credito_valor,credito_aplicado_em";
+  async function loadInd() {
+    parceiro = null; indicacoes = [];
+    try {
+      if (somenteLeitura()) {   // admin vendo a conta do cliente: lê direto (RLS de admin)
+        const p = await sb.from("parceiros").select("slug,nome,empresa").eq("email", folder).eq("ativo", true);
+        if (!p.error && p.data && p.data.length) {
+          parceiro = p.data[0];
+          const r = await sb.from("indicacoes").select(IND_COLS).in("parceiro_slug", p.data.map(x => x.slug)).order("criado_em", { ascending: false });
+          if (!r.error) indicacoes = r.data || [];
+        }
+      } else {
+        const p = await sb.rpc("meu_parceiro");
+        if (!p.error && p.data && p.data.length) {
+          parceiro = p.data[0];
+          const r = await sb.rpc("minhas_indicacoes");
+          if (!r.error) indicacoes = r.data || [];
+        }
+      }
+    } catch (e) { /* programa ainda não instalado */ }
+    $("nav-ind").hidden = !parceiro;
+  }
+  // Link curto aureafi.com/indicacao/<slug>/ (cada parceiro tem a pasta indicacao/<slug>/index.html no site)
+  const indUrl = () => parceiro ? `https://aureafi.com/indicacao/${encodeURIComponent(parceiro.slug)}/` : "";
+  function renderInd() {
+    if (!parceiro) return;
+    $("ind-adm").hidden = !somenteLeitura();
+    const u = indUrl();
+    $("ind-url").value = u;
+    $("ind-wa").href = "https://wa.me/?text=" + encodeURIComponent(T("ind_wa_msg").replace("{u}", u));
+    $("ind-ok").hidden = true;
+    // Crédito: ganho no mês em que o indicado fecha; usado na fatura do mês seguinte (zera todo mês).
+    // Se o painel tiver a data em que o crédito foi aplicado, vale essa data.
+    const mesHoje = hojeISO().slice(0, 7);
+    const proxMes = m => { let [y, mm] = m.split("-").map(Number); mm++; if (mm > 12) { mm = 1; y++; } return `${y}-${String(mm).padStart(2, "0")}`; };
+    const nomeMes = m => { const [y, mm] = m.split("-").map(Number); return new Date(y, mm - 1, 1).toLocaleDateString(locale(), { month: "long", year: "numeric" }); };
+    const mesCurto = m => { const [y, mm] = m.split("-").map(Number); return new Date(y, mm - 1, 1).toLocaleDateString(locale(), { month: "short", year: "numeric" }).replace(".", "").replace(" de ", "/"); };
+    const credito = i => {
+      if (i.status !== "ativa" || i.credito_valor == null) return null;
+      const ganho = (i.data_fechamento || i.credito_aplicado_em || i.criado_em || "").slice(0, 7);
+      const uso = i.credito_aplicado_em ? i.credito_aplicado_em.slice(0, 7) : proxMes(ganho);
+      return { valor: +i.credito_valor, ganho, uso, usado: !!i.credito_aplicado_em || uso <= mesHoje };
+    };
+    const n = indicacoes.length, at = indicacoes.filter(i => i.status === "ativa"), cs = indicacoes.map(credito).filter(Boolean);
+    const prox = cs.filter(c => !c.usado).reduce((a, c) => a + c.valor, 0), usado = cs.filter(c => c.usado).reduce((a, c) => a + c.valor, 0);
+    $("ind-sum").innerHTML = n ? `<span><b>${n}</b>${T(n === 1 ? "ind_n1" : "ind_n")}</span><span><b>${at.length}</b>${T(at.length === 1 ? "ind_at1" : "ind_at")}</span>`
+      + `<span class="next"><b>${money2(prox)}</b>${T("ind_cr")}</span>` + (usado ? `<span class="used"><b>${money2(usado)}</b>${T("ind_used")}</span>` : "") : "";
+    // Crédito por mês: o mês atual em destaque, os anteriores em cinza (já usados)
+    const meses = {};
+    cs.forEach(c => { const m = meses[c.ganho] || (meses[c.ganho] = { valor: 0, uso: c.uso, usado: true }); m.valor += c.valor; m.usado = m.usado && c.usado; });
+    const ks = Object.keys(meses).sort().reverse();
+    $("ind-hist").hidden = !ks.length;
+    $("ind-meses").innerHTML = ks.map(k => { const m = meses[k];
+      return `<div class="ind-mes${m.usado ? " used" : ""}"><b>${nomeMes(k)} · ${money2(m.valor)}</b><span>${T(m.usado ? "ind_m_used" : "ind_m_next").replace("{m}", nomeMes(m.uso))}</span></div>`; }).join("");
+    $("ind-empty").hidden = !!n;
+    const serv = { bookkeeping: "ind_bk", auditoria: "ind_au", tax: "ind_tx" };
+    $("ind-list").innerHTML = indicacoes.map(i => {
+      const d = (i.criado_em || "").slice(0, 10), st = ["pendente", "ativa", "perdida"].includes(i.status) ? i.status : "pendente";
+      const sv = i.status === "ativa" && serv[i.servico_fechado] ? " · " + T(serv[i.servico_fechado]) : "";
+      const c = credito(i);
+      const cr = c ? `${money2(c.valor)}<small>${c.usado ? T("ind_ap").replace("{m}", mesCurto(c.uso)) : T("ind_ap_no")}</small>` : "";
+      return `<div class="ind-row"><div><b>${escH(i.nome)}</b><small>${d ? T("ind_on").replace("{d}", dataCurta(d)) : ""}${sv}</small></div>
+        <span class="ind-st ${st}">${T("ind_" + st)}</span><div class="ind-cr${c && c.usado ? " used" : ""}">${cr}</div></div>`;
+    }).join("");
+  }
+  $("ind-copy").addEventListener("click", async () => {
+    const u = indUrl(); if (!u) return;
+    try { await navigator.clipboard.writeText(u); } catch (e) { $("ind-url").select(); try { document.execCommand("copy"); } catch (x) {} }
+    $("ind-ok").hidden = false;
+  });
 
   function pendBadge() {
     const abertas = pdAbertas(null), n = abertas.length, nb = $("nav-pend-n");

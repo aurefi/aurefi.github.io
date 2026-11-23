@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Indicações · Aurea Financial</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=20261115">
+<style>
+/* Painel de indicações (só admins). Estilos próprios, sem mexer no styles.css. */
+body.ix{background:#F3EADF}
+.ix-top{display:flex;align-items:center;gap:16px;padding:14px 28px;background:var(--ink);color:var(--cream-2)}
+.ix-top img{height:34px;width:auto;background:var(--cream-2);border-radius:6px;padding:4px 8px}
+.ix-top h1{font-size:18px;font-weight:700;margin:0}
+.ix-top .sp{flex:1}
+.ix-top .who{font-size:14px;color:#C9C1B4}
+.ix-top button{background:none;border:1px solid #5E5A52;color:var(--cream-2);padding:8px 14px;font:600 13px var(--sans);cursor:pointer;border-radius:4px}
+.ix-top button:hover{border-color:var(--gold);color:var(--gold)}
+.ix-main{max-width:1180px;margin:0 auto;padding:28px 24px 80px}
+.ix-card{background:#FFFDF9;border:1px solid var(--line);border-radius:10px;padding:22px 24px}
+.ix-login{max-width:420px;margin:60px auto}
+.ix-login h2{font-size:22px;margin:0 0 6px}
+.ix-login p{color:var(--muted);margin:0 0 20px;font-size:15px}
+.ix-login form{padding:0;background:none}
+.ix-login .btn{width:100%;justify-content:center}
+.ix-msg{margin-top:12px;font-size:14.5px;color:#A23B2A;min-height:1em}
+.ix-partners{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-bottom:26px}
+.ix-p h3{font-size:18px;margin:0}
+.ix-p .co{color:var(--muted);font-size:14px}
+.ix-link{display:flex;gap:8px;align-items:center;margin:12px 0 16px}
+.ix-link code{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:#F8F1E6;padding:8px 10px;border-radius:6px;font-size:13px}
+.ix-link button{flex:none;border:1px solid var(--line);background:#fff;padding:7px 12px;font:600 12.5px var(--sans);cursor:pointer;border-radius:6px}
+.ix-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.ix-kpis .k-cr{grid-column:1/-1;display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.ix-kpis div{background:#F8F1E6;border-radius:8px;padding:10px 12px}
+.ix-kpis small{display:block;font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.ix-kpis b{font-size:20px}
+.ix-kpis .k-pend b{color:#9A6B12}.ix-kpis .k-at b{color:#137a55}.ix-kpis .k-cr b{color:var(--ink)}
+.ix-off{display:inline-block;margin-left:8px;font-size:12px;font-weight:700;color:#A23B2A}
+.ix-bar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:14px}
+.ix-bar h2{font-size:20px;margin:0 auto 0 0}
+.ix-bar select{padding:9px 12px;border:1px solid #A9A296;background:#fff;font:15px var(--sans);border-radius:6px}
+.ix-chips{display:flex;gap:6px;flex-wrap:wrap}
+.ix-chips button{border:1px solid var(--line);background:#fff;padding:8px 14px;border-radius:999px;font:600 13.5px var(--sans);cursor:pointer;color:var(--ink)}
+.ix-chips button.on{background:var(--ink);border-color:var(--ink);color:var(--cream-2)}
+.ix-list{display:flex;flex-direction:column;gap:10px}
+.ix-row{background:#FFFDF9;border:1px solid var(--line);border-radius:10px}
+.ix-row-h{display:grid;grid-template-columns:110px minmax(0,1.3fr) minmax(0,1.6fr) 120px 96px;gap:14px;align-items:center;padding:14px 18px}
+.ix-row-h .d{font-size:13.5px;color:var(--muted)}
+.ix-row-h .n b{display:block}
+.ix-row-h .n span{font-size:13.5px;color:var(--muted)}
+.ix-row-h .c a{display:block;font-size:14px;color:var(--ink);text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ix-row-h .c a:hover{color:var(--brown);text-decoration:underline}
+.ix-st{display:inline-block;padding:4px 10px;border-radius:999px;font-size:12.5px;font-weight:700}
+.ix-st.pendente{background:#FBEFD5;color:#8A5E0A}.ix-st.ativa{background:#DDF3E9;color:#11694a}.ix-st.perdida{background:#EEE8DF;color:#6A645A}
+.ix-row-h button{border:1px solid var(--ink);background:#fff;padding:8px 12px;font:600 13px var(--sans);cursor:pointer;border-radius:6px}
+.ix-row-h button:hover{background:var(--ink);color:var(--cream-2)}
+.ix-msgtxt{padding:0 18px 14px;font-size:14px;color:var(--muted);white-space:pre-wrap}
+.ix-edit{border-top:1px solid var(--line);padding:18px;background:#FBF6EE;border-radius:0 0 10px 10px}
+.ix-edit form{padding:0;background:none}
+.ix-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.ix-edit label{font-size:13px;margin-bottom:4px}
+.ix-edit input,.ix-edit select,.ix-edit textarea{width:100%;padding:9px 10px;border:1px solid #A9A296;background:#fff;font:15px var(--sans);margin-bottom:12px;border-radius:0}
+.ix-edit textarea{min-height:64px}
+.ix-edit .hint{font-size:13px;color:var(--muted);margin:-2px 0 12px}
+.ix-edit .acts{display:flex;gap:12px;align-items:center}
+.ix-edit .btn{padding:11px 20px}
+.ix-edit .ok{font-size:14px;color:#137a55}
+.ix-empty{text-align:center;color:var(--muted);padding:40px 20px}
+@media (max-width:900px){
+  .ix-top{padding:12px 16px;flex-wrap:wrap}.ix-top .who{display:none}
+  .ix-main{padding:20px 14px 60px}
+  .ix-row-h{grid-template-columns:1fr auto;gap:6px 12px}
+  .ix-row-h .d{grid-column:1/-1}
+  .ix-row-h .c{grid-column:1/-1}
+  .ix-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body class="ix">
+<header class="ix-top">
+  <img src="logo.png" alt="Aurea Financial">
+  <h1>Indicações</h1>
+  <span class="sp"></span>
+  <span class="who" id="ix-who"></span>
+  <button type="button" id="ix-out" hidden>Sair</button>
+</header>
+
+<main class="ix-main">
+  <div class="ix-card ix-login" id="ix-login" hidden>
+    <h2>Entrar</h2>
+    <p>Painel só para a equipe da Aurea. Use o mesmo login do modo administrador da Área do cliente.</p>
+    <form id="ix-login-form" novalidate>
+      <label for="ix-email">E-mail</label><input id="ix-email" type="email" autocomplete="username" required>
+      <label for="ix-pass">Senha</label><input id="ix-pass" type="password" autocomplete="current-password" required>
+      <button class="btn btn-gold" type="submit">Entrar</button>
+      <p class="ix-msg" id="ix-login-msg" role="status"></p>
+    </form>
+  </div>
+
+  <div class="ix-card ix-login" id="ix-noadm" hidden>
+    <h2>Sem acesso</h2>
+    <p>Este login não está na lista de administradores da Aurea.</p>
+  </div>
+
+  <div id="ix-app" hidden>
+    <div class="ix-partners" id="ix-partners"></div>
+    <div class="ix-bar">
+      <h2>Indicações</h2>
+      <select id="ix-fp" aria-label="Parceiro"></select>
+      <div class="ix-chips" id="ix-fs">
+        <button type="button" data-s="" class="on">Todas</button>
+        <button type="button" data-s="pendente">Pendentes</button>
+        <button type="button" data-s="ativa">Ativas</button>
+        <button type="button" data-s="perdida">Perdidas</button>
+      </div>
+    </div>
+    <div class="ix-list" id="ix-list"></div>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js"></script>
+<script src="indicacoes-admin.js?v=20261123"></script>
+</body>
+</html>

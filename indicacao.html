@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Indicação · Aurea Financial</title>
+<meta name="description" content="Você foi indicado para conhecer a Aurea Financial: bookkeeping para pequenas empresas nos EUA, em português e inglês.">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,600;6..96,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=20261115">
+<style>
+/* Página de indicação (estilos próprios, para não mexer no styles.css) */
+.ref-page{display:grid;grid-template-columns:1fr 1.1fr;gap:56px;align-items:start;padding:24px 0 96px}
+.ref-page .side p{color:var(--muted)}
+.ref-by{display:flex;align-items:center;gap:14px;margin:0 0 28px;padding:16px 18px;background:var(--cream-2);border-left:3px solid var(--gold)}
+.ref-by svg{width:30px;height:30px;flex:none;stroke:var(--brown);fill:none;stroke-width:1.6}
+.ref-by small{display:block;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--brown)}
+.ref-by b{display:block;font-size:19px;line-height:1.3}
+.ref-by span.co{display:block;font-size:15px;color:var(--muted)}
+.ref-list{list-style:none;margin:24px 0 0;padding:0}
+.ref-list li{position:relative;padding-left:26px;margin-bottom:12px;color:var(--ink)}
+.ref-list li::before{content:"";position:absolute;left:0;top:9px;width:12px;height:2px;background:var(--gold)}
+.ref-form{border:1px solid var(--line);position:relative}
+.ref-form .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.ref-form .opt{font-weight:400;color:#8E877B}
+.ref-form textarea{min-height:96px}
+.ref-form .r-check{display:flex;gap:10px;align-items:flex-start;font-size:15px;color:var(--ink);margin:4px 0 20px;cursor:pointer}
+.ref-form .r-check input{width:18px;height:18px;margin:2px 0 0;flex:none;accent-color:var(--brown)}
+.ref-form .btn{width:100%;justify-content:center}
+.ref-form .r-phone{display:flex;gap:8px;margin-bottom:18px}
+.ref-form .r-phone input{margin-bottom:0;flex:1;min-width:0}
+.ref-form .r-ddi{position:relative;display:flex;flex:none}
+.ref-form .r-ddi-face{display:flex;align-items:center;gap:8px;padding:0 12px;border:1px solid #A9A296;font:16px var(--sans);color:var(--ink);pointer-events:none}
+.ref-form .r-flag svg{display:block;width:24px;height:16px;border-radius:2px;box-shadow:0 0 0 1px rgba(19,31,28,.12)}
+.ref-form .r-chev{width:10px;height:6px;fill:none;stroke:var(--muted);stroke-width:1.6}
+.ref-form .r-ddi select{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:16px}
+.ref-form .r-ddi:focus-within .r-ddi-face{outline:2px solid var(--gold);outline-offset:-1px;border-color:var(--gold)}
+.ref-form [aria-invalid="true"]{border-color:#A23B2A;outline-color:#A23B2A}
+.ref-form .form-status.err{color:#A23B2A}
+.ref-ok,.ref-bad{border:1px solid var(--line);background:var(--cream-2);padding:44px 32px;text-align:center}
+.ref-ok h3,.ref-bad h3{font-weight:800;font-size:24px;margin:14px 0 8px}
+.ref-ok p,.ref-bad p{color:var(--muted);margin:0 auto 22px;max-width:420px}
+.check-ok{width:64px;height:64px;margin:0 auto;border-radius:50%;background:var(--ink);display:grid;place-items:center}
+.check-ok svg{width:30px;height:30px;stroke:var(--gold);fill:none;stroke-width:2.4}
+.ref-loading{min-height:420px}
+@media (max-width:900px){ .ref-page{grid-template-columns:1fr;gap:32px} }
+@media (max-width:520px){ form.ref-form{padding:26px 20px} }
+</style>
+</head>
+<body data-page="indicacao">
+
+<div id="site-header"></div>
+
+<main>
+  <div class="wrap page-head">
+    <h1 class="eyebrow" data-i18n="eyebrow">Indicação</h1>
+    <p class="title" data-i18n="title">Bookkeeping em dia para a sua empresa crescer.</p>
+  </div>
+  <div class="wrap">
+    <div class="ref-page">
+      <div class="side">
+        <div class="ref-by" id="ref-by" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.4c2.1.7 3.5 2.6 3.5 5.6"/></svg>
+          <div><small data-i18n="by">Indicado por</small><b id="ref-name"></b><span class="co" id="ref-co"></span></div>
+        </div>
+        <p data-i18n="side">A Aurea Financial cuida do bookkeeping de pequenas empresas nos Estados Unidos, em português e inglês. Deixe seus dados e a gente entra em contato para uma conversa gratuita, sem compromisso.</p>
+        <ul class="ref-list">
+          <li data-i18n="b1">QuickBooks organizado e conciliado todo mês</li>
+          <li data-i18n="b2">Relatórios mensais em inglês e português</li>
+          <li data-i18n="b3">Atendimento 100% remoto, em todos os EUA</li>
+        </ul>
+      </div>
+
+      <div id="ref-slot" class="ref-loading">
+        <form class="ref-form" id="ref-form" novalidate hidden>
+          <h3 data-i18n="form_t">Quero conhecer a Aurea</h3>
+          <label for="r-nome" data-i18n="f_nome">Nome *</label>
+          <input id="r-nome" name="nome" autocomplete="name" required maxlength="120">
+          <label for="r-email" data-i18n="f_email">E-mail *</label>
+          <input id="r-email" name="email" type="email" autocomplete="email" required maxlength="254">
+          <label for="r-wa" data-i18n="f_wa">WhatsApp *</label>
+          <div class="r-phone">
+            <div class="r-ddi">
+              <span class="r-ddi-face" aria-hidden="true"><span class="r-flag" id="r-flag"></span><span id="r-ddi-code">+1</span><svg class="r-chev" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></span>
+              <select id="r-pais" aria-label="País do WhatsApp"></select>
+            </div>
+            <input id="r-wa" name="whatsapp" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(000) 000-0000" required>
+          </div>
+          <label for="r-emp"><span data-i18n="f_emp">Empresa</span> <span class="opt" data-i18n="opt">(opcional)</span></label>
+          <input id="r-emp" name="empresa" autocomplete="organization" maxlength="120">
+          <label for="r-msg"><span data-i18n="f_msg">Como podemos ajudar?</span> <span class="opt" data-i18n="opt">(opcional)</span></label>
+          <textarea id="r-msg" name="mensagem" maxlength="2000"></textarea>
+          <input type="text" name="site_empresa" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <label class="r-check"><input type="checkbox" id="r-ok" required> <span data-i18n="f_ok">Autorizo a Aurea a entrar em contato por e-mail e WhatsApp.</span></label>
+          <button class="btn btn-gold" type="submit" data-i18n="f_send">Enviar</button>
+          <p class="form-status" id="r-status" role="status"></p>
+          <p class="form-note"><span data-i18n="f_note">Seus dados são usados só para este contato. Veja os nossos</span> <a href="terms.html" data-i18n="f_note_link">Termos e Política de Privacidade</a>.</p>
+        </form>
+
+        <div class="ref-ok" id="ref-ok" hidden>
+          <div class="check-ok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+          <h3 data-i18n="ok_t">Obrigado!</h3>
+          <p data-i18n="ok_p">A Aurea vai entrar em contato em até 1 dia útil.</p>
+        </div>
+
+        <div class="ref-bad" id="ref-bad" hidden>
+          <h3 data-i18n="bad_t">Link de indicação inválido</h3>
+          <p data-i18n="bad_p">Este link não está mais ativo ou foi digitado errado. Você ainda pode falar com a Aurea pelo formulário de contato.</p>
+          <a class="btn btn-dark" href="contact.html" data-i18n="bad_btn">Fale conosco</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+
+<script>
+window.PAGE_DICT = {
+  pt: { page_title:"Indicação · Aurea Financial", eyebrow:"Indicação", title:"Bookkeeping em dia para a sua empresa crescer.",
+        by:"Indicado por",
+        side:"A Aurea Financial cuida do bookkeeping de pequenas empresas nos Estados Unidos, em português e inglês. Deixe seus dados e a gente entra em contato para uma conversa gratuita, sem compromisso.",
+        b1:"QuickBooks organizado e conciliado todo mês", b2:"Relatórios mensais em inglês e português", b3:"Atendimento 100% remoto, em todos os EUA",
+        form_t:"Quero conhecer a Aurea", f_nome:"Nome *", f_email:"E-mail *", f_wa:"WhatsApp *", f_emp:"Empresa", f_msg:"Como podemos ajudar?", opt:"(opcional)",
+        f_ok:"Autorizo a Aurea a entrar em contato por e-mail e WhatsApp.", f_send:"Enviar",
+        f_note:"Seus dados são usados só para este contato. Veja os nossos", f_note_link:"Termos e Política de Privacidade",
+        ok_t:"Obrigado!", ok_p:"A Aurea vai entrar em contato em até 1 dia útil.",
+        bad_t:"Link de indicação inválido", bad_p:"Este link não está mais ativo ou foi digitado errado. Você ainda pode falar com a Aurea pelo formulário de contato.", bad_btn:"Fale conosco",
+        e_nome:"Preencha o seu nome.", e_email:"Confira o e-mail.", e_ok:"Marque a autorização de contato para enviar.",
+        e_us:"Confira o WhatsApp: nos EUA são 10 dígitos, com o código de área. Ex.: (325) 956-5160.",
+        e_br:"Confira o WhatsApp: no Brasil, use o DDD e o número. Ex.: (11) 98765-4321.",
+        e_pt:"Confira o WhatsApp: em Portugal são 9 dígitos. Ex.: 912 345 678.",
+        e_send:"Não foi possível enviar agora. Tente de novo em instantes ou fale com a Aurea pelo WhatsApp (325) 956-5160.",
+        sending:"Enviando...", p_us:"Estados Unidos", p_br:"Brasil", p_pt:"Portugal" },
+  en: { page_title:"Referral · Aurea Financial", eyebrow:"Referral", title:"Up-to-date books so your business can grow.",
+        by:"Referred by",
+        side:"Aurea Financial handles bookkeeping for small businesses across the United States, in English and Portuguese. Leave your details and we'll reach out for a free, no-commitment conversation.",
+        b1:"QuickBooks organized and reconciled every month", b2:"Monthly reports in English and Portuguese", b3:"100% remote service anywhere in the U.S.",
+        form_t:"I'd like to meet Aurea", f_nome:"Name *", f_email:"Email *", f_wa:"WhatsApp *", f_emp:"Company", f_msg:"How can we help?", opt:"(optional)",
+        f_ok:"I authorize Aurea to contact me by email and WhatsApp.", f_send:"Send",
+        f_note:"Your details are used only for this contact. See our", f_note_link:"Terms and Privacy Policy",
+        ok_t:"Thank you!", ok_p:"Aurea will reach out within 1 business day.",
+        bad_t:"Invalid referral link", bad_p:"This link is no longer active or was typed incorrectly. You can still reach Aurea through our contact form.", bad_btn:"Get in touch",
+        e_nome:"Please enter your name.", e_email:"Please check your email.", e_ok:"Please check the contact authorization to send.",
+        e_us:"Please check the WhatsApp number: U.S. numbers have 10 digits, including the area code. E.g. (325) 956-5160.",
+        e_br:"Please check the WhatsApp number: in Brazil, use the area code and number. E.g. (11) 98765-4321.",
+        e_pt:"Please check the WhatsApp number: Portugal numbers have 9 digits. E.g. 912 345 678.",
+        e_send:"We couldn't send it right now. Please try again in a moment or message Aurea on WhatsApp at (325) 956-5160.",
+        sending:"Sending...", p_us:"United States", p_br:"Brazil", p_pt:"Portugal" }
+};
+</script>
+<script src="main.js"></script>
+<script src="indicacao.js?v=20261115"></script>
+</body>
+</html>

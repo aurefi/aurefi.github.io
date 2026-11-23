@@ -42,6 +42,37 @@
 .pd-card.done .pd-desc,.pd-card.done .pd-val{color:#6A645A}
 .pd-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;font-size:13.5px;color:var(--muted)}
 .al-card{max-width:760px;margin:0 0 18px;padding:18px 20px}
+.ind-card{max-width:760px;margin:0 0 18px}
+.ind-card h2{margin:0 0 6px;font-size:18px}
+.ind-help{margin:0 0 14px;color:var(--muted);font-size:14px;line-height:1.5}
+.ind-link{display:flex;gap:8px;flex-wrap:wrap}
+.ind-link input{flex:1 1 260px;min-width:0;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font:500 14px var(--sans);background:#fff;color:var(--ink)}
+.ind-ok{margin:8px 0 0;font-size:13px;color:#2E7D4F}
+.ind-sum{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.ind-sum span{padding:8px 12px;border-radius:8px;background:#F6EFE3;font-size:13.5px}
+.ind-sum b{font-size:16px;margin-right:4px}
+.ind-list{display:flex;flex-direction:column}
+.ind-row{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;padding:12px 2px;border-top:1px solid var(--line)}
+.ind-row:first-child{border-top:0}
+.ind-row b{display:block;font-size:14.5px}
+.ind-row small{color:var(--muted);font-size:12.5px}
+.ind-st{padding:3px 10px;border-radius:999px;font-size:12.5px;font-weight:700;white-space:nowrap}
+.ind-st.pendente{background:#FFF4D6;color:#7A5A00}
+.ind-st.ativa{background:#E3F3E8;color:#1F6B3E}
+.ind-st.perdida{background:#EEE;color:#666}
+.ind-cr{min-width:90px;text-align:right;font-size:14px;font-weight:700}
+.ind-cr small{display:block;font-weight:500;color:var(--muted)}
+.ind-sum span.next{background:#F3E3BF}
+.ind-sum span.used{background:#EFEDEA;color:#7a7a7a}
+.ind-hist{margin:0 0 16px}
+.ind-hist h3{margin:0 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.ind-mes{display:flex;justify-content:space-between;gap:10px;align-items:baseline;padding:9px 12px;border-radius:8px;margin-bottom:6px;background:#F3E3BF;border-left:4px solid var(--gold)}
+.ind-mes b{font-size:14px}
+.ind-mes span{font-size:13px}
+.ind-mes.used{background:#F1F0EE;border-left-color:#C9C6C1;color:#8a8783}
+.ind-mes.used b{font-weight:600}
+.ind-cr.used{color:#9a9792;font-weight:600}
+@media (max-width:520px){ .ind-row{grid-template-columns:1fr auto} .ind-cr{grid-column:1/-1;text-align:left} }
 .al-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
 .al-av{flex:none;width:38px;height:38px;border-radius:50%;background:var(--ink);color:var(--gold);display:grid;place-items:center;box-shadow:0 0 0 2px #E9DCC9}
 .al-av svg{width:20px;height:20px;fill:currentColor;stroke:none}
@@ -160,6 +191,10 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.5l-5.4 3 1.2-6L3.3 9.3l6.1-.7z" stroke-linejoin="round"/></svg>
           <span data-i18n="nav_estella">Estella</span><b class="nav-n red" id="nav-al-red" hidden></b><b class="nav-n yellow" id="nav-al-yel" hidden></b>
         </button>
+        <button type="button" class="nav-btn" data-page="ind" id="nav-ind" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-9.6A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.4C19 15.6 12 20 12 20z" stroke-linejoin="round"/></svg>
+          <span data-i18n="nav_ind">Indicações</span>
+        </button>
         <button type="button" class="nav-btn" data-page="account">
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
           <span data-i18n="nav_account">Minha conta</span>
@@ -273,6 +308,27 @@
         <div class="empty" id="al-empty" hidden data-i18n="al_empty">Nenhum recado da Estella por enquanto. Quando houver algo importante, como um vencimento chegando, ele aparece aqui.</div>
       </div>
 
+      <!-- ===== Indicações (só para parceiros) ===== -->
+      <div class="app-page" id="p-ind" hidden>
+        <p class="adm-note" id="ind-adm" hidden data-i18n="ind_adm">Modo administrador: é isto que o parceiro vê. Para mudar status e crédito, use o painel de indicações.</p>
+        <div class="pcard ind-card">
+          <h2 data-i18n="ind_link_t">Seu link de indicação</h2>
+          <p class="ind-help" data-i18n="ind_help">Compartilhe com quem precisa de contabilidade para a empresa. Quando um indicado seu fecha contrato com a Aurea, sua empresa ganha um crédito na fatura: 5% do plano de bookkeeping ou 15% da auditoria de seguro.</p>
+          <div class="ind-link">
+            <input type="text" id="ind-url" readonly aria-label="Link">
+            <button class="btn btn-gold sm" type="button" id="ind-copy" data-i18n="ind_copy">Copiar</button>
+            <a class="btn btn-line sm" id="ind-wa" target="_blank" rel="noopener" data-i18n="ind_wa">Enviar no WhatsApp</a>
+          </div>
+          <p class="ind-ok" id="ind-ok" hidden data-i18n="ind_copied">Link copiado.</p>
+        </div>
+        <div class="pcard ind-card">
+          <div class="ind-sum" id="ind-sum"></div>
+          <div class="ind-hist" id="ind-hist" hidden><h3 data-i18n="ind_hist">Crédito por mês</h3><div id="ind-meses"></div></div>
+          <div class="ind-list" id="ind-list"></div>
+          <div class="empty" id="ind-empty" hidden data-i18n="ind_empty">Nenhuma indicação ainda. Quando alguém preencher o formulário pelo seu link, a indicação aparece aqui.</div>
+        </div>
+      </div>
+
       <!-- ===== Minha conta ===== -->
       <div class="app-page" id="p-account" hidden>
         <p class="adm-note" id="adm-note" hidden></p>
@@ -371,7 +427,7 @@ window.PAGE_DICT = {
     login_t:"Entrar", login_d:"Use o e-mail e a senha que a Aurea enviou para você.",
     email:"E-mail", pass:"Senha", login_btn:"Entrar",
     forgot:"Esqueceu a senha ou ainda não tem acesso?", forgot_link:"Fale com a Aurea no WhatsApp",
-    nav_dash:"Painel", nav_reports:"Relatórios", nav_account:"Minha conta", nav_pend:"Pendências", nav_estella:"Estella", al_adm:"Modo administrador: você vê se o cliente já leu cada recado.", al_empty:"Nenhum recado da Estella por enquanto. Quando houver algo importante, como um vencimento chegando, ele aparece aqui.",
+    nav_dash:"Painel", nav_reports:"Relatórios", nav_account:"Minha conta", nav_pend:"Pendências", nav_estella:"Estella", nav_ind:"Indicações", ind_t:"Indicações", ind_adm:"Modo administrador: é isto que o parceiro vê. Para mudar status e crédito, use o painel de indicações.", ind_link_t:"Seu link de indicação", ind_help:"Compartilhe com quem precisa de contabilidade para a empresa. Quando um indicado seu fecha contrato com a Aurea, sua empresa ganha um crédito na fatura: 5% do plano de bookkeeping ou 15% da auditoria de seguro.", ind_copy:"Copiar", ind_copied:"Link copiado.", ind_wa:"Enviar no WhatsApp", ind_empty:"Nenhuma indicação ainda. Quando alguém preencher o formulário pelo seu link, a indicação aparece aqui.", ind_n:"indicações", ind_n1:"indicação", ind_at:"viraram clientes", ind_at1:"virou cliente", ind_cr:"na próxima fatura", ind_hist:"Crédito por mês", ind_m_next:"vai na fatura de {m}", ind_m_used:"usado na fatura de {m}", ind_used:"já usado", ind_pendente:"Em contato", ind_ativa:"Virou cliente", ind_perdida:"Não fechou", ind_on:"indicado em {d}", ind_ap:"usado na fatura de {m}", ind_ap_no:"próxima fatura", ind_wa_msg:"Oi! Uso a Aurea Financial na contabilidade da minha empresa e recomendo. Se quiser conhecer, deixe seus dados aqui que eles entram em contato: {u}", ind_bk:"Bookkeeping", ind_au:"Auditoria de seguro", ind_tx:"Imposto", al_adm:"Modo administrador: você vê se o cliente já leu cada recado.", al_empty:"Nenhum recado da Estella por enquanto. Quando houver algo importante, como um vencimento chegando, ele aparece aqui.",
     pa_go:"Responder", pa_t1:"1 dúvida para responder", pa_tn:"{n} dúvidas para responder", pa_d:"Leva poucos minutos. Prazo: {d}.",
     pd_left:"Faltam {a} de {n}", al_t:"Recados da Estella", al_sub:"Assistente virtual da Aurea", al_red_t:"{n} alerta(s) não visto(s)", al_yel_t:"{n} recado(s) não visto(s)", al_d0:"Vence hoje", al_d1:"Vence amanhã", al_dn:"Vence em {n} dias", al_dp:"Venceu há {n} dia(s)", al_ok:"Ok, entendi", al_seen_n:"Vistos ({n})", al_hide:"Esconder vistos", al_seen_on:"Visto em {d}", al_cli_seen:"Cliente viu em {d}", al_cli_new:"Cliente ainda não viu", al_e:"Não foi possível salvar. Tente de novo.", pd_due:"Responder até {d}", pd_answered:"{a} de {n} respondidas", pd_prazo:"prazo {d}", pd_prazo_fim:"prazo encerrado em {d}",
     pd_help:"Toque em \"Sim\" quando o nosso palpite estiver certo. Cada resposta é salva na hora.",
@@ -423,7 +479,7 @@ window.PAGE_DICT = {
     login_t:"Sign in", login_d:"Use the email and password Aurea sent you.",
     email:"Email", pass:"Password", login_btn:"Sign in",
     forgot:"Forgot your password or don't have access yet?", forgot_link:"Message Aurea on WhatsApp",
-    nav_dash:"Dashboard", nav_reports:"Reports", nav_account:"My account", nav_pend:"Pending", nav_estella:"Estella", al_adm:"Admin mode: you can see whether the client has read each note.", al_empty:"No notes from Estella for now. When something important comes up, like a due date approaching, it will show up here.",
+    nav_dash:"Dashboard", nav_reports:"Reports", nav_account:"My account", nav_pend:"Pending", nav_estella:"Estella", nav_ind:"Referrals", ind_t:"Referrals", ind_adm:"Admin mode: this is what the partner sees. To change status and credit, use the referrals panel.", ind_link_t:"Your referral link", ind_help:"Share it with anyone who needs bookkeeping for their business. When someone you referred signs with Aurea, your company gets a credit on its invoice: 5% of the bookkeeping plan or 15% of the insurance audit.", ind_copy:"Copy", ind_copied:"Link copied.", ind_wa:"Send on WhatsApp", ind_empty:"No referrals yet. When someone fills out the form through your link, it will show up here.", ind_n:"referrals", ind_n1:"referral", ind_at:"became clients", ind_at1:"became a client", ind_cr:"on the next invoice", ind_hist:"Credit by month", ind_m_next:"goes on the {m} invoice", ind_m_used:"used on the {m} invoice", ind_used:"already used", ind_pendente:"In contact", ind_ativa:"Became a client", ind_perdida:"Didn't sign", ind_on:"referred on {d}", ind_ap:"used on the {m} invoice", ind_ap_no:"next invoice", ind_wa_msg:"Hi! I use Aurea Financial for my company's bookkeeping and I recommend them. If you'd like to know more, leave your details here and they'll reach out: {u}", ind_bk:"Bookkeeping", ind_au:"Insurance audit", ind_tx:"Tax", al_adm:"Admin mode: you can see whether the client has read each note.", al_empty:"No notes from Estella for now. When something important comes up, like a due date approaching, it will show up here.",
     pa_go:"Answer", pa_t1:"1 question to answer", pa_tn:"{n} questions to answer", pa_d:"It only takes a few minutes. Due: {d}.",
     pd_left:"{a} of {n} left", al_t:"Notes from Estella", al_sub:"Aurea's virtual assistant", al_red_t:"{n} unseen alert(s)", al_yel_t:"{n} unseen note(s)", al_d0:"Due today", al_d1:"Due tomorrow", al_dn:"Due in {n} days", al_dp:"Overdue by {n} day(s)", al_ok:"Got it", al_seen_n:"Seen ({n})", al_hide:"Hide seen", al_seen_on:"Seen on {d}", al_cli_seen:"Client saw it on {d}", al_cli_new:"Client hasn't seen it yet", al_e:"We couldn't save it. Please try again.", pd_due:"Answer by {d}", pd_answered:"{a} of {n} answered", pd_prazo:"due {d}", pd_prazo_fim:"closed on {d}",
     pd_help:"Tap \"Yes\" when our guess is right. Each answer is saved right away.",
@@ -473,6 +529,6 @@ window.PAGE_DICT = {
 <script src="main.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<script src="portal.js?v=20261118f"></script>
+<script src="portal.js?v=20261123a"></script>
 </body>
 </html>
