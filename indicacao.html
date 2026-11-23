@@ -48,6 +48,11 @@
 .check-ok{width:64px;height:64px;margin:0 auto;border-radius:50%;background:var(--ink);display:grid;place-items:center}
 .check-ok svg{width:30px;height:30px;stroke:var(--gold);fill:none;stroke-width:2.4}
 .ref-loading{min-height:420px}
+.ref-bonus{display:flex;gap:14px;align-items:center;margin:-4px 0 24px;padding:16px 18px;background:var(--ink);color:#F6EFE3;border-radius:6px;box-shadow:0 0 0 2px var(--gold) inset}
+.ref-bonus svg{width:34px;height:34px;flex:none;stroke:var(--gold);fill:none;stroke-width:1.6;stroke-linejoin:round}
+.ref-bonus small{display:block;font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.ref-bonus b{display:block;font-size:19px;line-height:1.25;margin:2px 0 3px;color:#fff}
+.ref-bonus span{display:block;font-size:14px;line-height:1.45;color:#D9D2C4}
 @media (max-width:900px){ .ref-page{grid-template-columns:1fr;gap:32px} }
 @media (max-width:520px){ form.ref-form{padding:26px 20px} }
 </style>
@@ -78,6 +83,10 @@
 
       <div id="ref-slot" class="ref-loading">
         <form class="ref-form" id="ref-form" novalidate hidden>
+          <div class="ref-bonus">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="9" width="17" height="11" rx="1.5"/><path d="M2.5 9h19M12 9v11M12 9c-1.5-3.5-6-4.2-6-1.6C6 9 12 9 12 9zm0 0c1.5-3.5 6-4.2 6-1.6C18 9 12 9 12 9z"/></svg>
+            <div><small data-i18n="bonus_k">Bônus de indicação</small><b data-i18n="bonus_t">Taxa de setup da sua conta grátis</b><span data-i18n="bonus_p">Por vir indicado, você não paga a taxa de setup ao fechar com a Aurea.</span></div>
+          </div>
           <h3 data-i18n="form_t">Quero conhecer a Aurea</h3>
           <label for="r-nome" data-i18n="f_nome">Nome *</label>
           <input id="r-nome" name="nome" autocomplete="name" required maxlength="120">
@@ -126,6 +135,7 @@ window.PAGE_DICT = {
         by:"Indicado por",
         side:"A Aurea Financial cuida do bookkeeping de pequenas empresas nos Estados Unidos, em português e inglês. Deixe seus dados e a gente entra em contato para uma conversa gratuita, sem compromisso.",
         b1:"QuickBooks organizado e conciliado todo mês", b2:"Relatórios mensais em inglês e português", b3:"Atendimento 100% remoto, em todos os EUA",
+        bonus_k:"Bônus de indicação", bonus_t:"Taxa de setup da sua conta grátis", bonus_p:"Por vir indicado, você não paga a taxa de setup ao fechar com a Aurea.",
         form_t:"Quero conhecer a Aurea", f_nome:"Nome *", f_email:"E-mail *", f_wa:"WhatsApp *", f_emp:"Empresa", f_msg:"Como podemos ajudar?", opt:"(opcional)",
         f_ok:"Autorizo a Aurea a entrar em contato por e-mail e WhatsApp.", f_send:"Enviar",
         f_note:"Seus dados são usados só para este contato. Veja os nossos", f_note_link:"Termos e Política de Privacidade",
@@ -141,6 +151,7 @@ window.PAGE_DICT = {
         by:"Referred by",
         side:"Aurea Financial handles bookkeeping for small businesses across the United States, in English and Portuguese. Leave your details and we'll reach out for a free, no-commitment conversation.",
         b1:"QuickBooks organized and reconciled every month", b2:"Monthly reports in English and Portuguese", b3:"100% remote service anywhere in the U.S.",
+        bonus_k:"Referral bonus", bonus_t:"Free account setup", bonus_p:"Because you were referred, you won't pay the setup fee when you sign with Aurea.",
         form_t:"I'd like to meet Aurea", f_nome:"Name *", f_email:"Email *", f_wa:"WhatsApp *", f_emp:"Company", f_msg:"How can we help?", opt:"(optional)",
         f_ok:"I authorize Aurea to contact me by email and WhatsApp.", f_send:"Send",
         f_note:"Your details are used only for this contact. See our", f_note_link:"Terms and Privacy Policy",
@@ -155,6 +166,6 @@ window.PAGE_DICT = {
 };
 </script>
 <script src="main.js"></script>
-<script src="indicacao.js?v=20261115"></script>
+<script src="indicacao.js?v=20261123"></script>
 </body>
 </html>
