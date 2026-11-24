@@ -25,7 +25,7 @@
 
   <!-- PESSOA -->
   <div class="wrap">
-    <div class="person">
+    <div class="person" style="padding-bottom:56px">
       <div class="portrait">
         <span class="mono">TM</span>
         <img src="img/thiago.jpg" alt="Thiago Morais" onerror="if(!this.dataset.r){this.dataset.r=1;this.src='thiago.jpg'}else{this.remove()}">
@@ -50,6 +50,17 @@
           <div class="fact"><b data-i18n="f2_t">Certificação</b><span data-i18n="f2_v">QuickBooks ProAdvisor Nível 2 (Intuit)</span></div>
           <div class="fact"><b data-i18n="f3_t">Experiência</b><span data-i18n="f3_v">Controller financeiro em construção e indústria</span></div>
         </div>
+      </div>
+    </div>
+
+    <!-- Certificações do Thiago, logo abaixo do card dele -->
+    <div class="person-creds" style="padding-bottom:96px">
+      <h2 class="eyebrow" data-i18n="creds_title" style="margin-bottom:24px;color:var(--brown)">Certificações do Thiago</h2>
+      <div class="badges">
+        <div class="badge-slot"><div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="537e58a4-7a95-4dca-a69a-6d3b09aa973c" data-share-badge-host="https://www.credly.com"></div></div>
+        <div class="badge-slot"><div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="9c0e50ce-4a24-4caf-8425-2507b628d590" data-share-badge-host="https://www.credly.com"></div></div>
+        <div class="badge-slot"><div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="2989db9d-552a-4fe4-beca-7c43a26e0776" data-share-badge-host="https://www.credly.com"></div></div>
+        <div class="badge-slot"><div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="93c4ae66-d838-4bbf-ba34-0506c5fe52d4" data-share-badge-host="https://www.credly.com"></div></div>
       </div>
     </div>
 
@@ -81,37 +92,6 @@
     </div>
   </div>
 
-  <div class="fade"></div>
-
-  <!-- TRAJETÓRIA -->
-  <section class="dark">
-    <div class="wrap">
-      <h2 class="eyebrow" data-i18n="path_title">Trajetória do Thiago</h2>
-      <ul class="timeline">
-        <li><div class="org">Aurea Financial</div><div class="what"><b data-i18n="t1_r">Fundador e bookkeeper</b><p data-i18n="t1_d">Bookkeeping em QuickBooks para pequenas empresas nos Estados Unidos, com relatórios mensais em português e inglês.</p></div></li>
-        <li><div class="org">H&amp;R Block</div><div class="what"><b data-i18n="t2_r">Preparador de impostos (temporada)</b><p data-i18n="t2_d">Preparação de declarações de imposto durante a temporada de impostos nos EUA.</p></div></li>
-        <li><div class="org">ACC Construction</div><div class="what"><b data-i18n="t3_r">Controller financeiro</b><p data-i18n="t3_d">Controladoria e gestão financeira de uma empresa de construção.</p></div></li>
-        <li><div class="org">Via Têxtil</div><div class="what"><b data-i18n="t4_r">Controller financeiro</b><p data-i18n="t4_d">Controladoria, pagamentos internacionais e hedge cambial em uma empresa do setor têxtil.</p></div></li>
-        <li><div class="org">Futura Invest</div><div class="what"><b data-i18n="t5_r">Sócio e broker</b><p data-i18n="t5_d">Mercado de ações e operações com opções.</p></div></li>
-        <li><div class="org">FGV</div><div class="what"><b data-i18n="t6_r">MBA em Gestão Financeira, Auditoria e Controladoria</b><p data-i18n="t6_d">Fundação Getulio Vargas, Brasil.</p></div></li>
-      </ul>
-    </div>
-  </section>
-
-  <div class="fade up"></div>
-
-  <!-- CERTIFICAÇÕES -->
-  <section class="light">
-    <div class="wrap">
-      <h2 class="eyebrow" data-i18n="creds_title">Certificações do Thiago</h2>
-      <div class="badges">
-        <div class="badge-slot"><div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="537e58a4-7a95-4dca-a69a-6d3b09aa973c" data-share-badge-host="https://www.credly.com"></div></div>
-        <div class="badge-slot"><div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="9c0e50ce-4a24-4caf-8425-2507b628d590" data-share-badge-host="https://www.credly.com"></div></div>
-        <div class="badge-slot"><div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="2989db9d-552a-4fe4-beca-7c43a26e0776" data-share-badge-host="https://www.credly.com"></div></div>
-        <div class="badge-slot"><div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="93c4ae66-d838-4bbf-ba34-0506c5fe52d4" data-share-badge-host="https://www.credly.com"></div></div>
-      </div>
-    </div>
-  </section>
 
   <div class="fade"></div>
 
@@ -137,13 +117,6 @@ window.PAGE_DICT = {
     f1_t:"Formação", f1_v:"MBA em Gestão Financeira, Auditoria e Controladoria (FGV)",
     f2_t:"Certificação", f2_v:"QuickBooks ProAdvisor Nível 2 (Intuit)",
     f3_t:"Experiência", f3_v:"Controller financeiro em construção e indústria",
-    path_title:"Trajetória do Thiago",
-    t1_r:"Fundador e bookkeeper", t1_d:"Bookkeeping em QuickBooks para pequenas empresas nos Estados Unidos, com relatórios mensais em português e inglês.",
-    t2_r:"Preparador de impostos (temporada)", t2_d:"Preparação de declarações de imposto durante a temporada de impostos nos EUA.",
-    t3_r:"Controller financeiro", t3_d:"Controladoria e gestão financeira de uma empresa de construção.",
-    t4_r:"Controller financeiro", t4_d:"Controladoria, pagamentos internacionais e hedge cambial em uma empresa do setor têxtil.",
-    t5_r:"Sócio e broker", t5_d:"Mercado de ações e operações com opções.",
-    t6_r:"MBA em Gestão Financeira, Auditoria e Controladoria", t6_d:"Fundação Getulio Vargas, Brasil.",
     creds_title:"Certificações do Thiago",
     dm_role:"Relacionamento com clientes (atendimento em inglês)", dm_f1_v:"Bachelor of Business (University of Limerick, Irlanda)", dm_f2_t:"Atendimento", dm_f2_v:"Clientes que falam inglês", dm_f3_v:"Ampla experiência em atendimento ao cliente",
     cta_title:"Vamos conversar sobre a sua empresa?", cta_btn:"Agende uma ligação gratuita"
@@ -155,13 +128,6 @@ window.PAGE_DICT = {
     f1_t:"Education", f1_v:"MBA in Financial Management, Auditing and Controlling (FGV)",
     f2_t:"Certification", f2_v:"QuickBooks ProAdvisor Level 2 (Intuit)",
     f3_t:"Experience", f3_v:"Financial controller in construction and manufacturing",
-    path_title:"Thiago\u2019s background",
-    t1_r:"Founder & Bookkeeper", t1_d:"QuickBooks bookkeeping for small businesses across the United States, with monthly reports in English and Portuguese.",
-    t2_r:"Tax Preparer (seasonal)", t2_d:"Prepared tax returns during the U.S. tax season.",
-    t3_r:"Financial Controller", t3_d:"Controllership and financial management for a construction company.",
-    t4_r:"Financial Controller", t4_d:"Controllership, international payments and foreign exchange hedging for a textile company.",
-    t5_r:"Partner & Broker", t5_d:"Stock market and options trading.",
-    t6_r:"MBA in Financial Management, Auditing and Controlling", t6_d:"Fundação Getulio Vargas, Brazil.",
     creds_title:"Thiago\u2019s certifications",
     dm_role:"Client Relations (English-speaking clients)", dm_f1_v:"Bachelor of Business (University of Limerick, Ireland)", dm_f2_t:"Clients", dm_f2_v:"English-speaking clients", dm_f3_v:"Extensive customer service experience",
     cta_title:"Let's talk about your business.", cta_btn:"Schedule a free call"
