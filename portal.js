@@ -257,19 +257,31 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     $("dash-nofiles").hidden = !!files.length;
   }
 
-  // ---------- Gráfico: receita e despesas (barras) + lucro (linha), um único eixo em US$ ----------
+  // ---------- Gráfico: receita e despesas (barras) + lucro (linha), um único eixo em US$ (topo = primeira linha redonda acima do maior valor) ----------
+  let chartMode = "all", lastMk = [];   // "all" = receita, despesas e lucro; "net" = só o lucro líquido
+  document.querySelectorAll(".cmode-b").forEach(b => b.addEventListener("click", () => {
+    if (chartMode === b.dataset.cmode) return; chartMode = b.dataset.cmode; renderChart(lastMk);
+  }));
   function renderChart(mk) {
-    const box = $("chart"), y = +selYear;
+    lastMk = mk;
+    const box = $("chart"), y = +selYear, soLucro = chartMode === "net";
     $("chart-title").textContent = `${T("chart_t")} · ${selYear}`;
+    $("chart-title-net").textContent = `${T("chart_net")} · ${selYear}`;
+    document.querySelectorAll(".cmode-b").forEach(b => { const on = b.dataset.cmode === chartMode; b.classList.toggle("on", on); b.setAttribute("aria-selected", on); });
+    $("chart-legend").hidden = soLucro;
     const pts = []; for (let m = 1; m <= 12; m++) { const k = `${selYear}-${String(m).padStart(2, "0")}`; pts.push({ k, m, n: data[k] && data[k].num }); }
-    const vals = pts.filter(p => p.n).flatMap(p => [p.n.receita, p.n.despesas, p.n.lucro]).filter(v => v != null);
+    const vals = pts.filter(p => p.n).flatMap(p => soLucro ? [p.n.lucro] : [p.n.receita, p.n.despesas, p.n.lucro]).filter(v => v != null);
     const W = Math.max(320, Math.round(box.clientWidth || 800)), H = W < 560 ? 220 : 280, L = 50, R = 6, Tp = 14, B = 28;
-    const nice = v => { if (!v) return 0; const p = Math.pow(10, Math.floor(Math.log10(Math.abs(v)))), n = Math.abs(v) / p; const s = n <= 1 ? 1 : n <= 2 ? 2 : n <= 2.5 ? 2.5 : n <= 5 ? 5 : 10; return Math.sign(v) * s * p; };
+    const nice = v => { if (!v) return 0; const p = Math.pow(10, Math.floor(Math.log10(Math.abs(v)))), n = Math.abs(v) / p; const s = [1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10].find(x => n <= x + 1e-9); return Math.sign(v) * s * p; };
     const vmax = Math.max(0, ...vals), vmin = Math.min(0, ...vals);
-    const step = nice((vmax - vmin) / 4) || 1;
-    const top = Math.max(step, Math.ceil(vmax / step) * step), bot = Math.floor(vmin / step) * step;
+    // o topo é a primeira linha redonda acima do maior valor (receita ou despesa), com uma folga mínima de 3%
+    // entre 3 e 5 faixas, fica a que deixa o topo mais perto do maior valor
+    const opc = [4, 5, 3].map(n => { const st = nice((vmax - vmin) / n) || 1;
+      return { st, tp: Math.max(st, Math.ceil(vmax * 1.03 / st) * st), bt: vmin < 0 ? Math.floor(vmin * 1.03 / st) * st : 0 }; })
+      .sort((a, b) => (a.tp - a.bt) - (b.tp - b.bt))[0];
+    const step = opc.st, top = opc.tp, bot = opc.bt;
     const yy = v => Tp + (top - v) / (top - bot) * (H - Tp - B);
-    const cw = (W - L - R) / 12, bw = Math.max(4, Math.min(16, (cw - 14) / 2));
+    const cw = (W - L - R) / 12, bw = soLucro ? Math.max(8, Math.min(30, cw - 18)) : Math.max(4, Math.min(16, (cw - 14) / 2));
     let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${T("chart_t")} ${selYear}">`;
     const ticks = []; for (let t = bot; t <= top + 1e-9; t += step) ticks.push(Math.round(t * 100) / 100);
     ticks.forEach(t => { s += `<line x1="${L}" x2="${W - R}" y1="${yy(t)}" y2="${yy(t)}" class="${Math.abs(t) < 1e-9 ? "base" : "grid"}"/><text x="${L - 8}" y="${yy(t) + 4}" text-anchor="end" class="ax">${short(t)}</text>`; });
@@ -286,6 +298,12 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
       if (selPeriod === p.k) s += `<rect x="${L + cw * i}" y="${Tp}" width="${cw}" height="${H - Tp - B}" class="selband"/>`;
       s += `<text x="${cx}" y="${H - 8}" text-anchor="middle" class="ax${selPeriod === p.k ? " on" : ""}">${cw < 38 ? mName(y, p.m, "short").charAt(0) : mName(y, p.m, "short").slice(0, 3)}</text>`;
       if (!p.n) return;
+      if (soLucro) {   // só o lucro: uma barra por mês, verde (ou vermelha no prejuízo), com o valor em cima
+        if (p.n.lucro == null) return;
+        s += bar(cx - bw / 2, p.n.lucro, "netb" + (p.n.lucro < 0 ? " neg" : ""));
+        if (cw >= 38) { const yv = yy(p.n.lucro); s += `<text x="${cx}" y="${p.n.lucro >= 0 ? yv - 6 : yv + 14}" text-anchor="middle" class="vlab">${short(p.n.lucro)}</text>`; }
+        return;
+      }
       s += bar(cx - bw - 1, p.n.receita, "rev") + bar(cx + 1, p.n.despesas, "exp");
       if (p.n.lucro != null) line.push([cx, yy(p.n.lucro)]);
     });

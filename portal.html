@@ -42,6 +42,13 @@
 .pd-card.done .pd-desc,.pd-card.done .pd-val{color:#6A645A}
 .pd-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;font-size:13.5px;color:var(--muted)}
 .al-card{max-width:760px;margin:0 0 18px;padding:18px 20px}
+.cmode{display:flex;gap:6px;flex-wrap:wrap}
+.cmode-b{appearance:none;border:1px solid transparent;background:none;padding:6px 12px;border-radius:999px;font:600 15px var(--sans);color:var(--muted);cursor:pointer}
+.cmode-b:hover{color:var(--ink);background:#F6EFE3}
+.cmode-b.on{color:var(--ink);background:#F3E3BF;border-color:#E2CC97;font-weight:700}
+.chart2 .b.netb{fill:#1baf7a}.chart2 .b.netb.neg{fill:#D23B2F}
+.chart2 .vlab{font:600 11.5px var(--sans);fill:var(--ink)}
+@media (max-width:560px){ .cmode-b{font-size:13px;padding:5px 10px} }
 .ind-card{max-width:760px;margin:0 0 18px}
 .ind-card h2{margin:0 0 6px;font-size:18px}
 .ind-help{margin:0 0 14px;color:var(--muted);font-size:14px;line-height:1.5}
@@ -235,8 +242,11 @@
 
           <div class="pcard chart-card2">
             <div class="card-head">
-              <h2 id="chart-title"></h2>
-              <div class="legend">
+              <div class="cmode" role="tablist">
+                <button type="button" role="tab" class="cmode-b on" data-cmode="all" id="chart-title"></button>
+                <button type="button" role="tab" class="cmode-b" data-cmode="net" id="chart-title-net"></button>
+              </div>
+              <div class="legend" id="chart-legend">
                 <span><i class="lg rev"></i><span data-i18n="k_rev">Receita</span></span>
                 <span><i class="lg exp"></i><span data-i18n="k_exp">Despesas</span></span>
                 <span><i class="lg net"></i><span data-i18n="k_net">Lucro líquido</span></span>
@@ -447,7 +457,7 @@ window.PAGE_DICT = {
     k_rev:"Receita", k_exp:"Despesas", k_net:"Lucro líquido", margin:"Margem",
     t_rev:"Receita total", t_exp:"Despesas totais", t_net:"Lucro líquido",
     vs_prev:"vs. mês anterior", months_in:"{n} meses", month_1:"1 mês",
-    chart_t:"Receita, despesas e lucro", show_table:"Ver tabela", hide_table:"Ocultar tabela", th_month:"Mês",
+    chart_t:"Receita, despesas e lucro", chart_net:"Lucro líquido", show_table:"Ver tabela", hide_table:"Ocultar tabela", th_month:"Mês",
     note_t:"Nota da Aurea", files_t:"Relatórios de {p}", files_latest:"Relatórios mais recentes", see_all:"Ver todos",
     m_nofiles:"Os relatórios deste período ainda não foram publicados.",
     others:"Outros documentos", empty:"Ainda não há relatórios na sua pasta. Assim que o relatório do mês estiver pronto, ele aparece aqui.",
@@ -499,7 +509,7 @@ window.PAGE_DICT = {
     k_rev:"Revenue", k_exp:"Expenses", k_net:"Net income", margin:"Margin",
     t_rev:"Total revenue", t_exp:"Total expenses", t_net:"Net income",
     vs_prev:"vs. previous month", months_in:"{n} months", month_1:"1 month",
-    chart_t:"Revenue, expenses and profit", show_table:"Show table", hide_table:"Hide table", th_month:"Month",
+    chart_t:"Revenue, expenses and profit", chart_net:"Net income", show_table:"Show table", hide_table:"Hide table", th_month:"Month",
     note_t:"Note from Aurea", files_t:"Reports for {p}", files_latest:"Latest reports", see_all:"See all",
     m_nofiles:"Reports for this period haven't been published yet.",
     others:"Other documents", empty:"There are no reports in your folder yet. As soon as this month's report is ready, it will show up here.",
@@ -529,6 +539,6 @@ window.PAGE_DICT = {
 <script src="main.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<script src="portal.js?v=20261123a"></script>
+<script src="portal.js?v=20261125d"></script>
 </body>
 </html>
