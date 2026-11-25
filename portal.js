@@ -146,6 +146,8 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
         d.num = { receita: rc, despesas: dp, lucro: r.lucro_liquido != null ? +r.lucro_liquido : (rc != null && dp != null ? rc - dp : null) };
       }
     });
+    const rt = await sb.from(SUMMARY_TABLE).select("mes,retiradas").eq("cliente_email", folder);
+    if (!rt.error) (rt.data || []).forEach(r => { if (/^\d{4}-\d{2}$/.test(r.mes) && r.retiradas != null) slot(r.mes).draw = +r.retiradas; });
     await loadTx();
     await loadDuvidas();
     await loadAlertas();
@@ -264,27 +266,39 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
   }));
   function renderChart(mk) {
     lastMk = mk;
-    const box = $("chart"), y = +selYear, soLucro = chartMode === "net";
+    // Modos de uma série só: lucro, margem (%) e lucro após as retiradas do dono
+    const temDraw = mk.some(k => data[k].draw != null);
+    if (chartMode === "after" && !temDraw) chartMode = "all";
+    const box = $("chart"), y = +selYear, soLucro = chartMode !== "all", emPct = chartMode === "margin";
+    const serie = n => n.receita == null && chartMode !== "net" ? null
+      : chartMode === "net" ? n.lucro
+      : chartMode === "margin" ? (n.receita && n.lucro != null ? n.lucro / n.receita * 100 : null)
+      : null;
+    const valor = p => chartMode === "after" ? (p.n.lucro != null && data[p.k].draw != null ? p.n.lucro - data[p.k].draw : null) : serie(p.n);
+    const fmtV = v => emPct ? v.toFixed(1).replace(".", currentLang === "en" ? "." : ",") + "%" : short(v);
     $("chart-title").textContent = `${T("chart_t")} · ${selYear}`;
     $("chart-title-net").textContent = `${T("chart_net")} · ${selYear}`;
+    $("chart-title-margin").textContent = `${T("chart_margin")} · ${selYear}`;
+    $("chart-title-after").textContent = `${T("chart_after")} · ${selYear}`;
+    $("chart-title-after").hidden = !temDraw;
     document.querySelectorAll(".cmode-b").forEach(b => { const on = b.dataset.cmode === chartMode; b.classList.toggle("on", on); b.setAttribute("aria-selected", on); });
     $("chart-legend").hidden = soLucro;
     const pts = []; for (let m = 1; m <= 12; m++) { const k = `${selYear}-${String(m).padStart(2, "0")}`; pts.push({ k, m, n: data[k] && data[k].num }); }
-    const vals = pts.filter(p => p.n).flatMap(p => soLucro ? [p.n.lucro] : [p.n.receita, p.n.despesas, p.n.lucro]).filter(v => v != null);
+    const vals = pts.filter(p => p.n).flatMap(p => soLucro ? [valor(p)] : [p.n.receita, p.n.despesas, p.n.lucro]).filter(v => v != null);
     const W = Math.max(320, Math.round(box.clientWidth || 800)), H = W < 560 ? 220 : 280, L = 50, R = 6, Tp = 14, B = 28;
     const nice = v => { if (!v) return 0; const p = Math.pow(10, Math.floor(Math.log10(Math.abs(v)))), n = Math.abs(v) / p; const s = [1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10].find(x => n <= x + 1e-9); return Math.sign(v) * s * p; };
     const vmax = Math.max(0, ...vals), vmin = Math.min(0, ...vals);
     // o topo é a primeira linha redonda acima do maior valor (receita ou despesa), com uma folga mínima de 3%
     // entre 3 e 5 faixas, fica a que deixa o topo mais perto do maior valor
     const opc = [4, 5, 3].map(n => { const st = nice((vmax - vmin) / n) || 1;
-      return { st, tp: Math.max(st, Math.ceil(vmax * 1.03 / st) * st), bt: vmin < 0 ? Math.floor(vmin * 1.03 / st) * st : 0 }; })
+      return { st, tp: Math.max(st, Math.ceil(vmax * 1.03 / st) * st), bt: vmin < 0 ? Math.floor(vmin * (soLucro ? 1.15 : 1.03) / st) * st : 0 }; })   // espaço para o valor embaixo das barras negativas
       .sort((a, b) => (a.tp - a.bt) - (b.tp - b.bt))[0];
     const step = opc.st, top = opc.tp, bot = opc.bt;
     const yy = v => Tp + (top - v) / (top - bot) * (H - Tp - B);
     const cw = (W - L - R) / 12, bw = soLucro ? Math.max(8, Math.min(30, cw - 18)) : Math.max(4, Math.min(16, (cw - 14) / 2));
     let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${T("chart_t")} ${selYear}">`;
     const ticks = []; for (let t = bot; t <= top + 1e-9; t += step) ticks.push(Math.round(t * 100) / 100);
-    ticks.forEach(t => { s += `<line x1="${L}" x2="${W - R}" y1="${yy(t)}" y2="${yy(t)}" class="${Math.abs(t) < 1e-9 ? "base" : "grid"}"/><text x="${L - 8}" y="${yy(t) + 4}" text-anchor="end" class="ax">${short(t)}</text>`; });
+    ticks.forEach(t => { s += `<line x1="${L}" x2="${W - R}" y1="${yy(t)}" y2="${yy(t)}" class="${Math.abs(t) < 1e-9 ? "base" : "grid"}"/><text x="${L - 8}" y="${yy(t) + 4}" text-anchor="end" class="ax">${emPct ? Math.round(t) + "%" : short(t)}</text>`; });
     const bar = (x, v, cls) => {
       if (v == null) return "";
       const y0 = yy(0), y1 = yy(v), h = Math.max(1.5, Math.abs(y1 - y0)), r = Math.min(4, h / 2, bw / 2);
@@ -298,10 +312,10 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
       if (selPeriod === p.k) s += `<rect x="${L + cw * i}" y="${Tp}" width="${cw}" height="${H - Tp - B}" class="selband"/>`;
       s += `<text x="${cx}" y="${H - 8}" text-anchor="middle" class="ax${selPeriod === p.k ? " on" : ""}">${cw < 38 ? mName(y, p.m, "short").charAt(0) : mName(y, p.m, "short").slice(0, 3)}</text>`;
       if (!p.n) return;
-      if (soLucro) {   // só o lucro: uma barra por mês, verde (ou vermelha no prejuízo), com o valor em cima
-        if (p.n.lucro == null) return;
-        s += bar(cx - bw / 2, p.n.lucro, "netb" + (p.n.lucro < 0 ? " neg" : ""));
-        if (cw >= 38) { const yv = yy(p.n.lucro); s += `<text x="${cx}" y="${p.n.lucro >= 0 ? yv - 6 : yv + 14}" text-anchor="middle" class="vlab">${short(p.n.lucro)}</text>`; }
+      if (soLucro) {   // uma série só: uma barra por mês, verde (ou vermelha quando negativa), com o valor em cima
+        const v = valor(p); if (v == null) return;
+        s += bar(cx - bw / 2, v, "netb" + (v < 0 ? " neg" : ""));
+        if (cw >= 38) { const yv = yy(v); s += `<text x="${cx}" y="${v >= 0 ? yv - 6 : yv + 14}" text-anchor="middle" class="vlab">${fmtV(v)}</text>`; }
         return;
       }
       s += bar(cx - bw - 1, p.n.receita, "rev") + bar(cx + 1, p.n.despesas, "exp");
@@ -317,7 +331,9 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     const tip = $("tip"), cross = box.querySelector("#cross"), card = box.closest(".pcard");
     const showTip = el => {
       const n = data[el.dataset.k].num;
-      tip.innerHTML = `<b>${mTitle(el.dataset.k)}</b><span><i class="lg rev"></i>${T("k_rev")}<em>${money(n.receita)}</em></span><span><i class="lg exp"></i>${T("k_exp")}<em>${money(n.despesas)}</em></span><span><i class="lg net"></i>${T("k_net")}<em>${money(n.lucro)}</em></span>`;
+      tip.innerHTML = `<b>${mTitle(el.dataset.k)}</b><span><i class="lg rev"></i>${T("k_rev")}<em>${money(n.receita)}</em></span><span><i class="lg exp"></i>${T("k_exp")}<em>${money(n.despesas)}</em></span><span><i class="lg net"></i>${T("k_net")}<em>${money(n.lucro)}</em></span>`
+        + (n.receita && n.lucro != null ? `<span>${T("margin")}<em>${(n.lucro / n.receita * 100).toFixed(1).replace(".", currentLang === "en" ? "." : ",")}%</em></span>` : "")
+        + (data[el.dataset.k].draw != null && n.lucro != null ? `<span>${T("k_draw")}<em>${money(-data[el.dataset.k].draw)}</em></span><span>${T("k_after")}<em>${money(n.lucro - data[el.dataset.k].draw)}</em></span>` : "");
       tip.hidden = false;
       const br = el.getBoundingClientRect(), cr = card.getBoundingClientRect();
       let left = br.left - cr.left + br.width + 6; if (left + tip.offsetWidth > cr.width - 8) left = br.left - cr.left - tip.offsetWidth - 6;
