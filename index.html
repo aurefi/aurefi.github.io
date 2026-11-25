@@ -90,8 +90,8 @@
         <div class="card">
           <h3 data-i18n="svc2_t">Impostos</h3>
           <div class="icon"><img src="img/svc2.jpg" alt="" loading="lazy" onerror="this.remove()"><svg viewBox="0 0 48 48"><path d="M12 6h18l8 8v28H12z"/><path d="M30 6v8h8M18 22h14M18 28h14M18 34h9"/></svg></div>
-          <p data-i18n="svc2_d">Declarações de imposto para empresas e pessoas físicas.</p>
-          <span class="status" data-i18n="soon">Em breve</span>
+          <p data-i18n="svc2_d">Declarações federais de imposto para empresas e pessoas físicas, a partir de janeiro de 2027.</p>
+          <a class="status open" style="text-decoration:none" data-tax-wa href="https://wa.me/13259565160?text=Ol%C3%A1%21%20Quero%20agendar%20minha%20declara%C3%A7%C3%A3o%20da%20temporada%202027." target="_blank" rel="noopener" data-i18n="tax_open">Agenda aberta para 2027</a>
         </div>
         <div class="card">
           <h3 data-i18n="svc3_t">Auditoria de Workers' Comp</h3>
@@ -139,7 +139,7 @@
         <details><summary>Em que idioma eu recebo os relatórios?</summary><p>Em português e em inglês. Todo mês você recebe a Demonstração de Resultado (P&amp;L), o Balanço (Balance Sheet) e o fluxo de caixa.</p></details>
         <details><summary>A Aurea movimenta o dinheiro da minha empresa?</summary><p>Não. Pagamentos, folha e impostos saem direto da conta da sua empresa. A Aurea organiza e registra, mas não guarda nem movimenta o seu dinheiro.</p></details>
         <details><summary>A Aurea é um escritório de CPA?</summary><p>Não. A Aurea presta serviços de bookkeeping e serviços financeiros para pequenas empresas. Quando o seu caso precisa de um CPA ou de um advogado, indicamos parceiros.</p></details>
-        <details><summary>Vocês fazem a declaração de imposto?</summary><p>A preparação de impostos chega em breve. Enquanto isso, o bookkeeping deixa os seus números organizados e prontos para a declaração.</p></details>
+        <details><summary>Vocês fazem a declaração de imposto?</summary><p>Sim. A agenda da temporada 2027 já está aberta. Preparamos declarações federais de empresas e pessoas físicas a partir de janeiro, e as estaduais nos estados em que estamos habilitados. <a href="https://wa.me/13259565160?text=Ol%C3%A1%21%20Quero%20agendar%20minha%20declara%C3%A7%C3%A3o%20da%20temporada%202027." target="_blank" rel="noopener" style="color:var(--brown);font-weight:600">Agende pelo WhatsApp</a>.</p></details>
       </div>
       <div class="faq" data-show="en">
         <details><summary>How does the first contact work?</summary><p>It starts with a free call where we learn how your business works and what it needs. After that, you receive a contract with the right services for your situation.</p></details>
@@ -149,7 +149,7 @@
         <details><summary>What language are the reports in?</summary><p>English and Portuguese. Every month you receive a Profit &amp; Loss, a Balance Sheet and a cash flow report.</p></details>
         <details><summary>Does Aurea handle my business's money?</summary><p>No. Payments, payroll and taxes are paid directly from your business account. Aurea organizes and records everything, but never holds or moves your money.</p></details>
         <details><summary>Is Aurea a CPA firm?</summary><p>No. Aurea provides bookkeeping and financial services for small businesses. When your situation calls for a CPA or an attorney, we refer you to trusted partners.</p></details>
-        <details><summary>Do you prepare tax returns?</summary><p>Tax preparation is coming soon. In the meantime, bookkeeping keeps your numbers organized and ready for tax time.</p></details>
+        <details><summary>Do you prepare tax returns?</summary><p>Yes. We are now booking the 2027 tax season. We prepare federal returns for businesses and individuals starting in January, and state returns in the states where we are authorized. <a href="https://wa.me/13259565160?text=Hi%21%20I%27d%20like%20to%20book%20my%20tax%20return%20for%20the%202027%20season." target="_blank" rel="noopener" style="color:var(--brown);font-weight:600">Book on WhatsApp</a>.</p></details>
       </div>
     </div>
   </section>
@@ -216,7 +216,7 @@ window.PAGE_DICT = {
     svc_title:"Nossos serviços",
     svc1_d:"QuickBooks em dia, conciliação mensal das contas e cartões, e relatórios em português e inglês.",
     svc_open:"Estamos aceitando novos clientes",
-    svc2_t:"Impostos", svc2_d:"Declarações de imposto para empresas e pessoas físicas.",
+    svc2_t:"Impostos", svc2_d:"Declarações federais de imposto para empresas e pessoas físicas, a partir de janeiro de 2027.", tax_open:"Agenda aberta para 2027",
     svc3_t:"Auditoria de Workers' Comp", svc3_d:"Folha de pagamento, 1099, W-9 e certificados de seguro dos subcontratados organizados para a auditoria anual do seguro de Workers' Compensation.",
     soon:"Em breve", svc_all:"Ver todos os serviços", t_title:"O que dizem os clientes", faq_title:"Perguntas frequentes",
     creds_title:"Credenciais", creds_sub:"Selos e certificações",
@@ -244,7 +244,7 @@ window.PAGE_DICT = {
     svc_title:"Our Services",
     svc1_d:"QuickBooks kept up to date, monthly reconciliation of bank accounts and cards, and reports in English and Portuguese.",
     svc_open:"We are currently accepting new clients",
-    svc2_t:"Taxes", svc2_d:"Tax returns for businesses and individuals.",
+    svc2_t:"Taxes", svc2_d:"Federal tax returns for businesses and individuals, starting January 2027.", tax_open:"Now booking for 2027",
     svc3_t:"Workers' Comp Audit", svc3_d:"Payroll records, 1099s, W-9s and subcontractor certificates of insurance, organized for your annual Workers' Compensation insurance audit.",
     soon:"Coming soon", svc_all:"See all services", t_title:"What clients say", faq_title:"Frequently asked questions",
     creds_title:"Credentials", creds_sub:"Badges and Certifications",
@@ -263,6 +263,15 @@ window.PAGE_DICT = {
 window.TESTIMONIALS = [];
 </script>
 <script src="main.js"></script>
+<script>
+/* Card de impostos: mensagem do WhatsApp no idioma da página */
+(function () {
+  const pt = "https://wa.me/13259565160?text=Ol%C3%A1%21%20Quero%20agendar%20minha%20declara%C3%A7%C3%A3o%20da%20temporada%202027.", en = "https://wa.me/13259565160?text=Hi%21%20I%27d%20like%20to%20book%20my%20tax%20return%20for%20the%202027%20season.";
+  const ajustar = () => document.querySelectorAll("[data-tax-wa]").forEach(a => { a.href = document.documentElement.lang === "en" ? en : pt; });
+  ajustar();
+  new MutationObserver(ajustar).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
+})();
+</script>
 <script src="sorteio-popup.js"></script>
 <script src="banner.js"></script>
 <script async src="https://cdn.credly.com/assets/utilities/embed.js"></script>

@@ -202,9 +202,9 @@
 
     </div>
 
-    <div class="svc-soon">
-      <span class="status" style="border-color:var(--brown);color:var(--brown)" data-i18n="soon">Em breve</span>
-      <span><b data-i18n="soon_t">Preparação de impostos.</b> <span data-i18n="soon_d">Declarações de imposto para empresas e pessoas físicas.</span></span>
+    <div class="svc-soon" style="border-style:solid;border-color:var(--gold)">
+      <a class="status open" style="margin-top:0;text-decoration:none" data-tax-wa href="https://wa.me/13259565160?text=Ol%C3%A1%21%20Quero%20agendar%20minha%20declara%C3%A7%C3%A3o%20da%20temporada%202027." target="_blank" rel="noopener" data-i18n="soon">Agenda aberta para 2027</a>
+      <span><b data-i18n="soon_t">Preparação de impostos.</b> <span data-i18n="soon_d">Declarações federais para empresas e pessoas físicas a partir de janeiro de 2027, e estaduais nos estados em que estamos habilitados.</span></span>
     </div>
   </div>
 
@@ -235,7 +235,7 @@ window.PAGE_DICT = {
     eyebrow:"Serviços", title:"Saiba quanto a sua empresa realmente lucra, todo mês.",
     intro:"Cuidamos dos números da sua empresa com relatórios mensais em português e inglês. Atendimento 100% remoto, em todos os Estados Unidos.",
     c1:"Construção", c2:"Remodelação", c3:"Pintura", c4:"Limpeza", c5:"Manutenção",
-    soon:"Em breve", soon_t:"Preparação de impostos.", soon_d:"Declarações de imposto para empresas e pessoas físicas.",
+    soon:"Agenda aberta para 2027", soon_t:"Preparação de impostos.", soon_d:"Declarações federais para empresas e pessoas físicas a partir de janeiro de 2027, e estaduais nos estados em que estamos habilitados.",
     how_title:"Como funciona",
     s1_t:"Ligação gratuita", s1_d:"Conversamos para entender como a sua empresa funciona e do que ela precisa.",
     s2_t:"Proposta sob medida", s2_d:"Você recebe o contrato com os serviços certos para a sua empresa.",
@@ -247,7 +247,7 @@ window.PAGE_DICT = {
     eyebrow:"Services", title:"Know how much your business really makes, every month.",
     intro:"We take care of your numbers with monthly reports in English and Portuguese. 100% remote service, anywhere in the United States.",
     c1:"Construction", c2:"Remodeling", c3:"Painting", c4:"Cleaning", c5:"Maintenance",
-    soon:"Coming soon", soon_t:"Tax preparation.", soon_d:"Tax returns for businesses and individuals.",
+    soon:"Now booking for 2027", soon_t:"Tax preparation.", soon_d:"Federal returns for businesses and individuals starting January 2027, and state returns in the states where we are authorized.",
     how_title:"How it works",
     s1_t:"Free call", s1_d:"We talk to understand how your business works and what it needs.",
     s2_t:"Tailored proposal", s2_d:"You receive a contract with the right services for your business.",
@@ -257,6 +257,14 @@ window.PAGE_DICT = {
 };
 </script>
 <script src="main.js"></script>
+<script>
+(function () {
+  const pt = "https://wa.me/13259565160?text=Ol%C3%A1%21%20Quero%20agendar%20minha%20declara%C3%A7%C3%A3o%20da%20temporada%202027.", en = "https://wa.me/13259565160?text=Hi%21%20I%27d%20like%20to%20book%20my%20tax%20return%20for%20the%202027%20season.";
+  const ajustar = () => document.querySelectorAll("[data-tax-wa]").forEach(a => { a.href = document.documentElement.lang === "en" ? en : pt; });
+  ajustar();
+  new MutationObserver(ajustar).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
+})();
+</script>
 <script src="sorteio-popup.js"></script>
 </body>
 </html>
