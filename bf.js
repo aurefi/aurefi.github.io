@@ -4,13 +4,12 @@
   const FIM = new Date("2026-11-30T23:59:59-06:00");            // fim da oferta: 30/11, 23h59 CT
   const CYBER_INICIO = new Date("2026-11-30T00:00:00-06:00");   // Cyber Monday: 30/11, o dia todo
   const VAGAS_TOTAL = 10;        // vagas de cada contador
-  // Vagas que ainda restam. Atualizar à mão a cada venda.
+  // Vagas que ainda restam: o número vem do arquivo vagas.json (na raiz do site), que a página
+  // busca sempre de novo, sem cache. Para atualizar, edite só o vagas.json no GitHub.
+  // Os números abaixo só valem se o vagas.json não carregar.
   // Setup grátis e o mês de extras não têm limite de vagas, por isso não têm contador.
-  const VAGAS = {
-    catchup: 8,     // Catch-up de 2026 pelo preço de 2 mensalidades
-    cyber: 8        // Plano anual da Cyber Monday (12 pelo preço de 10)
-  };
-  const ATUALIZADO = "";   // ex.: "20/11, 10h". Vazio: a linha "Atualizado em" não aparece
+  let VAGAS = { catchup: 8, cyber: 8 };
+  let ATUALIZADO = "";
 
   // ===== Fase da página =====
   const agora = new Date();
@@ -36,20 +35,33 @@
     pt: { de: n => n === 1 ? "vaga restante de " + VAGAS_TOTAL : "vagas restantes de " + VAGAS_TOTAL, esgotado: "Esgotado", esg_de: "As " + VAGAS_TOTAL + " vagas acabaram", upd: "Atualizado em " },
     en: { de: n => (n === 1 ? "spot left of " : "spots left of ") + VAGAS_TOTAL, esgotado: "Sold out", esg_de: "All " + VAGAS_TOTAL + " spots are taken", upd: "Updated " }
   };
-  document.querySelectorAll("[data-bf-slots]").forEach(sec => {
-    const t = TXT[sec.dataset.bfSlots] || TXT.pt;
-    sec.querySelectorAll("[data-promo]").forEach(card => {
-      const bruto = VAGAS[card.dataset.promo];
-      const n = Math.max(0, Math.min(VAGAS_TOTAL, Math.floor(Number(bruto ?? VAGAS_TOTAL)) || 0));
-      card.classList.toggle("esgotado", n === 0);
-      card.classList.toggle("poucas", n > 0 && n <= 3);
-      card.querySelector(".num").textContent = n === 0 ? t.esgotado : n;
-      card.querySelector(".de").textContent = n === 0 ? t.esg_de : t.de(n);
-      card.querySelector(".bar i").style.width = (n / VAGAS_TOTAL * 100) + "%";
+  function mostrarVagas() {
+    document.querySelectorAll("[data-bf-slots]").forEach(sec => {
+      const t = TXT[sec.dataset.bfSlots] || TXT.pt;
+      sec.querySelectorAll("[data-promo]").forEach(card => {
+        const bruto = VAGAS[card.dataset.promo];
+        const n = Math.max(0, Math.min(VAGAS_TOTAL, Math.floor(Number(bruto ?? VAGAS_TOTAL)) || 0));
+        card.classList.toggle("esgotado", n === 0);
+        card.classList.toggle("poucas", n > 0 && n <= 3);
+        card.querySelector(".num").textContent = n === 0 ? t.esgotado : n;
+        card.querySelector(".de").textContent = n === 0 ? t.esg_de : t.de(n);
+        card.querySelector(".bar i").style.width = (n / VAGAS_TOTAL * 100) + "%";
+      });
+      const upd = sec.querySelector("[data-bf-upd]");
+      if (upd) { upd.textContent = ATUALIZADO ? t.upd + ATUALIZADO + "." : ""; upd.hidden = !ATUALIZADO; }
     });
-    const upd = sec.querySelector("[data-bf-upd]");
-    if (ATUALIZADO && upd) { upd.textContent = t.upd + ATUALIZADO + "."; upd.hidden = false; }
-  });
+  }
+  mostrarVagas();
+  // Busca os números atualizados (sem cache) e redesenha os contadores
+  fetch("vagas.json?t=" + Date.now(), { cache: "no-store" })
+    .then(r => r.ok ? r.json() : null)
+    .then(d => {
+      if (!d) return;
+      VAGAS = { catchup: d.catchup, cyber: d.cyber };
+      ATUALIZADO = typeof d.atualizado === "string" ? d.atualizado : "";
+      mostrarVagas();
+    })
+    .catch(() => {});
 
   // ===== Contagem regressiva até 30/11, 23h59 CT =====
   const contadores = [...document.querySelectorAll("[data-bf-count]")];
