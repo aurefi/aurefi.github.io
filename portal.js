@@ -442,7 +442,7 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
   const CFG_TABLE = "cliente_config";
   const CFG_PADRAO = {
     idioma: null, painel: "all",
-    aviso_pend: "portal", aviso_rel: "portal", pend_lembrete: 0,
+    aviso_pend_portal: true, aviso_pend_whats: false, aviso_pend_email: false, aviso_rel_portal: true, aviso_rel_whats: false, aviso_rel_email: false, pend_lembrete: 0,
     contato2: false, contato2_nome: null, contato2_email: null, contato2_whats: null,
     resumo: "mensal", contas: true, contas_dias: 7, invoices: true, impostos: true, retirada: false, retirada_limite: null,
     relatorios: "juntos"
@@ -450,7 +450,7 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
   // Cada cartão salva só os próprios campos
   const CFG_CARDS = {
     geral: ["idioma", "painel"],
-    avisos: ["aviso_pend", "aviso_rel", "pend_lembrete", "contato2", "contato2_nome", "contato2_email", "contato2_whats"],
+    avisos: ["aviso_pend_portal", "aviso_pend_whats", "aviso_pend_email", "aviso_rel_portal", "aviso_rel_whats", "aviso_rel_email", "pend_lembrete", "contato2", "contato2_nome", "contato2_email", "contato2_whats"],
     estella: ["resumo", "contas", "contas_dias", "invoices", "impostos", "retirada", "retirada_limite"],
     rel: ["relatorios"]
   };
@@ -496,7 +496,8 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     const sw = (campo, rot) => `<button type="button" class="es-sw" role="switch" aria-checked="${!!cfgEd[campo]}" aria-label="${rot}" data-essw="${campo}"${dis}></button>`;
     const linha = (rot, desc, ctrl, extra) => `<div class="es-row"><div class="es-lbl"><b>${rot}</b>${desc ? `<small>${desc}</small>` : ""}</div>${ctrl}${extra || ""}</div>`;
     const txt = (campo, rot, tipo, ph, max) => `<label class="es-field"><span>${rot}</span><input type="${tipo}" data-estxt="${campo}" maxlength="${max}" value="${escH(cfgEd[campo] || "")}" placeholder="${ph}"${dis}></label>`;
-    const canais = [["portal", T("cf_c_portal")], ["whatsapp", "WhatsApp"], ["email", T("cf_c_email")]];
+    // Portal, WhatsApp e E-mail: o cliente marca um, dois ou os três
+    const canais = base => `<div class="es-seg es-multi" role="group">${[["portal", "Portal"], ["whats", "WhatsApp"], ["email", T("cf_c_email")]].map(([v, t]) => `<button type="button" data-escanal="${base}_${v}" aria-pressed="${!!cfgEd[base + "_" + v]}"${dis}><i aria-hidden="true"></i>${t}</button>`).join("")}</div>`;
     const card = (id, corpo) => `<div class="pcard es-cfg" data-cfgcard="${id}">
       <h2><svg viewBox="0 0 24 24" aria-hidden="true">${ICO_CFG[id]}</svg>${T("cf_t_" + id)}</h2><p class="es-sub">${T("cf_s_" + id)}</p>${corpo}
       ${ro ? "" : `<div class="es-foot"><button type="button" class="es-save" data-cfgsave="${id}"${cfgMudou(id) ? "" : " disabled"}>${T("es_save")}</button><span class="es-msg${cfgMsg[id] && cfgMsg[id].e ? " err" : ""}" role="status">${cfgMsg[id] ? T(cfgMsg[id].k) : ""}</span></div>`}</div>`;
@@ -507,8 +508,8 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
         linha(T("cf_idioma"), T("cf_idioma_d"), `<div class="es-seg" role="group">${[["pt", "Português"], ["en", "English"]].map(([v, t]) => `<button type="button" data-escampo="idioma" data-esv="${v}" aria-pressed="${idiomaAtual === v}"${dis}>${t}</button>`).join("")}</div>`)
         + linha(T("cf_painel"), T("cf_painel_d"), seg("painel", [["all", T("cf_p_all")], ["net", T("cf_p_net")], ["margin", T("cf_p_margin")], ["after", T("cf_p_after")]])))
       + card("avisos",
-        linha(T("cf_av_pend"), T("cf_av_pend_d"), seg("aviso_pend", canais))
-        + linha(T("cf_av_rel"), T("cf_av_rel_d"), seg("aviso_rel", canais))
+        linha(T("cf_av_pend"), T("cf_av_pend_d"), canais("aviso_pend"))
+        + linha(T("cf_av_rel"), T("cf_av_rel_d"), canais("aviso_rel"))
         + linha(T("cf_lemb"), T("cf_lemb_d"), seg("pend_lembrete", [[0, T("cf_lemb_0")], [1, T("cf_lemb_n1")], [2, T("cf_lemb_n").replace("{n}", 2)], [3, T("cf_lemb_n").replace("{n}", 3)]]))
         + linha(T("cf_c2"), T("cf_c2_d"), sw("contato2", T("cf_c2")),
             cfgEd.contato2 ? `<div class="es-sub2 es-fields">${txt("contato2_nome", T("cf_c2_nome"), "text", "", 80)}${txt("contato2_email", T("cf_c2_email"), "email", "nome@empresa.com", 120)}${txt("contato2_whats", "WhatsApp", "tel", "+1 555 123 4567", 30)}</div>` : ""))
@@ -539,6 +540,12 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     const b = e.target.closest("button"); if (!b) return;
     const d = b.dataset, cardEl = b.closest("[data-cfgcard]"), c = cardEl && cardEl.dataset.cfgcard;
     if (d.escampo) { cfgEd[d.escampo] = ["contas_dias", "pend_lembrete"].includes(d.escampo) ? Number(d.esv) : d.esv; delete cfgMsg[c]; renderCfg(); return; }
+    if (d.escanal) {   // não deixa desmarcar o último canal
+      const base = d.escanal.replace(/_(portal|whats|email)$/, "");
+      const outros = ["portal", "whats", "email"].map(v => base + "_" + v).filter(k => k !== d.escanal);
+      if (cfgEd[d.escanal] && !outros.some(k => cfgEd[k])) { cfgMsg[c] = { k: "cf_e_canal", e: true }; renderCfg(); return; }
+      cfgEd[d.escanal] = !cfgEd[d.escanal]; delete cfgMsg[c]; renderCfg(); return;
+    }
     if (d.essw) { cfgEd[d.essw] = !cfgEd[d.essw]; delete cfgMsg[c]; renderCfg(); const f = d.essw === "retirada" ? $("es-lim") : d.essw === "contato2" ? document.querySelector('[data-estxt="contato2_nome"]') : null; if (f && cfgEd[d.essw]) f.focus(); return; }
     if (!d.cfgsave) return;
     const erro = cfgValidar(c);
