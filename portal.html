@@ -207,7 +207,11 @@
   .app-main{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
   /* topo rola junto com a página (as abas ficam na barra de baixo): nada cobre o logo */
   .side-nav{position:relative;top:auto}
-  .app-top{position:static;background:none;backdrop-filter:none;-webkit-backdrop-filter:none;border-bottom:0}
+  /* só o título da página gruda no topo, com fundo sólido de ponta a ponta */
+  .app-top{display:contents}
+  .app-top h1{position:sticky;top:0;z-index:30;margin:-20px -16px 14px;padding:14px 16px 12px;background:#F3EADC;border-bottom:1px solid #E6DCCB}
+  .app-top .admin-bar{margin:0 0 12px}
+  .app-top .who-chip{width:max-content;margin:0 0 20px}
   .admin-bar label{white-space:nowrap}
   .admin-bar select{min-width:0;width:100%;text-overflow:ellipsis}
 }
@@ -637,6 +641,6 @@ window.PAGE_DICT = {
 <script src="main.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<script src="portal.js?v=20261126i"></script>
+<script src="portal.js?v=20261126j"></script>
 </body>
 </html>
