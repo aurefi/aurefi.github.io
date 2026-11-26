@@ -42,6 +42,42 @@
 .pd-card.done .pd-desc,.pd-card.done .pd-val{color:#6A645A}
 .pd-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;font-size:13.5px;color:var(--muted)}
 .al-card{max-width:760px;margin:0 0 18px;padding:18px 20px}
+.cfg-wrap{display:flex;flex-direction:column;gap:18px;max-width:760px;margin-bottom:18px}
+.es-cfg{max-width:760px;margin:0;padding:18px 20px}
+.cfg-sec{max-width:760px}
+.cfg-sec .acc-card{max-width:760px}
+.cfg-sec h2{display:flex;align-items:center;gap:8px}
+.cfg-ico{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8}
+.es-sub2.es-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:6px}
+.es-field{display:flex;flex-direction:column;gap:4px;font-size:13px;color:#6b665c;margin:0}
+.es-field input{border:1px solid #A9A296;border-radius:8px;min-height:42px;padding:0 10px;font:16px var(--sans);background:#fff;color:var(--ink);margin:0;width:100%;box-sizing:border-box}
+@media (max-width:640px){.es-sub2.es-fields{grid-template-columns:1fr}.es-seg{flex-wrap:wrap}}
+.es-cfg h2{display:flex;align-items:center;gap:8px;font-size:18px;margin:0 0 2px}
+.es-cfg h2 svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8}
+.es-sub{margin:0 0 6px;color:#6b665c;font-size:14px}
+.es-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 0;border-top:1px solid #ECE4D6;flex-wrap:wrap}
+.es-row:first-of-type{border-top:0}
+.es-lbl{flex:1 1 190px;min-width:0}
+.es-lbl b{display:block;font-size:15px}
+.es-lbl small{display:block;color:#6b665c;font-size:13.5px;line-height:1.4;margin-top:2px}
+.es-sub2{flex-basis:100%;display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:-2px;font-size:14px;color:#4a463f}
+.es-seg{display:inline-flex;border:1px solid #CFC6B6;border-radius:8px;overflow:hidden;background:#fff}
+.es-seg button{border:0;border-left:1px solid #CFC6B6;background:#fff;color:var(--ink);font:600 14px var(--sans);padding:0 14px;min-height:40px;cursor:pointer}
+.es-seg button:first-child{border-left:0}
+.es-seg button[aria-pressed="true"]{background:var(--ink);color:var(--cream-2)}
+.es-sw{position:relative;flex:none;width:50px;height:30px;border-radius:15px;border:0;background:#CFC6B6;cursor:pointer;transition:background .15s}
+.es-sw::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:left .15s}
+.es-sw[aria-checked="true"]{background:#1BB07A}
+.es-sw[aria-checked="true"]::after{left:23px}
+.es-money{display:inline-flex;align-items:center;margin:0;border:1px solid #A9A296;border-radius:8px;background:#fff;padding:0 10px;min-height:40px}
+.es-money span{color:#6b665c;margin-right:4px}
+.es-money input{border:0;outline:0;font:16px var(--sans);width:110px;background:none;padding:0;margin:0;height:38px;min-height:0;box-shadow:none;border-radius:0}
+.es-foot{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding-top:14px;border-top:1px solid #ECE4D6}
+.es-save{min-height:44px;padding:0 20px;border-radius:8px;border:1px solid var(--ink);background:var(--ink);color:var(--cream-2);font:600 14.5px var(--sans);cursor:pointer}
+.es-save:disabled{opacity:.45;cursor:default}
+.es-msg{font-size:14px;color:#6b665c}
+.es-msg.err{color:#B3261E}
+.es-cfg.ro .es-seg button,.es-cfg.ro .es-sw{cursor:default;opacity:.75}
 .cmode{display:flex;gap:6px;flex-wrap:wrap}
 .cmode-b{appearance:none;border:1px solid transparent;background:none;padding:6px 12px;border-radius:999px;font:600 15px var(--sans);color:var(--muted);cursor:pointer}
 .cmode-b:hover{color:var(--ink);background:#F6EFE3}
@@ -126,6 +162,9 @@
 .pd-ans{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:15px}
 .pd-ans b{color:#11694a}
 .pd-ans .ed{border:0;background:none;color:var(--brown);font:600 14px var(--sans);text-decoration:underline;cursor:pointer;padding:6px 0}
+.pd-note{margin-top:8px;padding:8px 12px;border-left:3px solid #B8924F;background:#F8F1E6;border-radius:0 6px 6px 0;font-size:14.5px;line-height:1.45;white-space:pre-wrap;word-break:break-word}
+.pd-note small{display:block;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--brown);margin-bottom:2px}
+.pd-noteb{border:0;background:none;color:var(--brown);font:600 14px var(--sans);text-decoration:underline;cursor:pointer;padding:8px 0 0;min-height:36px}
 .pd-rec{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px;font-size:14px}
 .pd-rec button{min-height:44px;padding:0 16px;border:1px dashed var(--brown);border-radius:10px;background:#fff;color:var(--brown);font:600 14.5px var(--sans);cursor:pointer}
 .pd-rec.req button{border-style:solid;border-color:#eb6834;color:#B9461A}
@@ -205,6 +244,10 @@
         <button type="button" class="nav-btn" data-page="account">
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
           <span data-i18n="nav_account">Minha conta</span>
+        </button>
+        <button type="button" class="nav-btn" data-page="config">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+          <span data-i18n="nav_config">Configurações</span>
         </button>
       </nav>
       <div class="side-bottom">
@@ -320,6 +363,25 @@
         <div class="empty" id="al-empty" hidden data-i18n="al_empty">Nenhum recado da Estella por enquanto. Quando houver algo importante, como um vencimento chegando, ele aparece aqui.</div>
       </div>
 
+      <!-- ===== Configurações (preferências da Estella) ===== -->
+      <div class="app-page" id="p-config" hidden>
+        <p class="adm-note" id="cfg-adm" hidden></p>
+        <div class="cfg-wrap" id="cfg-wrap" hidden></div>
+        <div class="cfg-sec">
+        <div class="pcard acc-card" id="pw-card">
+          <div class="card-head"><h2><svg class="cfg-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span data-i18n="pw_t">Trocar senha</span></h2></div>
+          <form id="pw-form" novalidate>
+            <label for="p-new" data-i18n="pw_new">Nova senha (mínimo de 8 caracteres)</label>
+            <input id="p-new" type="password" autocomplete="new-password" minlength="8" required>
+            <label for="p-conf" data-i18n="pw_conf">Repita a nova senha</label>
+            <input id="p-conf" type="password" autocomplete="new-password" minlength="8" required>
+            <button class="btn btn-gold sm" type="submit" data-i18n="pw_save">Salvar nova senha</button>
+            <p class="msg" id="pw-msg" role="status"></p>
+          </form>
+        </div>
+        </div>
+      </div>
+
       <!-- ===== Indicações (só para parceiros) ===== -->
       <div class="app-page" id="p-ind" hidden>
         <p class="adm-note" id="ind-adm" hidden data-i18n="ind_adm">Modo administrador: é isto que o parceiro vê. Para mudar status e crédito, use o painel de indicações.</p>
@@ -368,17 +430,6 @@
         <div class="pcard acc-card">
           <div class="card-head"><h2 data-i18n="acc_t">Dados de acesso</h2></div>
           <p><span class="muted" data-i18n="email">E-mail</span><br><b id="acc-email"></b></p>
-        </div>
-        <div class="pcard acc-card" id="pw-card">
-          <div class="card-head"><h2 data-i18n="pw_t">Trocar senha</h2></div>
-          <form id="pw-form" novalidate>
-            <label for="p-new" data-i18n="pw_new">Nova senha (mínimo de 8 caracteres)</label>
-            <input id="p-new" type="password" autocomplete="new-password" minlength="8" required>
-            <label for="p-conf" data-i18n="pw_conf">Repita a nova senha</label>
-            <input id="p-conf" type="password" autocomplete="new-password" minlength="8" required>
-            <button class="btn btn-gold sm" type="submit" data-i18n="pw_save">Salvar nova senha</button>
-            <p class="msg" id="pw-msg" role="status"></p>
-          </form>
         </div>
         </div>
 
@@ -439,7 +490,7 @@ window.PAGE_DICT = {
     login_t:"Entrar", login_d:"Use o e-mail e a senha que a Aurea enviou para você.",
     email:"E-mail", pass:"Senha", login_btn:"Entrar",
     forgot:"Esqueceu a senha ou ainda não tem acesso?", forgot_link:"Fale com a Aurea no WhatsApp",
-    nav_dash:"Painel", nav_reports:"Relatórios", nav_account:"Minha conta", nav_pend:"Pendências", nav_estella:"Estella", nav_ind:"Indicações", ind_t:"Indicações", ind_adm:"Modo administrador: é isto que o parceiro vê. Para mudar status e crédito, use o painel de indicações.", ind_link_t:"Seu link de indicação", ind_help:"Compartilhe com quem precisa de contabilidade para a empresa. Quando um indicado seu fecha contrato com a Aurea, sua empresa ganha um crédito na fatura: 5% do plano de bookkeeping ou 15% da auditoria de seguro.", ind_copy:"Copiar", ind_copied:"Link copiado.", ind_wa:"Enviar no WhatsApp", ind_empty:"Nenhuma indicação ainda. Quando alguém preencher o formulário pelo seu link, a indicação aparece aqui.", ind_n:"indicações", ind_n1:"indicação", ind_at:"viraram clientes", ind_at1:"virou cliente", ind_cr:"na próxima fatura", ind_hist:"Crédito por mês", ind_m_next:"vai na fatura de {m}", ind_m_used:"usado na fatura de {m}", ind_used:"já usado", ind_pendente:"Em contato", ind_ativa:"Virou cliente", ind_perdida:"Não fechou", ind_on:"indicado em {d}", ind_ap:"usado na fatura de {m}", ind_ap_no:"próxima fatura", ind_wa_msg:"Oi! Uso a Aurea Financial na contabilidade da minha empresa e recomendo. Se quiser conhecer, deixe seus dados aqui que eles entram em contato: {u}", ind_bk:"Bookkeeping", ind_au:"Auditoria de seguro", ind_tx:"Imposto", al_adm:"Modo administrador: você vê se o cliente já leu cada recado.", al_empty:"Nenhum recado da Estella por enquanto. Quando houver algo importante, como um vencimento chegando, ele aparece aqui.",
+    cf_t_geral:"Geral", cf_s_geral:"Idioma e o que o Painel mostra ao abrir.", cf_idioma:"Idioma do portal", cf_idioma_d:"Vale em qualquer aparelho. A Aurea também escreve os recados e as pendências neste idioma.", cf_painel:"Gráfico do Painel", cf_painel_d:"O que o gráfico mostra quando você abre o portal.", cf_p_all:"Completo", cf_p_net:"Lucro", cf_p_margin:"Margem", cf_p_after:"Após retiradas", cf_t_avisos:"Avisos", cf_s_avisos:"Como a Aurea avisa você fora do portal.", cf_av_pend:"Pendências novas", cf_av_pend_d:"Quando a Aurea tiver dúvidas sobre transações do mês.", cf_av_rel:"Relatórios do mês", cf_av_rel_d:"Quando os relatórios do mês forem publicados.", cf_c_portal:"Só no portal", cf_c_email:"E-mail", cf_lemb:"Lembrete do prazo das Pendências", cf_lemb_d:"Se ainda faltar resposta, a Aurea lembra você antes do prazo.", cf_lemb_0:"Não", cf_lemb_n1:"1 dia antes", cf_lemb_n:"{n} dias antes", cf_c2:"Outra pessoa também recebe", cf_c2_d:"Um sócio, gerente ou familiar recebe os mesmos avisos.", cf_c2_nome:"Nome", cf_c2_email:"E-mail", cf_e_nome:"Digite o nome da outra pessoa.", cf_e_contato:"Digite o e-mail ou o WhatsApp da outra pessoa.", cf_e_email:"O e-mail não parece certo.", cf_e_whats:"O WhatsApp precisa ter o código do país e o número.", cf_t_estella:"Preferências da Estella", cf_s_estella:"Escolha sobre o que a Estella fala com você.", cf_t_rel:"Relatórios", cf_s_rel:"Como os arquivos aparecem na aba Relatórios.", cf_rel:"Ordem dos relatórios", cf_rel_d:"Os traduzidos para o português ou os originais do QuickBooks, em inglês.", cf_r_pt:"Traduzidos primeiro", cf_r_en:"Originais primeiro", cf_r_all:"Juntos", nav_config:"Configurações", es_t:"Preferências da Estella", es_sub:"Escolha sobre o que a Estella fala com você. Você pode mudar quando quiser.", es_resumo:"Resumo do trabalho", es_resumo_d:"O que a Aurea fez nos seus livros no período.", es_sem:"Semanal", es_men:"Mensal", es_nen:"Sem resumo", es_contas:"Contas a vencer", es_contas_d:"Parcelas, seguros, cartões e outras contas da empresa.", es_dias:"Avisar com", es_dias_n:"{n} dias", es_dias_s:"de antecedência", es_inv:"Invoices atrasadas", es_inv_d:"Quando um cliente seu está devendo há mais de 30 dias.", es_imp:"Impostos trimestrais", es_imp_d:"Datas do estimated tax do IRS (abril, junho, setembro e janeiro).", es_ret:"Limite de retirada", es_ret_d:"Avisa quando as retiradas do mês passam do valor que você definir.", es_ret_v:"Limite por mês", es_save:"Salvar preferências", es_saving:"Salvando...", es_saved:"Preferências salvas.", es_e:"Não deu para salvar. Tente de novo.", es_e_lim:"Digite o limite de retirada por mês.", es_upd:"Atualizado em {d}", es_def:"O cliente ainda não mudou nada: valem as opções padrão.", es_adm:"Modo administrador: só leitura.", nav_dash:"Painel", nav_reports:"Relatórios", nav_account:"Minha conta", nav_pend:"Pendências", nav_estella:"Estella", nav_ind:"Indicações", ind_t:"Indicações", ind_adm:"Modo administrador: é isto que o parceiro vê. Para mudar status e crédito, use o painel de indicações.", ind_link_t:"Seu link de indicação", ind_help:"Compartilhe com quem precisa de contabilidade para a empresa. Quando um indicado seu fecha contrato com a Aurea, sua empresa ganha um crédito na fatura: 5% do plano de bookkeeping ou 15% da auditoria de seguro.", ind_copy:"Copiar", ind_copied:"Link copiado.", ind_wa:"Enviar no WhatsApp", ind_empty:"Nenhuma indicação ainda. Quando alguém preencher o formulário pelo seu link, a indicação aparece aqui.", ind_n:"indicações", ind_n1:"indicação", ind_at:"viraram clientes", ind_at1:"virou cliente", ind_cr:"na próxima fatura", ind_hist:"Crédito por mês", ind_m_next:"vai na fatura de {m}", ind_m_used:"usado na fatura de {m}", ind_used:"já usado", ind_pendente:"Em contato", ind_ativa:"Virou cliente", ind_perdida:"Não fechou", ind_on:"indicado em {d}", ind_ap:"usado na fatura de {m}", ind_ap_no:"próxima fatura", ind_wa_msg:"Oi! Uso a Aurea Financial na contabilidade da minha empresa e recomendo. Se quiser conhecer, deixe seus dados aqui que eles entram em contato: {u}", ind_bk:"Bookkeeping", ind_au:"Auditoria de seguro", ind_tx:"Imposto", al_adm:"Modo administrador: você vê se o cliente já leu cada recado.", al_empty:"Nenhum recado da Estella por enquanto. Quando houver algo importante, como um vencimento chegando, ele aparece aqui.",
     pa_go:"Responder", pa_t1:"1 dúvida para responder", pa_tn:"{n} dúvidas para responder", pa_d:"Leva poucos minutos. Prazo: {d}.",
     pd_left:"Faltam {a} de {n}", al_t:"Recados da Estella", al_sub:"Assistente virtual da Aurea", al_red_t:"{n} alerta(s) não visto(s)", al_yel_t:"{n} recado(s) não visto(s)", al_d0:"Vence hoje", al_d1:"Vence amanhã", al_dn:"Vence em {n} dias", al_dp:"Venceu há {n} dia(s)", al_ok:"Ok, entendi", al_seen_n:"Vistos ({n})", al_hide:"Esconder vistos", al_seen_on:"Visto em {d}", al_cli_seen:"Cliente viu em {d}", al_cli_new:"Cliente ainda não viu", al_e:"Não foi possível salvar. Tente de novo.", pd_due:"Responder até {d}", pd_answered:"{a} de {n} respondidas", pd_prazo:"prazo {d}", pd_prazo_fim:"prazo encerrado em {d}",
     pd_help:"Toque em \"Sim\" quando o nosso palpite estiver certo. Cada resposta é salva na hora.",
@@ -448,7 +499,7 @@ window.PAGE_DICT = {
     pd_empty:"Nenhuma dúvida por aqui. Quando a Aurea tiver perguntas sobre as transações do mês, elas aparecem nesta aba.",
     pd_adm:"Modo administrador: você vê as respostas do cliente, mas não pode responder por ele.",
     pd_guess:"Nosso palpite", pd_yes:"Sim", pd_other:"Outro", pd_other_ph:"Conte o que foi esta transação", pd_save:"Salvar", pd_cancel:"Cancelar",
-    pd_your:"Sua resposta", pd_yes_ans:"Sim, {p}", pd_edit:"Alterar", pd_out:"Saída", pd_in:"Entrada",
+    pd_your:"Sua resposta", pd_note_add:"+ Adicionar explicação (opcional)", pd_note_edit:"Editar explicação", pd_note_ph:"Se quiser, explique (ex.: para que foi a compra)", pd_note_lbl:"Explicação", pd_yes_ans:"Sim, {p}", pd_edit:"Alterar", pd_out:"Saída", pd_in:"Entrada",
     pd_rec:"Anexar recibo", pd_rec_req:"Anexar recibo (obrigatório)", pd_rec_ok:"Recibo enviado", pd_rec_change:"Trocar recibo", pd_rec_view:"Ver",
     pd_rec_missing:"Falta o recibo para concluir esta resposta.", pd_rec_sending:"Enviando recibo...",
     pd_est:"Classificado por estimativa", pd_noans:"Sem resposta", pd_saving:"Salvando...",
@@ -491,7 +542,7 @@ window.PAGE_DICT = {
     login_t:"Sign in", login_d:"Use the email and password Aurea sent you.",
     email:"Email", pass:"Password", login_btn:"Sign in",
     forgot:"Forgot your password or don't have access yet?", forgot_link:"Message Aurea on WhatsApp",
-    nav_dash:"Dashboard", nav_reports:"Reports", nav_account:"My account", nav_pend:"Pending", nav_estella:"Estella", nav_ind:"Referrals", ind_t:"Referrals", ind_adm:"Admin mode: this is what the partner sees. To change status and credit, use the referrals panel.", ind_link_t:"Your referral link", ind_help:"Share it with anyone who needs bookkeeping for their business. When someone you referred signs with Aurea, your company gets a credit on its invoice: 5% of the bookkeeping plan or 15% of the insurance audit.", ind_copy:"Copy", ind_copied:"Link copied.", ind_wa:"Send on WhatsApp", ind_empty:"No referrals yet. When someone fills out the form through your link, it will show up here.", ind_n:"referrals", ind_n1:"referral", ind_at:"became clients", ind_at1:"became a client", ind_cr:"on the next invoice", ind_hist:"Credit by month", ind_m_next:"goes on the {m} invoice", ind_m_used:"used on the {m} invoice", ind_used:"already used", ind_pendente:"In contact", ind_ativa:"Became a client", ind_perdida:"Didn't sign", ind_on:"referred on {d}", ind_ap:"used on the {m} invoice", ind_ap_no:"next invoice", ind_wa_msg:"Hi! I use Aurea Financial for my company's bookkeeping and I recommend them. If you'd like to know more, leave your details here and they'll reach out: {u}", ind_bk:"Bookkeeping", ind_au:"Insurance audit", ind_tx:"Tax", al_adm:"Admin mode: you can see whether the client has read each note.", al_empty:"No notes from Estella for now. When something important comes up, like a due date approaching, it will show up here.",
+    cf_t_geral:"General", cf_s_geral:"Language and what the Dashboard shows when it opens.", cf_idioma:"Portal language", cf_idioma_d:"Applies on any device. Aurea also writes your notes and pending questions in this language.", cf_painel:"Dashboard chart", cf_painel_d:"What the chart shows when you open the portal.", cf_p_all:"Full", cf_p_net:"Profit", cf_p_margin:"Margin", cf_p_after:"After draws", cf_t_avisos:"Notifications", cf_s_avisos:"How Aurea lets you know outside the portal.", cf_av_pend:"New pending questions", cf_av_pend_d:"When Aurea has questions about the month\'s transactions.", cf_av_rel:"Monthly reports", cf_av_rel_d:"When the month\'s reports are published.", cf_c_portal:"Portal only", cf_c_email:"Email", cf_lemb:"Pending questions reminder", cf_lemb_d:"If an answer is still missing, Aurea reminds you before the due date.", cf_lemb_0:"No", cf_lemb_n1:"1 day before", cf_lemb_n:"{n} days before", cf_c2:"Someone else also receives them", cf_c2_d:"A partner, manager or family member gets the same notifications.", cf_c2_nome:"Name", cf_c2_email:"Email", cf_e_nome:"Enter the other person\'s name.", cf_e_contato:"Enter the other person\'s email or WhatsApp.", cf_e_email:"That email doesn\'t look right.", cf_e_whats:"WhatsApp needs the country code and number.", cf_t_estella:"Estella preferences", cf_s_estella:"Choose what Estella talks to you about.", cf_t_rel:"Reports", cf_s_rel:"How files show up in the Reports tab.", cf_rel:"Report order", cf_rel_d:"Portuguese translations or the QuickBooks originals in English.", cf_r_pt:"Translations first", cf_r_en:"Originals first", cf_r_all:"Together", nav_config:"Settings", es_t:"Estella preferences", es_sub:"Choose what Estella talks to you about. You can change it anytime.", es_resumo:"Work summary", es_resumo_d:"What Aurea did in your books during the period.", es_sem:"Weekly", es_men:"Monthly", es_nen:"No summary", es_contas:"Upcoming bills", es_contas_d:"Loan payments, insurance, credit cards and other company bills.", es_dias:"Remind me", es_dias_n:"{n} days", es_dias_s:"in advance", es_inv:"Overdue invoices", es_inv_d:"When one of your customers owes you for more than 30 days.", es_imp:"Quarterly taxes", es_imp_d:"IRS estimated tax dates (April, June, September and January).", es_ret:"Owner draw limit", es_ret_d:"Lets you know when the month\'s draws go over the amount you set.", es_ret_v:"Monthly limit", es_save:"Save preferences", es_saving:"Saving...", es_saved:"Preferences saved.", es_e:"Could not save. Please try again.", es_e_lim:"Enter your monthly draw limit.", es_upd:"Updated on {d}", es_def:"The client hasn\'t changed anything yet: default options apply.", es_adm:"Admin mode: read only.", nav_dash:"Dashboard", nav_reports:"Reports", nav_account:"My account", nav_pend:"Pending", nav_estella:"Estella", nav_ind:"Referrals", ind_t:"Referrals", ind_adm:"Admin mode: this is what the partner sees. To change status and credit, use the referrals panel.", ind_link_t:"Your referral link", ind_help:"Share it with anyone who needs bookkeeping for their business. When someone you referred signs with Aurea, your company gets a credit on its invoice: 5% of the bookkeeping plan or 15% of the insurance audit.", ind_copy:"Copy", ind_copied:"Link copied.", ind_wa:"Send on WhatsApp", ind_empty:"No referrals yet. When someone fills out the form through your link, it will show up here.", ind_n:"referrals", ind_n1:"referral", ind_at:"became clients", ind_at1:"became a client", ind_cr:"on the next invoice", ind_hist:"Credit by month", ind_m_next:"goes on the {m} invoice", ind_m_used:"used on the {m} invoice", ind_used:"already used", ind_pendente:"In contact", ind_ativa:"Became a client", ind_perdida:"Didn't sign", ind_on:"referred on {d}", ind_ap:"used on the {m} invoice", ind_ap_no:"next invoice", ind_wa_msg:"Hi! I use Aurea Financial for my company's bookkeeping and I recommend them. If you'd like to know more, leave your details here and they'll reach out: {u}", ind_bk:"Bookkeeping", ind_au:"Insurance audit", ind_tx:"Tax", al_adm:"Admin mode: you can see whether the client has read each note.", al_empty:"No notes from Estella for now. When something important comes up, like a due date approaching, it will show up here.",
     pa_go:"Answer", pa_t1:"1 question to answer", pa_tn:"{n} questions to answer", pa_d:"It only takes a few minutes. Due: {d}.",
     pd_left:"{a} of {n} left", al_t:"Notes from Estella", al_sub:"Aurea's virtual assistant", al_red_t:"{n} unseen alert(s)", al_yel_t:"{n} unseen note(s)", al_d0:"Due today", al_d1:"Due tomorrow", al_dn:"Due in {n} days", al_dp:"Overdue by {n} day(s)", al_ok:"Got it", al_seen_n:"Seen ({n})", al_hide:"Hide seen", al_seen_on:"Seen on {d}", al_cli_seen:"Client saw it on {d}", al_cli_new:"Client hasn't seen it yet", al_e:"We couldn't save it. Please try again.", pd_due:"Answer by {d}", pd_answered:"{a} of {n} answered", pd_prazo:"due {d}", pd_prazo_fim:"closed on {d}",
     pd_help:"Tap \"Yes\" when our guess is right. Each answer is saved right away.",
@@ -500,7 +551,7 @@ window.PAGE_DICT = {
     pd_empty:"Nothing here. When Aurea has questions about your monthly transactions, they will show up on this tab.",
     pd_adm:"Admin mode: you can see the client's answers, but you can't answer for them.",
     pd_guess:"Our guess", pd_yes:"Yes", pd_other:"Other", pd_other_ph:"Tell us what this transaction was", pd_save:"Save", pd_cancel:"Cancel",
-    pd_your:"Your answer", pd_yes_ans:"Yes, {p}", pd_edit:"Change", pd_out:"Money out", pd_in:"Money in",
+    pd_your:"Your answer", pd_note_add:"+ Add an explanation (optional)", pd_note_edit:"Edit explanation", pd_note_ph:"Add details if you'd like (e.g., what the purchase was for)", pd_note_lbl:"Explanation", pd_yes_ans:"Yes, {p}", pd_edit:"Change", pd_out:"Money out", pd_in:"Money in",
     pd_rec:"Attach receipt", pd_rec_req:"Attach receipt (required)", pd_rec_ok:"Receipt sent", pd_rec_change:"Replace receipt", pd_rec_view:"View",
     pd_rec_missing:"A receipt is needed to complete this answer.", pd_rec_sending:"Uploading receipt...",
     pd_est:"Classified by estimate", pd_noans:"No answer", pd_saving:"Saving...",
@@ -541,6 +592,6 @@ window.PAGE_DICT = {
 <script src="main.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<script src="portal.js?v=20261125e"></script>
+<script src="portal.js?v=20261126d"></script>
 </body>
 </html>

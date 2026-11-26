@@ -175,9 +175,9 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     if (p === "ind" && !parceiro) p = "dash";   // aba só existe para parceiros
     page = p;
     document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("on", b.dataset.page === p));
-    $("app-title").textContent = T({ dash: "nav_dash", reports: "nav_reports", pend: "nav_pend", estella: "al_t", ind: "ind_t", account: "nav_account" }[p]);
-    ["dash", "reports", "pend", "estella", "ind", "account"].forEach(x => { if (x !== p) $("p-" + x).hidden = true; });
-    if (p === "dash") renderDash(); if (p === "reports") renderReports(); if (p === "pend") renderPend(); if (p === "estella") renderAlertas(); if (p === "ind") renderInd();
+    $("app-title").textContent = T({ dash: "nav_dash", reports: "nav_reports", pend: "nav_pend", estella: "al_t", ind: "ind_t", account: "nav_account", config: "nav_config" }[p]);
+    ["dash", "reports", "pend", "estella", "ind", "account", "config"].forEach(x => { if (x !== p) $("p-" + x).hidden = true; });
+    if (p === "dash") renderDash(); if (p === "reports") renderReports(); if (p === "pend") renderPend(); if (p === "estella") renderAlertas(); if (p === "config") renderCfg(); if (p === "ind") renderInd();
     pendBadge(); alBadge();
     reveal($("p-" + p));
     if (p === "account") renderTx();   // depois de aparecer, para o gráfico medir a largura certa
@@ -424,15 +424,149 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
   }
 
   // ---------- Alertas do Painel (avisos sem resposta) ----------
-  let alertas = [], alVerVistos = false;
+  let alertas = [], alTodos = [], alVerVistos = false;
   async function loadAlertas() {
-    alertas = [];
+    alTodos = []; alertas = [];
+    const sel = "id,chave,nivel,titulo,texto,valor,vence_em,ativo_ate,criado_em,visto_em,resolvido_em";
+    const busca = campos => sb.from(AL_TABLE).select(campos).eq("cliente_email", folder).is("resolvido_em", null).order("criado_em", { ascending: false });
     try {
-      const r = await sb.from(AL_TABLE).select("id,chave,nivel,titulo,texto,valor,vence_em,ativo_ate,criado_em,visto_em,resolvido_em")
-        .eq("cliente_email", folder).is("resolvido_em", null).order("criado_em", { ascending: false });
-      if (!r.error) alertas = (r.data || []).filter(a => !a.ativo_ate || a.ativo_ate >= hojeISO());
+      let r = await busca(sel + ",tipo");
+      if (r.error) r = await busca(sel);   // coluna "tipo" ainda não criada
+      if (!r.error) alTodos = (r.data || []).filter(a => !a.ativo_ate || a.ativo_ate >= hojeISO());
     } catch (e) { /* tabela ainda não criada */ }
+    await loadCfg();
+    alFiltrar();
   }
+
+  // ---------- Configurações (preferências do cliente: geral, avisos, Estella e relatórios) ----------
+  const CFG_TABLE = "cliente_config";
+  const CFG_PADRAO = {
+    idioma: null, painel: "all",
+    aviso_pend: "portal", aviso_rel: "portal", pend_lembrete: 0,
+    contato2: false, contato2_nome: null, contato2_email: null, contato2_whats: null,
+    resumo: "mensal", contas: true, contas_dias: 7, invoices: true, impostos: true, retirada: false, retirada_limite: null,
+    relatorios: "juntos"
+  };
+  // Cada cartão salva só os próprios campos
+  const CFG_CARDS = {
+    geral: ["idioma", "painel"],
+    avisos: ["aviso_pend", "aviso_rel", "pend_lembrete", "contato2", "contato2_nome", "contato2_email", "contato2_whats"],
+    estella: ["resumo", "contas", "contas_dias", "invoices", "impostos", "retirada", "retirada_limite"],
+    rel: ["relatorios"]
+  };
+  let cfg = Object.assign({}, CFG_PADRAO), cfgEd = Object.assign({}, CFG_PADRAO), cfgSalvo = false, cfgOk = false, cfgEm = null, cfgMsg = {};
+  async function loadCfg() {
+    cfg = Object.assign({}, CFG_PADRAO); cfgSalvo = false; cfgOk = false; cfgEm = null; cfgMsg = {};
+    try {
+      const r = await sb.from(CFG_TABLE).select("*").eq("cliente_email", folder).maybeSingle();
+      if (!r.error) { cfgOk = true; if (r.data) { cfgSalvo = true; cfgEm = r.data.atualizado_em; for (const k in CFG_PADRAO) if (r.data[k] != null) cfg[k] = r.data[k]; } }
+    } catch (e) { /* tabela ainda não criada */ }
+    if (cfg.retirada_limite != null) cfg.retirada_limite = Number(cfg.retirada_limite);
+    cfgEd = Object.assign({}, cfg);
+    chartMode = cfg.painel || "all";
+    // Idioma salvo na conta vale em qualquer aparelho (o admin vendo um cliente não muda de idioma)
+    if (!somenteLeitura() && cfg.idioma && cfg.idioma !== currentLang && typeof setLang === "function") { setLang(cfg.idioma); markLang(); }
+  }
+  // Recado com tipo desligado pelo cliente não aparece. Conta a vencer só aparece dentro da antecedência escolhida.
+  function alVisivel(a) {
+    switch (a.tipo) {
+      case "resumo": return cfg.resumo !== "nenhum";
+      case "conta": return cfg.contas && (a.vence_em == null || alDias(a) <= cfg.contas_dias);
+      case "invoice": return cfg.invoices;
+      case "imposto": return cfg.impostos;
+      case "retirada": return cfg.retirada;
+      default: return true;
+    }
+  }
+  function alFiltrar() { alertas = alTodos.filter(alVisivel); }
+  const cfgMudou = c => CFG_CARDS[c].some(k => (cfgEd[k] ?? null) !== (cfg[k] ?? null));
+  const ICO_CFG = {
+    geral: '<path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2" fill="currentColor"/><circle cx="15" cy="12" r="2" fill="currentColor"/><circle cx="7" cy="18" r="2" fill="currentColor"/>',
+    avisos: '<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z" stroke-linejoin="round"/><path d="M10 20a2 2 0 0 0 4 0"/>',
+    estella: '<path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.5l-5.4 3 1.2-6L3.3 9.3l6.1-.7z" stroke-linejoin="round"/>',
+    rel: '<path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9 12h7M9 16h7"/>'
+  };
+  function renderCfg() {
+    const box = $("cfg-wrap"), ro = somenteLeitura();
+    box.hidden = !cfgOk; $("cfg-adm").hidden = !ro;
+    if (ro) $("cfg-adm").textContent = `${T("es_adm")} ${cfgSalvo && cfgEm ? T("es_upd").replace("{d}", dataLonga(cfgEm.slice(0, 10))) : T("es_def")}`;
+    if (!cfgOk) return;
+    const dis = ro ? " disabled" : "";
+    const seg = (campo, vals) => `<div class="es-seg" role="group">${vals.map(([v, t]) => `<button type="button" data-escampo="${campo}" data-esv="${v}" aria-pressed="${String(cfgEd[campo]) === String(v)}"${dis}>${t}</button>`).join("")}</div>`;
+    const sw = (campo, rot) => `<button type="button" class="es-sw" role="switch" aria-checked="${!!cfgEd[campo]}" aria-label="${rot}" data-essw="${campo}"${dis}></button>`;
+    const linha = (rot, desc, ctrl, extra) => `<div class="es-row"><div class="es-lbl"><b>${rot}</b>${desc ? `<small>${desc}</small>` : ""}</div>${ctrl}${extra || ""}</div>`;
+    const txt = (campo, rot, tipo, ph, max) => `<label class="es-field"><span>${rot}</span><input type="${tipo}" data-estxt="${campo}" maxlength="${max}" value="${escH(cfgEd[campo] || "")}" placeholder="${ph}"${dis}></label>`;
+    const canais = [["portal", T("cf_c_portal")], ["whatsapp", "WhatsApp"], ["email", T("cf_c_email")]];
+    const card = (id, corpo) => `<div class="pcard es-cfg" data-cfgcard="${id}">
+      <h2><svg viewBox="0 0 24 24" aria-hidden="true">${ICO_CFG[id]}</svg>${T("cf_t_" + id)}</h2><p class="es-sub">${T("cf_s_" + id)}</p>${corpo}
+      ${ro ? "" : `<div class="es-foot"><button type="button" class="es-save" data-cfgsave="${id}"${cfgMudou(id) ? "" : " disabled"}>${T("es_save")}</button><span class="es-msg${cfgMsg[id] && cfgMsg[id].e ? " err" : ""}" role="status">${cfgMsg[id] ? T(cfgMsg[id].k) : ""}</span></div>`}</div>`;
+    const lim = cfgEd.retirada_limite != null && !isNaN(cfgEd.retirada_limite) ? String(cfgEd.retirada_limite) : "";
+    const idiomaAtual = cfgEd.idioma || currentLang;
+    box.innerHTML =
+      card("geral",
+        linha(T("cf_idioma"), T("cf_idioma_d"), `<div class="es-seg" role="group">${[["pt", "Português"], ["en", "English"]].map(([v, t]) => `<button type="button" data-escampo="idioma" data-esv="${v}" aria-pressed="${idiomaAtual === v}"${dis}>${t}</button>`).join("")}</div>`)
+        + linha(T("cf_painel"), T("cf_painel_d"), seg("painel", [["all", T("cf_p_all")], ["net", T("cf_p_net")], ["margin", T("cf_p_margin")], ["after", T("cf_p_after")]])))
+      + card("avisos",
+        linha(T("cf_av_pend"), T("cf_av_pend_d"), seg("aviso_pend", canais))
+        + linha(T("cf_av_rel"), T("cf_av_rel_d"), seg("aviso_rel", canais))
+        + linha(T("cf_lemb"), T("cf_lemb_d"), seg("pend_lembrete", [[0, T("cf_lemb_0")], [1, T("cf_lemb_n1")], [2, T("cf_lemb_n").replace("{n}", 2)], [3, T("cf_lemb_n").replace("{n}", 3)]]))
+        + linha(T("cf_c2"), T("cf_c2_d"), sw("contato2", T("cf_c2")),
+            cfgEd.contato2 ? `<div class="es-sub2 es-fields">${txt("contato2_nome", T("cf_c2_nome"), "text", "", 80)}${txt("contato2_email", T("cf_c2_email"), "email", "nome@empresa.com", 120)}${txt("contato2_whats", "WhatsApp", "tel", "+1 555 123 4567", 30)}</div>` : ""))
+      + card("estella",
+        linha(T("es_resumo"), T("es_resumo_d"), seg("resumo", [["semanal", T("es_sem")], ["mensal", T("es_men")], ["nenhum", T("es_nen")]]))
+        + linha(T("es_contas"), T("es_contas_d"), sw("contas", T("es_contas")), cfgEd.contas ? `<div class="es-sub2">${T("es_dias")} ${seg("contas_dias", [3, 7, 14].map(n => [n, T("es_dias_n").replace("{n}", n)]))} ${T("es_dias_s")}</div>` : "")
+        + linha(T("es_inv"), T("es_inv_d"), sw("invoices", T("es_inv")))
+        + linha(T("es_imp"), T("es_imp_d"), sw("impostos", T("es_imp")))
+        + linha(T("es_ret"), T("es_ret_d"), sw("retirada", T("es_ret")), cfgEd.retirada ? `<div class="es-sub2">${T("es_ret_v")} <label class="es-money"><span>US$</span><input type="text" inputmode="decimal" id="es-lim" value="${escH(lim)}" placeholder="8,000" aria-label="${T("es_ret_v")}"${dis}></label></div>` : ""))
+      + card("rel",
+        linha(T("cf_rel"), T("cf_rel_d"), seg("relatorios", [["traduzido", T("cf_r_pt")], ["original", T("cf_r_en")], ["juntos", T("cf_r_all")]])));
+  }
+  const cfgNum = s => { const t = String(s || "").replace(/[^0-9.,]/g, ""); if (!t) return null;
+    const n = Number(t.replace(/,(?=\d{3}(\D|$))/g, "").replace(",", ".")); return isFinite(n) && n > 0 ? Math.round(n * 100) / 100 : NaN; };
+  function cfgValidar(c) {
+    if (c === "estella" && cfgEd.retirada && !(cfgEd.retirada_limite > 0)) return "es_e_lim";
+    if (c === "avisos" && cfgEd.contato2) {
+      const nome = (cfgEd.contato2_nome || "").trim(), em = (cfgEd.contato2_email || "").trim(), wa = (cfgEd.contato2_whats || "").replace(/\D/g, "");
+      if (!nome) return "cf_e_nome";
+      if (!em && !wa) return "cf_e_contato";
+      if (em && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) return "cf_e_email";
+      if (cfgEd.contato2_whats && (wa.length < 8 || wa.length > 15)) return "cf_e_whats";
+    }
+    return null;
+  }
+  $("cfg-wrap").addEventListener("click", async e => {
+    if (somenteLeitura()) return;
+    const b = e.target.closest("button"); if (!b) return;
+    const d = b.dataset, cardEl = b.closest("[data-cfgcard]"), c = cardEl && cardEl.dataset.cfgcard;
+    if (d.escampo) { cfgEd[d.escampo] = ["contas_dias", "pend_lembrete"].includes(d.escampo) ? Number(d.esv) : d.esv; delete cfgMsg[c]; renderCfg(); return; }
+    if (d.essw) { cfgEd[d.essw] = !cfgEd[d.essw]; delete cfgMsg[c]; renderCfg(); const f = d.essw === "retirada" ? $("es-lim") : d.essw === "contato2" ? document.querySelector('[data-estxt="contato2_nome"]') : null; if (f && cfgEd[d.essw]) f.focus(); return; }
+    if (!d.cfgsave) return;
+    const erro = cfgValidar(c);
+    if (erro) { cfgMsg[c] = { k: erro, e: true }; renderCfg(); return; }
+    b.disabled = true; const m = cardEl.querySelector(".es-msg"); if (m) { m.textContent = T("es_saving"); m.classList.remove("err"); }
+    const linhaDb = { cliente_email: folder };
+    CFG_CARDS[c].forEach(k => { let v = cfgEd[k]; if (typeof v === "string") v = v.trim() || null; linhaDb[k] = v; });
+    if (c === "estella" && !(linhaDb.retirada_limite > 0)) linhaDb.retirada_limite = null;
+    if (c === "avisos" && !linhaDb.contato2) { linhaDb.contato2_nome = linhaDb.contato2_email = linhaDb.contato2_whats = null; }
+    if (c === "geral" && !linhaDb.idioma) linhaDb.idioma = currentLang;
+    const { data: row, error } = await sb.from(CFG_TABLE).upsert(linhaDb, { onConflict: "cliente_email" }).select("atualizado_em").single();
+    if (error) { cfgMsg[c] = { k: /limite/.test(error.message || "") ? "es_e_lim" : "es_e", e: true }; renderCfg(); return; }
+    CFG_CARDS[c].forEach(k => { cfg[k] = linhaDb[k]; cfgEd[k] = linhaDb[k]; });
+    cfgSalvo = true; cfgEm = row && row.atualizado_em; cfgMsg[c] = { k: "es_saved" };
+    if (c === "estella") { alFiltrar(); alBadge(); }
+    if (c === "geral") { chartMode = cfg.painel; if (cfg.idioma !== currentLang && typeof setLang === "function") { setLang(cfg.idioma); relang(); return; } }
+    renderCfg();
+  });
+  $("cfg-wrap").addEventListener("input", e => {
+    const t = e.target, cardEl = t.closest("[data-cfgcard]"); if (!cardEl) return;
+    const c = cardEl.dataset.cfgcard;
+    if (t.id === "es-lim") cfgEd.retirada_limite = cfgNum(t.value);
+    else if (t.dataset.estxt) cfgEd[t.dataset.estxt] = t.value;
+    else return;
+    const s = cardEl.querySelector(".es-save"); if (s) s.disabled = !cfgMudou(c);
+    const m = cardEl.querySelector(".es-msg"); if (m) { m.textContent = ""; m.classList.remove("err"); }
+    delete cfgMsg[c];
+  });
   // Vermelho = alerta: nível "atencao" ou vencimento a 3 dias ou menos (ou vencido). Amarelo = recado.
   const alDias = a => a.vence_em ? Math.round((Date.parse(a.vence_em + "T12:00:00") - Date.parse(hojeISO() + "T12:00:00")) / 864e5) : null;
   const alVermelho = a => a.nivel !== "info" || (a.vence_em != null && alDias(a) <= 3);
@@ -627,8 +761,16 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     const opcoes = (Array.isArray(x.opcoes) ? x.opcoes : []).filter(o => o !== x.palpite);
     const respTxt = x.resposta === "confirmado" ? T("pd_yes_ans").replace("{p}", x.palpite || "") : x.resposta === "outro" ? x.resposta_texto : x.resposta;
     let corpo = "";
-    if (x.resposta && !editando && pdAberta[x.id] !== "outro") {
-      corpo = `<div class="pd-ans"><span>${T("pd_your")}: <b>${escH(respTxt)}</b></span>${!fechada && !ro ? `<button type="button" class="ed" data-pdedit="${x.id}">${T("pd_edit")}</button>` : ""}</div>`;
+    // Explicação opcional junto com um botão (o texto do "Outro" já é a própria resposta)
+    const nota = x.resposta && x.resposta !== "outro" ? (x.resposta_texto || "") : "";
+    if (x.resposta && pdAberta[x.id] === "nota" && !fechada && !ro) {
+      corpo = `<div class="pd-ans"><span>${T("pd_your")}: <b>${escH(respTxt)}</b></span></div>
+        <div class="pd-other"><textarea maxlength="500" id="pdt-${x.id}" placeholder="${T("pd_note_ph")}">${escH(nota)}</textarea>
+        <div class="row"><button type="button" class="sv" data-pdnotesave="${x.id}">${T("pd_save")}</button><button type="button" class="cc" data-pdcancel="${x.id}">${T("pd_cancel")}</button></div></div>`;
+    } else if (x.resposta && !editando && pdAberta[x.id] !== "outro") {
+      corpo = `<div class="pd-ans"><span>${T("pd_your")}: <b>${escH(respTxt)}</b></span>${!fechada && !ro ? `<button type="button" class="ed" data-pdedit="${x.id}">${T("pd_edit")}</button>` : ""}</div>`
+        + (nota ? `<div class="pd-note"><small>${T("pd_note_lbl")}</small>${escH(nota)}</div>` : "")
+        + (x.resposta !== "outro" && !fechada && !ro ? `<button type="button" class="pd-noteb" data-pdnote="${x.id}">${T(nota ? "pd_note_edit" : "pd_note_add")}</button>` : "");
     } else if (fechada || ro) {
       corpo = `<span class="pd-est">${T(fechada ? "pd_est" : "pd_noans")}</span>`;
     } else if (pdAberta[x.id] === "outro") {
@@ -650,7 +792,7 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
         <span class="pd-val">${x.valor < 0 ? "-" : "+"}${money2(x.valor)}<small>${T(x.valor < 0 ? "pd_out" : "pd_in")}</small></span></div>
       <div class="pd-desc">${escH(x.descricao)}</div>
       <p class="pd-q">${escH(x.pergunta)}</p>
-      ${x.palpite && !(x.resposta && !editando) ? `<div class="pd-guess">${T("pd_guess")}: <b>${escH(x.palpite)}</b></div>` : ""}
+      ${x.palpite && !(x.resposta && (!editando || pdAberta[x.id] === "nota")) ? `<div class="pd-guess">${T("pd_guess")}: <b>${escH(x.palpite)}</b></div>` : ""}
       ${corpo}${rec}${falta}<p class="pd-msg" id="pdm-${x.id}" role="status"></p>
     </div>`;
   }
@@ -706,7 +848,14 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
       return;
     }
     if (somenteLeitura()) return;
-    if (d.pdans) { pdSalvar(d.pdans, { resposta: d.v, resposta_texto: null }); return; }
+    if (d.pdans) {   // troca a resposta e mantém a explicação que já existia (se a anterior era "Outro", o texto vira explicação)
+      pdSalvar(d.pdans, { resposta: d.v }); return;
+    }
+    if (d.pdnote) { pdAberta[d.pdnote] = "nota"; renderPend(); const t = $("pdt-" + d.pdnote); if (t) t.focus(); return; }
+    if (d.pdnotesave) {
+      const t = ($("pdt-" + d.pdnotesave).value || "").trim();
+      pdSalvar(d.pdnotesave, { resposta_texto: t ? t.slice(0, 500) : null }); return;
+    }
     if (d.pdother) { pdAberta[d.pdother] = "outro"; renderPend(); const t = $("pdt-" + d.pdother); if (t) t.focus(); return; }
     if (d.pdedit) { pdAberta[d.pdedit] = true; renderPend(); return; }
     if (d.pdcancel) { delete pdAberta[d.pdcancel]; renderPend(); return; }
@@ -763,7 +912,9 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
   // ---------- Lista de arquivos + visualizador ----------
   function fillFiles(list, files, withMonth) {
     list.innerHTML = "";
-    files.slice().sort((a, b) => a.name.localeCompare(b.name)).forEach(f => {
+    const pref = cfg.relatorios === "traduzido" ? "pt" : cfg.relatorios === "original" ? "en" : null;
+    const ordem = f => pref && fileLang(f.name) !== pref ? 1 : 0;
+    files.slice().sort((a, b) => (ordem(a) - ordem(b)) || a.name.localeCompare(b.name)).forEach(f => {
       const li = document.createElement("li");
       li.innerHTML = '<div class="f-main"><span class="f-ico"></span><div><div class="f-name"></div><div class="f-meta"></div></div></div><div class="f-act"><span class="f-lang" role="img"></span><button class="btn btn-line sm" type="button"></button></div>';
       const lg = fileLang(f.name), fl = li.querySelector(".f-lang");
