@@ -190,8 +190,12 @@
           okInicio: "Back to home", passo: (i, n) => `Part ${i} of ${n}` }
   };
 
-  const PAISES = [{ v: "1", pt: "EUA (+1)", en: "U.S. (+1)", min: 10, max: 10 }, { v: "55", pt: "Brasil (+55)", en: "Brazil (+55)", min: 10, max: 11 },
-                  { v: "x", pt: "Outro", en: "Other", min: 7, max: 15 }];
+  const PAISES = [{ v: "1", pt: "Estados Unidos (+1)", en: "United States (+1)", cod: "+1", ph: "(407) 555-1234", min: 10, max: 10 },
+                  { v: "55", pt: "Brasil (+55)", en: "Brazil (+55)", cod: "+55", ph: "(11) 91234-5678", min: 10, max: 11 },
+                  { v: "x", pt: "Outro país", en: "Other country", cod: "+", ph: "+44 7700 900123", min: 7, max: 15 }];
+  // bandeiras: as mesmas do seletor de idioma (main.js); "outro" usa um globo
+  const GLOBO = '<svg class="flag" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" rx="2" fill="#e9dfcf"/><g fill="none" stroke="#7A5A2E" stroke-width="1.1"><circle cx="12" cy="8" r="5.6"/><ellipse cx="12" cy="8" rx="2.4" ry="5.6"/><path d="M6.4 8h11.2"/></g></svg>';
+  const bandeira = v => v === "1" ? (typeof FLAG_US !== "undefined" ? FLAG_US : "") : v === "55" ? (typeof FLAG_BR !== "undefined" ? FLAG_BR : "") : GLOBO;
 
   // ---------- estado ----------
   const $ = id => document.getElementById(id);
@@ -260,8 +264,9 @@
       corpo = `<label class="orc-lbl" for="orc-email">${t("email")}</label>
         <input class="orc-input" id="orc-email" type="email" autocomplete="email" maxlength="160" value="${esc(c.email || "")}">
         <label class="orc-lbl" for="orc-tel">${t("whats")}</label>
-        <div class="orc-tel"><select id="orc-pais" aria-label="${t("pais")}">${PAISES.map(p => `<option value="${p.v}"${p.v === pais ? " selected" : ""}>${p[lang]}</option>`).join("")}</select>
-        <input class="orc-input" id="orc-tel" type="tel" autocomplete="tel-national" inputmode="tel" maxlength="24" value="${esc(c.tel || "")}"></div>`;
+        <div class="orc-tel"><div class="orc-pais"><span class="orc-pais-v" id="orc-pais-v" aria-hidden="true">${bandeira(pais)}<b>${PAISES.find(p => p.v === pais).cod}</b><svg class="chev" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></span>
+          <select id="orc-pais" aria-label="${t("pais")}">${PAISES.map(p => `<option value="${p.v}"${p.v === pais ? " selected" : ""}>${p[lang]}</option>`).join("")}</select></div>
+        <input class="orc-input" id="orc-tel" type="tel" autocomplete="tel-national" inputmode="tel" maxlength="24" placeholder="${PAISES.find(p => p.v === pais).ph}" value="${esc(c.tel || "")}"></div>`;
     } else if (q.tipo === "single" || q.tipo === "multi") {
       const multi = q.tipo === "multi", sel = multi ? (v || []) : [v];
       corpo = `<div class="orc-ops${q.opcoes.length > 4 ? " col2" : ""}" role="${multi ? "group" : "radiogroup"}">${q.opcoes.map(op =>
@@ -355,6 +360,11 @@
     // guarda o que foi digitado a cada tecla (trocar o idioma no meio redesenha a pergunta)
     if (q.tipo === "text") $("orc-text").addEventListener("input", e => { A[q.id] = e.target.value; salvar(); });
     if (q.tipo === "textarea") $("orc-area").addEventListener("input", e => { A[q.id] = e.target.value; salvar(); });
+    if (q.tipo === "contato") $("orc-pais").addEventListener("change", e => {
+      const p = PAISES.find(x => x.v === e.target.value);
+      $("orc-pais-v").innerHTML = `${bandeira(p.v)}<b>${p.cod}</b><svg class="chev" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg>`;
+      $("orc-tel").placeholder = p.ph;
+    });
     if (q.tipo === "contato") ["orc-email", "orc-pais", "orc-tel"].forEach(id => $(id).addEventListener("input", () => {
       A[q.id] = { email: $("orc-email").value.trim(), pais: $("orc-pais").value, tel: $("orc-tel").value }; salvar();
     }));
