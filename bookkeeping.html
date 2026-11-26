@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bookkeeping · Aurea Financial</title>
+<meta name="description" content="Bookkeeping mensal no QuickBooks para pequenas empresas nos EUA: conciliação de bancos e cartões, relatórios mensais em português e inglês e Área do cliente. Atendimento 100% remoto.">
+<meta property="og:title" content="Bookkeeping · Aurea Financial">
+<meta property="og:description" content="Seus números em dia todo mês, com relatórios em português e inglês e uma Área do cliente para acompanhar tudo.">
+<meta property="og:image" content="https://aureafi.com/img/svc1.jpg">
+<meta property="og:url" content="https://aureafi.com/bookkeeping">
+<link rel="canonical" href="https://aureafi.com/bookkeeping">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,600;6..96,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* Só das páginas de serviço (prefixo pg-) */
+  .pg-hero{padding:56px 0 72px}
+  .pg-hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+  .pg-hero h1{font-weight:800;font-size:clamp(2.3rem,4.6vw,3.8rem);line-height:1.04;letter-spacing:-.03em}
+  .pg-hero .lead{margin-top:20px;font-size:clamp(1.1rem,1.6vw,1.3rem);line-height:1.55;color:var(--muted);max-width:580px}
+  .pg-hero .ctas{margin-top:30px;display:flex;gap:14px;flex-wrap:wrap}
+  .pg-hero img{width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;border-radius:10px;box-shadow:0 24px 60px rgba(19,31,28,.18)}
+  .pg-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+  .pg-tags span{border:1px solid var(--ink);padding:6px 12px;font-size:14px;font-weight:600}
+  .pg-sec{padding:80px 0}
+  .pg-sec .eyebrow{color:var(--brown);margin-bottom:14px}
+  .pg-sec.dark .eyebrow{color:var(--gold)}
+  .pg-intro{margin-top:16px;font-size:18px;color:var(--muted);max-width:720px}
+  .pg-sec.dark .pg-intro{color:var(--soft)}
+  .pg-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:36px;list-style:none}
+  .pg-cards li{background:var(--cream-2);border-top:3px solid var(--gold);padding:26px 22px}
+  .pg-cards svg{width:30px;height:30px;stroke:var(--brown);fill:none;stroke-width:1.7;margin-bottom:14px;display:block}
+  .pg-cards b{display:block;font-size:18px;line-height:1.3;margin-bottom:8px}
+  .pg-cards p{font-size:16px;line-height:1.55;color:#3E453F}
+  .pg-split{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:center}
+  .pg-split img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px}
+  .pg-list{list-style:none;margin-top:24px}
+  .pg-list li{position:relative;padding:14px 0 14px 34px;border-top:1px solid var(--line);font-size:17px;line-height:1.5}
+  .pg-list li:last-child{border-bottom:1px solid var(--line)}
+  .pg-list li::before{content:"";position:absolute;left:4px;top:20px;width:14px;height:8px;border-left:2px solid var(--brown);border-bottom:2px solid var(--brown);transform:rotate(-45deg)}
+  .pg-sec.dark .pg-list li{border-color:rgba(251,243,232,.14);color:var(--soft)}
+  .pg-sec.dark .pg-list li::before{border-color:var(--gold)}
+  .pg-sec.dark .pg-list b{color:var(--cream-2)}
+  .pg-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:36px;list-style:none;counter-reset:st}
+  .pg-steps li{counter-increment:st;border-top:1px solid rgba(251,243,232,.2);padding-top:22px;color:var(--soft);font-size:16.5px;line-height:1.55}
+  .pg-steps li::before{content:counter(st,decimal-leading-zero);display:block;font-weight:800;font-size:34px;color:var(--gold);margin-bottom:10px}
+  .pg-steps b{display:block;color:var(--cream-2);font-size:18px;margin-bottom:6px}
+  .pg-two{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:36px}
+  .pg-box{border:1px solid var(--line);padding:28px 26px;background:#FFFDF9}
+  .pg-box .tag{display:inline-block;background:var(--gold);color:var(--ink);font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:5px 10px;margin-bottom:14px}
+  .pg-box h3{font-weight:800;font-size:22px;letter-spacing:-.01em;margin-bottom:10px}
+  .pg-box p{font-size:16.5px;line-height:1.6;color:#3E453F}
+  .pg-box a{display:inline-block;margin-top:14px;font-weight:700;color:var(--brown)}
+  .pg-faq .faq{margin-top:24px}
+  @media (max-width:900px){
+    .pg-hero .wrap,.pg-split{grid-template-columns:1fr;gap:32px}
+    .pg-hero img{max-width:520px}
+    .pg-cards,.pg-steps{grid-template-columns:1fr 1fr}
+    .pg-two{grid-template-columns:1fr}
+  }
+  @media (max-width:560px){
+    .pg-hero{padding:36px 0 56px}
+    .pg-sec{padding:60px 0}
+    .pg-cards,.pg-steps{grid-template-columns:1fr}
+    .pg-hero .ctas .btn{width:100%;justify-content:center}
+  }
+</style>
+</head>
+<body data-page="bookkeeping">
+
+<div id="site-header"></div>
+
+<main>
+<!-- ======================= PORTUGUÊS ======================= -->
+<div data-show="pt">
+
+  <section class="pg-hero">
+    <div class="wrap">
+      <div>
+        <p class="eyebrow">Bookkeeping</p>
+        <h1>Seus números em dia, todo mês, em português e inglês.</h1>
+        <p class="lead">Cuidamos do QuickBooks da sua empresa: lançamos as transações, conciliamos bancos e cartões e entregamos os relatórios do mês. Você acompanha tudo na Área do cliente e decide com números, não no chute.</p>
+        <div class="ctas">
+          <a class="btn btn-dark" href="contact.html">Agende uma ligação gratuita</a>
+          <a class="btn btn-line" href="https://wa.me/13259565160?text=Ol%C3%A1%21%20Quero%20saber%20mais%20sobre%20o%20bookkeeping%20da%20Aurea." target="_blank" rel="noopener">Falar no WhatsApp</a>
+        </div>
+        <div class="pg-tags"><span>Construção</span><span>Remodelação</span><span>Pintura</span><span>Limpeza</span><span>Manutenção</span></div>
+      </div>
+      <img src="img/svc1.jpg" alt="Notebook com o painel da Área do cliente da Aurea, recibos e caderno de anotações numa mesa de madeira" width="900" height="900">
+    </div>
+  </section>
+
+  <section class="pg-sec" style="padding-top:0">
+    <div class="wrap">
+      <p class="eyebrow">O que está incluso</p>
+      <h2 class="title">Tudo o que o mês da sua empresa precisa</h2>
+      <ul class="pg-cards">
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 14h4"/></svg><b>QuickBooks completo</b><p>Lançamento e categorização de todas as transações da empresa.</p></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/><path d="M17 16l2 2 3-4"/></svg><b>Conciliação mensal</b><p>Bancos e cartões de crédito conferidos, mês a mês, com o extrato.</p></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9 12h7M9 16h7"/></svg><b>Relatórios em PT e EN</b><p>Demonstração de Resultado (P&amp;L), Balanço (Balance Sheet) e fluxo de caixa, todo mês.</p></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg><b>Recibos sem custo extra</b><p>Você manda por WhatsApp ou e-mail, ou damos acesso direto aos seus fornecedores.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="pg-sec" style="padding-top:0">
+    <div class="wrap pg-split">
+      <img src="img/why1.jpg" alt="Dono de empresa no carro com o celular e um recibo na mão" loading="lazy">
+      <div>
+        <p class="eyebrow">Área do cliente</p>
+        <h2 class="title">Os números da sua empresa, num só lugar</h2>
+        <p class="pg-intro">Cada cliente tem acesso à Área do cliente da Aurea, com login e senha próprios.</p>
+        <ul class="pg-list">
+          <li><b>Painel do mês e do ano:</b> receita, despesas, lucro e margem, com gráfico mês a mês.</li>
+          <li><b>Relatórios para abrir ou baixar:</b> os oficiais do QuickBooks e versões traduzidas para o português.</li>
+          <li><b>Pendências:</b> quando uma transação precisa de explicação, a pergunta chega ali, para você responder sem trocar mil mensagens.</li>
+          <li><b>Envio seguro de documentos</b>, sem extrato rodando por e-mail.</li>
+        </ul>
+        <a class="btn btn-line" href="portal.html" style="margin-top:26px">Conhecer a Área do cliente</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="pg-sec dark">
+    <div class="wrap">
+      <p class="eyebrow">Como funciona o mês</p>
+      <h2 class="title">Você cuida da obra. A gente cuida dos números.</h2>
+      <ol class="pg-steps">
+        <li><b>Você envia</b>recibos e documentos ao longo do mês, pelo WhatsApp ou por e-mail.</li>
+        <li><b>A gente lança</b>as transações no QuickBooks e concilia bancos e cartões.</li>
+        <li><b>Você responde</b>às pendências na Área do cliente, quando alguma transação precisa de explicação.</li>
+        <li><b>Você recebe</b>os relatórios do mês fechado, em português e inglês, com a nota da Aurea.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="pg-sec">
+    <div class="wrap">
+      <p class="eyebrow">Para cada momento da empresa</p>
+      <h2 class="title">Começando agora ou com meses atrasados</h2>
+      <div class="pg-two">
+        <div class="pg-box">
+          <span class="tag">Startup Plan</span>
+          <h3>Abriu a empresa agora?</h3>
+          <p>Para empresas com até 6 meses de abertura e menos de 30 transações por mês. Comece certo desde o primeiro recibo, com uma mensalidade menor que uma diária de ajudante.</p>
+          <a href="https://wa.me/13259565160?text=Ol%C3%A1%21%20Quero%20saber%20do%20Startup%20Plan." target="_blank" rel="noopener">Quero saber do Startup Plan →</a>
+        </div>
+        <div class="pg-box">
+          <span class="tag">Catch-up</span>
+          <h3>Ficou sem bookkeeping alguns meses?</h3>
+          <p>Colocamos em dia os meses atrasados e deixamos o ano organizado para a declaração de imposto. Depois, seguimos com o bookkeeping mensal.</p>
+          <a href="https://wa.me/13259565160?text=Ol%C3%A1%21%20Estou%20com%20meses%20atrasados%20e%20quero%20colocar%20o%20bookkeeping%20em%20dia." target="_blank" rel="noopener">Quero colocar em dia →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pg-sec" style="padding-top:0">
+    <div class="wrap">
+      <p class="eyebrow">Extras</p>
+      <h2 class="title">Serviços que podem entrar junto</h2>
+      <ul class="pg-list" style="max-width:880px">
+        <li><b>Lucro por obra (job costing):</b> quanto cada obra ou serviço realmente deu de lucro.</li>
+        <li><b>Emissão de invoices</b> pelo QuickBooks.</li>
+        <li><b>Reuniões de análise dos relatórios</b> com o Thiago.</li>
+        <li><b>Preparação para a auditoria do seguro de responsabilidade:</b> W-9 dos subcontratados, certificados de seguro e cópias de cheques organizados.</li>
+        <li><b>Emissão de 1099</b> para subcontratados.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="pg-sec pg-faq" style="padding-top:0">
+    <div class="wrap">
+      <p class="eyebrow">Perguntas frequentes</p>
+      <div class="faq">
+        <details><summary>A Aurea atende a minha empresa no meu estado?</summary><p>Sim. O atendimento é 100% remoto, para empresas em todos os Estados Unidos.</p></details>
+        <details><summary>A Aurea movimenta o dinheiro da minha empresa?</summary><p>Não. Pagamentos, folha e impostos saem sempre das contas da sua empresa. A Aurea organiza os números, mas não movimenta o seu dinheiro.</p></details>
+        <details><summary>Em que idioma recebo os relatórios?</summary><p>Em inglês, como saem do QuickBooks, e em português, nas versões traduzidas da Área do cliente. O atendimento também é em português e inglês.</p></details>
+        <details><summary>Vocês também fazem a declaração de imposto?</summary><p>Sim. A agenda da temporada 2027 está aberta. Veja a página <a href="impostos.html" style="color:var(--brown);font-weight:600">Imposto de renda</a>.</p></details>
+        <details><summary>Quanto custa?</summary><p>Depende do tamanho da empresa e do número de transações por mês. Na ligação gratuita, entendemos a sua empresa e mandamos uma proposta sob medida.</p></details>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ======================= ENGLISH ======================= -->
+<div data-show="en">
+
+  <section class="pg-hero">
+    <div class="wrap">
+      <div>
+        <p class="eyebrow">Bookkeeping</p>
+        <h1>Your numbers up to date, every month, in English and Portuguese.</h1>
+        <p class="lead">We take care of your company's QuickBooks: we record your transactions, reconcile your bank and credit card accounts and deliver your monthly reports. You follow everything in the Client Portal and make decisions based on numbers, not guesses.</p>
+        <div class="ctas">
+          <a class="btn btn-dark" href="contact.html">Book a free call</a>
+          <a class="btn btn-line" href="https://wa.me/13259565160?text=Hi%21%20I%27d%20like%20to%20know%20more%20about%20Aurea%27s%20bookkeeping." target="_blank" rel="noopener">Message us on WhatsApp</a>
+        </div>
+        <div class="pg-tags"><span>Construction</span><span>Remodeling</span><span>Painting</span><span>Cleaning</span><span>Maintenance</span></div>
+      </div>
+      <img src="img/svc1.jpg" alt="Laptop showing the Aurea Client Portal dashboard, with receipts and a notebook on a wooden desk" width="900" height="900">
+    </div>
+  </section>
+
+  <section class="pg-sec" style="padding-top:0">
+    <div class="wrap">
+      <p class="eyebrow">What's included</p>
+      <h2 class="title">Everything your business needs each month</h2>
+      <ul class="pg-cards">
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 14h4"/></svg><b>Full QuickBooks management</b><p>Every business transaction recorded and categorized.</p></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/><path d="M17 16l2 2 3-4"/></svg><b>Monthly reconciliation</b><p>Bank and credit card accounts checked against your statements, month by month.</p></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9 12h7M9 16h7"/></svg><b>Reports in EN and PT</b><p>Profit and Loss, Balance Sheet and Cash Flow, every month.</p></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg><b>Receipts at no extra cost</b><p>Send them by WhatsApp or email, or give us direct access to your vendors.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="pg-sec" style="padding-top:0">
+    <div class="wrap pg-split">
+      <img src="img/why1.jpg" alt="Business owner in a truck holding a phone and a receipt" loading="lazy">
+      <div>
+        <p class="eyebrow">Client Portal</p>
+        <h2 class="title">All your business numbers in one place</h2>
+        <p class="pg-intro">Every client gets access to the Aurea Client Portal, with their own login and password.</p>
+        <ul class="pg-list">
+          <li><b>Monthly and year-to-date dashboard:</b> income, expenses, profit and margin, with a month-by-month chart.</li>
+          <li><b>Reports to open or download:</b> the official QuickBooks reports and translated versions in Portuguese.</li>
+          <li><b>Open questions:</b> when a transaction needs an explanation, the question shows up there, so you answer it without a long message thread.</li>
+          <li><b>Secure document upload</b>, so statements don't travel by email.</li>
+        </ul>
+        <a class="btn btn-line" href="portal.html" style="margin-top:26px">See the Client Portal</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="pg-sec dark">
+    <div class="wrap">
+      <p class="eyebrow">How a month works</p>
+      <h2 class="title">You run the job site. We run the numbers.</h2>
+      <ol class="pg-steps">
+        <li><b>You send</b>receipts and documents during the month, by WhatsApp or email.</li>
+        <li><b>We record</b>the transactions in QuickBooks and reconcile your bank and card accounts.</li>
+        <li><b>You answer</b>any open questions in the Client Portal when a transaction needs an explanation.</li>
+        <li><b>You receive</b>your closed-month reports, in English and Portuguese, with a note from Aurea.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="pg-sec">
+    <div class="wrap">
+      <p class="eyebrow">For every stage of your business</p>
+      <h2 class="title">Just getting started or months behind</h2>
+      <div class="pg-two">
+        <div class="pg-box">
+          <span class="tag">Startup Plan</span>
+          <h3>Just opened your business?</h3>
+          <p>For businesses up to 6 months old with fewer than 30 transactions a month. Start right from your very first receipt, for less than a day's wage for a helper.</p>
+          <a href="https://wa.me/13259565160?text=Hi%21%20I%27d%20like%20to%20know%20about%20the%20Startup%20Plan." target="_blank" rel="noopener">Tell me about the Startup Plan →</a>
+        </div>
+        <div class="pg-box">
+          <span class="tag">Catch-up</span>
+          <h3>Months without bookkeeping?</h3>
+          <p>We bring the months you're behind up to date and get the year ready for your tax return. Then we keep going with monthly bookkeeping.</p>
+          <a href="https://wa.me/13259565160?text=Hi%21%20I%27m%20behind%20on%20my%20bookkeeping%20and%20want%20to%20catch%20up." target="_blank" rel="noopener">I want to catch up →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pg-sec" style="padding-top:0">
+    <div class="wrap">
+      <p class="eyebrow">Add-ons</p>
+      <h2 class="title">Services you can add</h2>
+      <ul class="pg-list" style="max-width:880px">
+        <li><b>Job costing:</b> how much profit each job or service really made.</li>
+        <li><b>Invoicing</b> through QuickBooks.</li>
+        <li><b>Report review meetings</b> with Thiago.</li>
+        <li><b>Liability insurance audit preparation:</b> subcontractor W-9s, certificates of insurance and check copies organized.</li>
+        <li><b>1099 filing</b> for subcontractors.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="pg-sec pg-faq" style="padding-top:0">
+    <div class="wrap">
+      <p class="eyebrow">Frequently asked questions</p>
+      <div class="faq">
+        <details><summary>Do you work with businesses in my state?</summary><p>Yes. We work 100% remotely with businesses across the United States.</p></details>
+        <details><summary>Does Aurea move my business's money?</summary><p>No. Payments, payroll and taxes always come from your own business accounts. Aurea organizes your numbers but never moves your money.</p></details>
+        <details><summary>What language are the reports in?</summary><p>In English, as they come out of QuickBooks, and in Portuguese, in the translated versions in the Client Portal. We also serve you in English and Portuguese.</p></details>
+        <details><summary>Do you also prepare tax returns?</summary><p>Yes. We are now booking the 2027 tax season. See the <a href="impostos.html" style="color:var(--brown);font-weight:600">Tax Preparation</a> page.</p></details>
+        <details><summary>How much does it cost?</summary><p>It depends on the size of your business and how many transactions you have each month. On the free call we get to know your business and send you a tailored proposal.</p></details>
+      </div>
+    </div>
+  </section>
+</div>
+
+  <section class="dark cta-band">
+    <div class="wrap">
+      <p class="title" data-i18n="pg_cta">Vamos conversar sobre a sua empresa?</p>
+      <a class="btn btn-cream" href="contact.html" data-i18n="pg_cta_btn">Agende uma ligação gratuita</a>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+
+<script>
+window.PAGE_DICT = {
+  pt: { page_title:"Bookkeeping · Aurea Financial", pg_cta:"Vamos conversar sobre a sua empresa?", pg_cta_btn:"Agende uma ligação gratuita" },
+  en: { page_title:"Bookkeeping · Aurea Financial", pg_cta:"Ready to talk about your business?", pg_cta_btn:"Book a free call" }
+};
+</script>
+<script src="main.js"></script>
+</body>
+</html>

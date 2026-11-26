@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Imposto de renda · Aurea Financial</title>
+<meta name="description" content="Declaração de imposto de renda nos EUA para pessoas físicas e pequenas empresas, em português e inglês. Agenda aberta para a temporada 2027. Apoio com ITIN.">
+<meta property="og:title" content="Imposto de renda · Aurea Financial">
+<meta property="og:description" content="Agenda aberta para a temporada 2027: declarações federais para pessoas físicas e pequenas empresas, com atendimento em português.">
+<meta property="og:image" content="https://aureafi.com/img/svc2.jpg">
+<meta property="og:url" content="https://aureafi.com/impostos">
+<link rel="canonical" href="https://aureafi.com/impostos">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,600;6..96,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* Só das páginas de serviço (prefixo pg-) */
+  .pg-hero{padding:56px 0 72px}
+  .pg-hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+  .pg-hero h1{font-weight:800;font-size:clamp(2.3rem,4.6vw,3.8rem);line-height:1.04;letter-spacing:-.03em}
+  .pg-hero .lead{margin-top:20px;font-size:clamp(1.1rem,1.6vw,1.3rem);line-height:1.55;color:var(--muted);max-width:580px}
+  .pg-hero .ctas{margin-top:30px;display:flex;gap:14px;flex-wrap:wrap}
+  .pg-hero img{width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;border-radius:10px;box-shadow:0 24px 60px rgba(19,31,28,.18)}
+  .pg-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+  .pg-tags span{border:1px solid var(--ink);padding:6px 12px;font-size:14px;font-weight:600}
+  .pg-sec{padding:80px 0}
+  .pg-sec .eyebrow{color:var(--brown);margin-bottom:14px}
+  .pg-sec.dark .eyebrow{color:var(--gold)}
+  .pg-intro{margin-top:16px;font-size:18px;color:var(--muted);max-width:720px}
+  .pg-sec.dark .pg-intro{color:var(--soft)}
+  .pg-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:36px;list-style:none}
+  .pg-cards li{background:var(--cream-2);border-top:3px solid var(--gold);padding:26px 22px}
+  .pg-cards svg{width:30px;height:30px;stroke:var(--brown);fill:none;stroke-width:1.7;margin-bottom:14px;display:block}
+  .pg-cards b{display:block;font-size:18px;line-height:1.3;margin-bottom:8px}
+  .pg-cards p{font-size:16px;line-height:1.55;color:#3E453F}
+  .pg-split{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:center}
+  .pg-split img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px}
+  .pg-list{list-style:none;margin-top:24px}
+  .pg-list li{position:relative;padding:14px 0 14px 34px;border-top:1px solid var(--line);font-size:17px;line-height:1.5}
+  .pg-list li:last-child{border-bottom:1px solid var(--line)}
+  .pg-list li::before{content:"";position:absolute;left:4px;top:20px;width:14px;height:8px;border-left:2px solid var(--brown);border-bottom:2px solid var(--brown);transform:rotate(-45deg)}
+  .pg-sec.dark .pg-list li{border-color:rgba(251,243,232,.14);color:var(--soft)}
+  .pg-sec.dark .pg-list li::before{border-color:var(--gold)}
+  .pg-sec.dark .pg-list b{color:var(--cream-2)}
+  .pg-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:36px;list-style:none;counter-reset:st}
+  .pg-steps li{counter-increment:st;border-top:1px solid rgba(251,243,232,.2);padding-top:22px;color:var(--soft);font-size:16.5px;line-height:1.55}
+  .pg-steps li::before{content:counter(st,decimal-leading-zero);display:block;font-weight:800;font-size:34px;color:var(--gold);margin-bottom:10px}
+  .pg-steps b{display:block;color:var(--cream-2);font-size:18px;margin-bottom:6px}
+  .pg-two{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:36px}
+  .pg-box{border:1px solid var(--line);padding:28px 26px;background:#FFFDF9}
+  .pg-box .tag{display:inline-block;background:var(--gold);color:var(--ink);font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:5px 10px;margin-bottom:14px}
+  .pg-box h3{font-weight:800;font-size:22px;letter-spacing:-.01em;margin-bottom:10px}
+  .pg-box p{font-size:16.5px;line-height:1.6;color:#3E453F}
+  .pg-box a{display:inline-block;margin-top:14px;font-weight:700;color:var(--brown)}
+  .pg-faq .faq{margin-top:24px}
+  @media (max-width:900px){
+    .pg-hero .wrap,.pg-split{grid-template-columns:1fr;gap:32px}
+    .pg-hero img{max-width:520px}
+    .pg-cards,.pg-steps{grid-template-columns:1fr 1fr}
+    .pg-two{grid-template-columns:1fr}
+  }
+  @media (max-width:560px){
+    .pg-hero{padding:36px 0 56px}
+    .pg-sec{padding:60px 0}
+    .pg-cards,.pg-steps{grid-template-columns:1fr}
+    .pg-hero .ctas .btn{width:100%;justify-content:center}
+  }
+</style>
+</head>
+<body data-page="impostos">
+
+<div id="site-header"></div>
+
+<main>
+<!-- ======================= PORTUGUÊS ======================= -->
+<div data-show="pt">
+
+  <section class="pg-hero">
+    <div class="wrap">
+      <div>
+        <p class="eyebrow">Imposto de renda · Temporada 2027</p>
+        <h1>Sua declaração feita por quem conhece os seus números.</h1>
+        <p class="lead">A agenda da temporada 2027 está aberta. Preparamos as declarações federais de pessoas físicas e de pequenas empresas a partir de janeiro, com atendimento em português e inglês. As estaduais, nos estados em que estamos habilitados.</p>
+        <div class="ctas">
+          <a class="btn btn-dark" href="https://wa.me/13259565160?text=Ol%C3%A1%21%20Quero%20agendar%20minha%20declara%C3%A7%C3%A3o%20da%20temporada%202027." target="_blank" rel="noopener">Quero agendar minha declaração</a>
+          <a class="btn btn-line" href="contact.html">Agende uma ligação gratuita</a>
+        </div>
+      </div>
+      <img src="img/svc2.jpg" alt="Formulário de declaração de imposto sobre uma mesa verde, com caneta e óculos" width="900" height="900">
+    </div>
+  </section>
+
+  <section class="pg-sec" style="padding-top:0">
+    <div class="wrap">
+      <p class="eyebrow">Para quem</p>
+      <h2 class="title">Declarações para você e para a sua empresa</h2>
+      <ul class="pg-cards">
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg><b>Pessoas físicas</b><p>A sua declaração federal individual, com dependentes, renda de W-2 e de 1099.</p></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21V9l9-6 9 6v12"/><path d="M9 21v-6h6v6"/></svg><b>Donos de pequenas empresas</b><p>A renda e as despesas da sua LLC ou do seu trabalho como autônomo, declaradas do jeito certo.</p></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/><path d="M17 16l2 2 3-4"/></svg><b>Clientes de bookkeeping</b><p>Com o QuickBooks já em dia na Aurea, os números da empresa chegam prontos para a declaração.</p></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="12" r="2.5"/><path d="M14 10h4M14 14h4"/></svg><b>Apoio com ITIN</b><p>Ajuda no preenchimento e no envio do pedido de ITIN para quem não tem Social Security.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="pg-sec dark">
+    <div class="wrap">
+      <p class="eyebrow">Como funciona</p>
+      <h2 class="title">Do agendamento ao envio, sem complicação</h2>
+      <ol class="pg-steps">
+        <li><b>Agende</b>pelo WhatsApp e conte a sua situação. Você recebe a proposta e a carta de engajamento para assinar.</li>
+        <li><b>Envie os documentos</b>pela Área do cliente, com login e senha. Nunca pedimos documentos de imposto por WhatsApp ou e-mail.</li>
+        <li><b>A gente prepara</b>a declaração e tira as dúvidas com você, em português.</li>
+        <li><b>Você revisa e assina</b>a autorização de envio eletrônico. A gente envia ao IRS e você acompanha a confirmação.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="pg-sec">
+    <div class="wrap pg-split">
+      <div>
+        <p class="eyebrow">Comece a separar</p>
+        <h2 class="title">Documentos que costumam entrar na declaração</h2>
+        <ul class="pg-list">
+          <li><b>Identificação:</b> Social Security ou ITIN de você, do cônjuge e dos dependentes.</li>
+          <li><b>Renda:</b> formulários W-2 e 1099 (NEC, MISC, K e outros) recebidos em janeiro.</li>
+          <li><b>Empresa:</b> receitas e despesas de 2026. Para clientes de bookkeeping, a Aurea já tem tudo no QuickBooks.</li>
+          <li><b>Declaração do ano anterior</b>, se você tiver.</li>
+          <li><b>Outros:</b> Form 1095-A (plano de saúde do marketplace), Form 1098 (juros de hipoteca) e pagamentos estimados de imposto feitos em 2026.</li>
+        </ul>
+        <p class="pg-intro" style="font-size:16px">A lista exata depende do seu caso. Depois do agendamento, você recebe o checklist completo.</p>
+      </div>
+      <img src="img/why2.jpg" alt="Calendário de parede numa mesa de trabalho perto da janela" loading="lazy">
+    </div>
+  </section>
+
+  <section class="pg-sec" style="padding-top:0">
+    <div class="wrap">
+      <p class="eyebrow">Compromissos</p>
+      <h2 class="title">Como a Aurea trabalha</h2>
+      <ul class="pg-list" style="max-width:880px">
+        <li><b>Seus dados protegidos:</b> as informações da sua declaração são usadas só para preparar e enviar a declaração, e ficam guardadas com segurança.</li>
+        <li><b>Honorários claros:</b> o valor é combinado na proposta e não é baseado no valor da restituição.</li>
+        <li><b>Seu dinheiro na sua conta:</b> o imposto é pago das suas contas e a restituição cai direto na conta que você escolher.</li>
+        <li><b>Experiência:</b> o Thiago já trabalhou como preparador de impostos na H&amp;R Block, durante a temporada de impostos.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="pg-sec pg-faq" style="padding-top:0">
+    <div class="wrap">
+      <p class="eyebrow">Perguntas frequentes</p>
+      <div class="faq">
+        <details><summary>Quando começa a preparação?</summary><p>Em janeiro de 2027, quando a temporada de impostos abre. A agenda já está aberta: agendando agora, você garante o seu horário.</p></details>
+        <details><summary>Qual é o prazo da declaração de pessoa física?</summary><p>O prazo federal é 15 de abril de 2027. Quanto antes os documentos chegarem, mais tranquilo fica.</p></details>
+        <details><summary>Preciso ser cliente de bookkeeping?</summary><p>Não. Fazemos a declaração de quem não é cliente de bookkeeping. Para quem é, os números da empresa já chegam organizados.</p></details>
+        <details><summary>Vocês fazem a declaração estadual?</summary><p>Fazemos nos estados em que estamos habilitados. No agendamento, confirmamos o seu estado.</p></details>
+        <details><summary>A Aurea é um escritório de CPA?</summary><p>Não. A Aurea faz bookkeeping e preparação de declarações, que não exige ser CPA. Quando o seu caso precisar de um CPA, de um enrolled agent ou de um advogado, avisamos e indicamos.</p></details>
+        <details><summary>Quanto custa?</summary><p>Depende do tipo de declaração e da complexidade do seu caso. O valor vem na proposta, antes de começar.</p></details>
+        <details><summary>Não tenho Social Security. Vocês ajudam?</summary><p>Sim. Ajudamos no preenchimento e no envio do pedido de ITIN. <a href="https://wa.me/13259565160?text=Ol%C3%A1%21%20Preciso%20de%20ajuda%20com%20o%20pedido%20de%20ITIN." target="_blank" rel="noopener" style="color:var(--brown);font-weight:600">Fale com a gente no WhatsApp</a>.</p></details>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ======================= ENGLISH ======================= -->
+<div data-show="en">
+
+  <section class="pg-hero">
+    <div class="wrap">
+      <div>
+        <p class="eyebrow">Tax Preparation · 2027 Season</p>
+        <h1>Your tax return prepared by people who know your numbers.</h1>
+        <p class="lead">We are now booking the 2027 tax season. We prepare federal returns for individuals and small businesses starting in January, in English and Portuguese, and state returns in the states where we are authorized.</p>
+        <div class="ctas">
+          <a class="btn btn-dark" href="https://wa.me/13259565160?text=Hi%21%20I%27d%20like%20to%20book%20my%20tax%20return%20for%20the%202027%20season." target="_blank" rel="noopener">Book my tax return</a>
+          <a class="btn btn-line" href="contact.html">Book a free call</a>
+        </div>
+      </div>
+      <img src="img/svc2.jpg" alt="Tax form on a green desk with a pen and glasses" width="900" height="900">
+    </div>
+  </section>
+
+  <section class="pg-sec" style="padding-top:0">
+    <div class="wrap">
+      <p class="eyebrow">Who we help</p>
+      <h2 class="title">Returns for you and for your business</h2>
+      <ul class="pg-cards">
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg><b>Individuals</b><p>Your federal individual return, with dependents, W-2 and 1099 income.</p></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21V9l9-6 9 6v12"/><path d="M9 21v-6h6v6"/></svg><b>Small business owners</b><p>Your LLC's or self-employment income and expenses, reported the right way.</p></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/><path d="M17 16l2 2 3-4"/></svg><b>Bookkeeping clients</b><p>With your QuickBooks already up to date at Aurea, your business numbers are ready for your return.</p></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="12" r="2.5"/><path d="M14 10h4M14 14h4"/></svg><b>ITIN support</b><p>Help preparing and filing an ITIN application for those without a Social Security number.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="pg-sec dark">
+    <div class="wrap">
+      <p class="eyebrow">How it works</p>
+      <h2 class="title">From booking to filing, made simple</h2>
+      <ol class="pg-steps">
+        <li><b>Book</b>on WhatsApp and tell us about your situation. You get a proposal and an engagement letter to sign.</li>
+        <li><b>Send your documents</b>through the Client Portal, with your own login. We never ask for tax documents by WhatsApp or email.</li>
+        <li><b>We prepare</b>your return and go over any questions with you.</li>
+        <li><b>You review and sign</b>the e-file authorization. We file with the IRS and you get the confirmation.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="pg-sec">
+    <div class="wrap pg-split">
+      <div>
+        <p class="eyebrow">Start gathering</p>
+        <h2 class="title">Documents that usually go into a return</h2>
+        <ul class="pg-list">
+          <li><b>Identification:</b> Social Security numbers or ITINs for you, your spouse and your dependents.</li>
+          <li><b>Income:</b> W-2 and 1099 forms (NEC, MISC, K and others) you receive in January.</li>
+          <li><b>Business:</b> 2026 income and expenses. For bookkeeping clients, Aurea already has everything in QuickBooks.</li>
+          <li><b>Last year's return</b>, if you have it.</li>
+          <li><b>Other:</b> Form 1095-A (marketplace health plan), Form 1098 (mortgage interest) and estimated tax payments made in 2026.</li>
+        </ul>
+        <p class="pg-intro" style="font-size:16px">The exact list depends on your situation. After you book, you get the full checklist.</p>
+      </div>
+      <img src="img/why2.jpg" alt="Wall calendar on a desk near a window" loading="lazy">
+    </div>
+  </section>
+
+  <section class="pg-sec" style="padding-top:0">
+    <div class="wrap">
+      <p class="eyebrow">Our commitments</p>
+      <h2 class="title">How Aurea works</h2>
+      <ul class="pg-list" style="max-width:880px">
+        <li><b>Your data protected:</b> your tax information is used only to prepare and file your return, and it is stored securely.</li>
+        <li><b>Clear fees:</b> the fee is agreed in your proposal and is not based on the amount of your refund.</li>
+        <li><b>Your money stays in your account:</b> taxes are paid from your accounts and refunds go directly to the account you choose.</li>
+        <li><b>Experience:</b> Thiago has worked as a seasonal tax preparer at H&amp;R Block.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="pg-sec pg-faq" style="padding-top:0">
+    <div class="wrap">
+      <p class="eyebrow">Frequently asked questions</p>
+      <div class="faq">
+        <details><summary>When does preparation start?</summary><p>In January 2027, when tax season opens. Booking is already open, so you can secure your spot now.</p></details>
+        <details><summary>What is the deadline for individual returns?</summary><p>The federal deadline is April 15, 2027. The sooner your documents arrive, the smoother it goes.</p></details>
+        <details><summary>Do I need to be a bookkeeping client?</summary><p>No. We prepare returns for people who are not bookkeeping clients. For those who are, the business numbers are already organized.</p></details>
+        <details><summary>Do you prepare state returns?</summary><p>Yes, in the states where we are authorized. We confirm your state when you book.</p></details>
+        <details><summary>Is Aurea a CPA firm?</summary><p>No. Aurea provides bookkeeping and tax return preparation, which does not require a CPA license. When your situation calls for a CPA, an enrolled agent or an attorney, we will tell you and refer you.</p></details>
+        <details><summary>How much does it cost?</summary><p>It depends on the type of return and how complex your situation is. You get the fee in your proposal before we start.</p></details>
+        <details><summary>I don't have a Social Security number. Can you help?</summary><p>Yes. We help you prepare and file your ITIN application. <a href="https://wa.me/13259565160?text=Hi%21%20I%20need%20help%20with%20an%20ITIN%20application." target="_blank" rel="noopener" style="color:var(--brown);font-weight:600">Message us on WhatsApp</a>.</p></details>
+      </div>
+    </div>
+  </section>
+</div>
+
+  <section class="dark cta-band">
+    <div class="wrap">
+      <p class="title" data-i18n="pg_cta">Garanta o seu horário da temporada 2027</p>
+      <a class="btn btn-cream" data-tax-wa href="https://wa.me/13259565160?text=Ol%C3%A1%21%20Quero%20agendar%20minha%20declara%C3%A7%C3%A3o%20da%20temporada%202027." target="_blank" rel="noopener" data-i18n="pg_cta_btn">Quero agendar minha declaração</a>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+
+<script>
+window.PAGE_DICT = {
+  pt: { page_title:"Imposto de renda · Aurea Financial", pg_cta:"Garanta o seu horário da temporada 2027", pg_cta_btn:"Quero agendar minha declaração" },
+  en: { page_title:"Tax Preparation · Aurea Financial", pg_cta:"Secure your spot for the 2027 tax season", pg_cta_btn:"Book my tax return" }
+};
+</script>
+<script src="main.js"></script>
+<script>
+(function () {
+  const pt = "https://wa.me/13259565160?text=Ol%C3%A1%21%20Quero%20agendar%20minha%20declara%C3%A7%C3%A3o%20da%20temporada%202027.", en = "https://wa.me/13259565160?text=Hi%21%20I%27d%20like%20to%20book%20my%20tax%20return%20for%20the%202027%20season.";
+  const ajustar = () => document.querySelectorAll("[data-tax-wa]").forEach(a => { a.href = document.documentElement.lang === "en" ? en : pt; });
+  ajustar();
+  new MutationObserver(ajustar).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
+})();
+</script>
+</body>
+</html>

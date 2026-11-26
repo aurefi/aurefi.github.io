@@ -40,17 +40,30 @@ header.scrolled .brand img{height:84px}
 /* Menu sem quebra de linha: em telas médias o menu encolhe em vez de quebrar */
 .menu a{white-space:nowrap}
 .menu li{flex:none}
+/* Submenu "Serviços" */
+.menu .has-sub{position:relative}
+.menu .sub-toggle{display:inline-flex;align-items:center;gap:7px;background:none;border:0;padding:0;cursor:pointer;color:inherit;font-family:var(--serif);font-weight:600;font-size:19px;white-space:nowrap;position:relative}
+.menu .sub-toggle svg{width:11px;height:7px;fill:none;stroke:currentColor;stroke-width:1.6;transition:transform .2s}
+.menu .has-sub.open .sub-toggle svg{transform:rotate(180deg)}
+.menu .sub-toggle::after{content:"";position:absolute;left:0;bottom:-4px;width:0;height:1px;background:var(--ink);transition:width .25s}
+.menu .sub-toggle:hover::after,.menu .sub-toggle.current::after{width:calc(100% - 18px)}
+.menu .submenu{position:absolute;top:calc(100% + 16px);left:-20px;min-width:240px;list-style:none;background:var(--cream-2);border:1px solid var(--line);box-shadow:0 14px 34px rgba(19,31,28,.14);padding:8px 0;display:none;z-index:70}
+.menu .has-sub.open .submenu{display:block}
+.menu .submenu li{width:auto}
+.menu .submenu a{display:block;padding:11px 22px;font-size:18px}
+.menu .submenu a::after{display:none}
+.menu .submenu a:hover,.menu .submenu a.current{background:var(--cream);color:var(--brown)}
 @media (min-width:901px) and (max-width:1360px){
   .nav{gap:18px}
   .menu{gap:22px}
-  .menu a{font-size:17px}
+  .menu a,.menu .sub-toggle{font-size:17px}
   .menu .portal-link{padding:7px 12px;font-size:15px}
   .brand img{height:110px}
   header.scrolled .brand img{height:76px}
 }
 @media (min-width:901px) and (max-width:1120px){
   .menu{gap:16px}
-  .menu a{font-size:16px}
+  .menu a,.menu .sub-toggle{font-size:16px}
   .menu .portal-link{padding:6px 10px;font-size:14px;gap:6px}
   .brand img{height:92px}
   header.scrolled .brand img{height:68px}
@@ -200,6 +213,10 @@ footer{background:var(--cream-2);padding:56px 0 40px}
   .menu a{display:block;padding:16px 24px}
   .menu a::after{display:none}
   .burger{display:block}
+  .menu .sub-toggle{display:flex;width:100%;justify-content:space-between;padding:16px 24px;font-size:21px}
+  .menu .sub-toggle::after{display:none}
+  .menu .submenu{position:static;min-width:0;box-shadow:none;border:0;background:var(--cream-2);padding:0 0 6px}
+  .menu .submenu a{padding:13px 24px 13px 42px;font-size:18px}
   .grid3{grid-template-columns:1fr}
   .badges{justify-content:center}
   .contact-grid{grid-template-columns:1fr}
@@ -676,6 +693,27 @@ body.app-mode .sorteio-pill{display:none !important}
   .promo-banner .pb-img{left:auto;right:0;width:74%}
   .promo-banner .pb-shade{background:linear-gradient(90deg,rgba(19,31,28,1) 0%,rgba(19,31,28,1) 26%,rgba(19,31,28,.55) 42%,rgba(19,31,28,0) 60%)}
 }
+
+/* ---------- Carrossel de campanhas (banner.js) ---------- */
+.pb-carousel{position:relative;background:var(--ink);padding:0 !important;margin:0}
+.pb-track{display:grid}
+.pb-slide{grid-area:1/1;opacity:0;visibility:hidden;transition:opacity .7s ease,visibility 0s linear .7s}
+.pb-slide.ativo{opacity:1;visibility:visible;transition:opacity .7s ease,visibility 0s}
+.pb-carousel .promo-banner .pb-img{object-position:var(--pos) !important}
+.pb-carousel .pb-title em::after{display:none}
+.pb-count i{font-style:normal;margin:0 6px;opacity:.6}
+.pb-carousel.varios .pb-inner{padding-bottom:72px}
+.pb-dots{position:absolute;left:0;right:0;bottom:26px;z-index:3;display:flex;gap:6px}
+.pb-dots button{background:none;border:0;padding:10px 4px;cursor:pointer}
+.pb-dots button span{display:block;width:28px;height:3px;border-radius:2px;background:rgba(251,243,232,.35);transition:background .3s,width .3s}
+.pb-dots button[aria-selected="true"] span{background:var(--gold);width:44px}
+.pb-dots button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+@media (max-width:700px){
+  .pb-carousel .promo-banner .pb-img{object-position:var(--pos-m) !important}
+  .pb-carousel.varios .pb-inner{padding-bottom:64px}
+  .pb-dots{bottom:18px}
+}
+@media (prefers-reduced-motion:reduce){ .pb-slide,.pb-slide.ativo{transition:none} }
 
 /* ---------- Correção: botão de fechar dos popups sempre visível (iPhone/Chrome) ---------- */
 .modal-box{max-height:calc(100vh - 40px);max-height:calc(100dvh - 40px);overscroll-behavior:contain;-webkit-overflow-scrolling:touch}

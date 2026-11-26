@@ -64,7 +64,7 @@ if (META_PIXEL_ID) {
 // ===== Textos comuns (cabeçalho, rodapé, formulário) =====
 const COMMON = {
   pt: {
-    nav_about:"Sobre a Aurea", nav_services:"Serviços", nav_team:"Time", nav_contact:"Fale conosco", nav_portal:"Área do cliente",
+    nav_about:"Sobre a Aurea", nav_bk:"Bookkeeping", nav_tax:"Imposto de renda", nav_all:"Todos os serviços", nav_services:"Serviços", nav_team:"Time", nav_contact:"Fale conosco", nav_portal:"Área do cliente",
     foot_team:"Time", foot_terms:"Termos e privacidade", foot_insta:"Instagram",
     copy:"© 2026 Aurea Financial LLC. Todos os direitos reservados.",
     wa_text:"Olá! Vim pelo site da Aurea e gostaria de saber mais sobre o bookkeeping.",
@@ -73,7 +73,7 @@ const COMMON = {
     f_note:"Ao enviar, você concorda com os nossos", f_note_link:"Termos e Política de Privacidade", close:"Fechar", f_cal:"Prefiro escolher o horário na agenda", f_or:"ou envie uma mensagem"
   },
   en: {
-    nav_about:"About Aurea", nav_services:"Services", nav_team:"Team", nav_contact:"Get In Touch", nav_portal:"Client Portal",
+    nav_about:"About Aurea", nav_bk:"Bookkeeping", nav_tax:"Tax Preparation", nav_all:"All services", nav_services:"Services", nav_team:"Team", nav_contact:"Get In Touch", nav_portal:"Client Portal",
     foot_team:"Team", foot_terms:"Terms & Privacy", foot_insta:"Instagram",
     copy:"© 2026 Aurea Financial LLC. All rights reserved.",
     wa_text:"Hi! I found Aurea through the website and would like to learn more about bookkeeping.",
@@ -96,8 +96,14 @@ document.getElementById("site-header").outerHTML = `
     <a class="brand" href="./" aria-label="Aurea Financial"><img src="logo.png" alt="Aurea Financial Services" onerror="${LOGO_FALLBACK}"></a>
     <ul class="menu" id="menu">
       <li><a href="./#sobre" data-i18n="nav_about">Sobre a Aurea</a></li>
-      <li><a href="services.html" data-i18n="nav_services" class="${page === "services" ? "current" : ""}">Serviços</a></li>
-      <li><a href="team.html" data-i18n="nav_team" class="${page === "team" ? "current" : ""}">Time</a></li>
+      <li class="has-sub" id="nav-svc">
+        <button type="button" class="sub-toggle ${["services", "bookkeeping", "impostos"].includes(page) ? "current" : ""}" aria-expanded="false" aria-controls="sub-svc"><span data-i18n="nav_services">Serviços</span><svg viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></button>
+        <ul class="submenu" id="sub-svc">
+          <li><a href="bookkeeping.html" data-i18n="nav_bk" class="${page === "bookkeeping" ? "current" : ""}">Bookkeeping</a></li>
+          <li><a href="impostos.html" data-i18n="nav_tax" class="${page === "impostos" ? "current" : ""}">Imposto de renda</a></li>
+          <li><a href="services.html" data-i18n="nav_all" class="${page === "services" ? "current" : ""}">Todos os serviços</a></li>
+        </ul>
+      </li>
       <li><a href="contact.html" data-i18n="nav_contact" class="${page === "contact" ? "current" : ""}">Fale conosco</a></li>
       <li><a href="portal.html" class="portal-link ${page === "portal" ? "current" : ""}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg><span data-i18n="nav_portal">Área do cliente</span></a></li>
     </ul>
@@ -121,6 +127,8 @@ document.getElementById("site-footer").outerHTML = `
       </div>
       <div class="center"><img src="logo.png" alt="Aurea Financial Services" onerror="${LOGO_FALLBACK}"></div>
       <div class="links">
+        <a href="bookkeeping.html" data-i18n="nav_bk">Bookkeeping</a>
+        <a href="impostos.html" data-i18n="nav_tax">Imposto de renda</a>
         <a href="services.html" data-i18n="nav_services">Serviços</a>
         <a href="team.html" data-i18n="foot_team">Time</a>
         <a href="https://www.instagram.com/${IG_HANDLE}/" target="_blank" rel="noopener">@${IG_HANDLE}</a>
@@ -215,6 +223,15 @@ document.querySelectorAll(".lang button").forEach(b => b.addEventListener("click
 const menu = document.getElementById("menu");
 document.getElementById("burger").addEventListener("click", () => menu.classList.toggle("open"));
 menu.querySelectorAll("a").forEach(a => a.addEventListener("click", () => menu.classList.remove("open")));
+// Submenu "Serviços": abre e fecha no clique; fecha ao clicar fora ou com Esc
+(function () {
+  const li = document.getElementById("nav-svc"); if (!li) return;
+  const bt = li.querySelector(".sub-toggle");
+  const set = on => { li.classList.toggle("open", on); bt.setAttribute("aria-expanded", on ? "true" : "false"); };
+  bt.addEventListener("click", e => { e.stopPropagation(); set(!li.classList.contains("open")); });
+  document.addEventListener("click", e => { if (!li.contains(e.target)) set(false); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && li.classList.contains("open")) { set(false); bt.focus(); } });
+})();
 const header = document.querySelector("header");
 const onScroll = () => header.classList.toggle("scrolled", window.scrollY > 10);
 window.addEventListener("scroll", onScroll); onScroll();
