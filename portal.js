@@ -175,6 +175,7 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     if (p === "ind" && !parceiro) p = "dash";   // aba só existe para parceiros
     page = p;
     document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("on", b.dataset.page === p));
+    if (typeof maisOn === "function") maisOn();
     $("app-title").textContent = T({ dash: "nav_dash", reports: "nav_reports", pend: "nav_pend", estella: "al_t", ind: "ind_t", account: "nav_account", config: "nav_config" }[p]);
     ["dash", "reports", "pend", "estella", "ind", "account", "config"].forEach(x => { if (x !== p) $("p-" + x).hidden = true; });
     if (p === "dash") renderDash(); if (p === "reports") renderReports(); if (p === "pend") renderPend(); if (p === "estella") renderAlertas(); if (p === "config") renderCfg(); if (p === "ind") renderInd();
@@ -185,6 +186,29 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
   }
   document.querySelectorAll(".nav-btn").forEach(b => b.addEventListener("click", () => swap(() => go(b.dataset.page))));
   document.querySelectorAll("[data-goto]").forEach(b => b.addEventListener("click", () => swap(() => go(b.dataset.goto))));
+
+  // Celular: barra embaixo com Painel, Relatórios, Pendências, Estella e "Mais" (Indicações, Minha conta, Configurações)
+  const mqNav = window.matchMedia("(max-width:900px)");
+  const navLinks = document.querySelector(".side-links"), navMaisBtn = $("nav-more"), navSheet = $("nav-sheet");
+  const navMais = ["ind", "account", "config"].map(p => document.querySelector(`.nav-btn[data-page="${p}"]`));
+  function maisOn() {   // pode rodar antes da barra existir: não depende das constantes acima
+    const m = $("nav-more"); if (!m) return;
+    m.classList.toggle("on", ["ind", "account", "config"].some(p => { const b = document.querySelector(`.nav-btn[data-page="${p}"]`); return b && b.classList.contains("on"); }));
+  }
+  function fecharMais() { navSheet.hidden = true; navMaisBtn.setAttribute("aria-expanded", "false"); }
+  function arrumarNav() {
+    navMais.forEach(b => mqNav.matches ? navSheet.insertBefore(b, $("nav-sheet-back")) : navLinks.insertBefore(b, navMaisBtn));
+    fecharMais(); maisOn();
+  }
+  navMaisBtn.addEventListener("click", e => {
+    e.stopPropagation();
+    const abrir = navSheet.hidden; navSheet.hidden = !abrir; navMaisBtn.setAttribute("aria-expanded", String(abrir));
+  });
+  navSheet.addEventListener("click", e => { if (e.target.closest(".nav-btn")) fecharMais(); });
+  document.addEventListener("click", e => { if (!navSheet.hidden && !navSheet.contains(e.target)) fecharMais(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && !navSheet.hidden) { fecharMais(); navMaisBtn.focus(); } });
+  (mqNav.addEventListener ? mqNav.addEventListener("change", arrumarNav) : mqNav.addListener(arrumarNav));
+  arrumarNav();
 
   // ---------- Painel ----------
   function renderDash() {
@@ -754,7 +778,11 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     $("pd-prazo").textContent = "· " + T(vencido ? "pd_prazo_fim" : "pd_prazo").replace("{d}", dataLonga(prazo));
     $("pd-bar").style.width = (total ? Math.round(feitas / total * 100) : 0) + "%";
     $("pd-done").hidden = !(faltam === 0 || vencido);
-    $("pd-done").textContent = vencido ? T("pd_closed") : T("pd_done");
+    // outros meses com pergunta sem resposta: não dizer "não tem mais nada"
+    const outros = (faltam === 0 || vencido) ? meses.filter(m => m !== pdMes && pdAbertas(m).length) : [];
+    $("pd-done").textContent = vencido ? T("pd_closed") : T(outros.length ? "pd_done_mes" : "pd_done");
+    $("pd-more").hidden = !outros.length;
+    $("pd-more").innerHTML = outros.length ? `<p>${T("pd_more_t")}</p><div>${outros.map(m => `<button type="button" data-pdmes="${m}">${mTitle(m)}<i>${pdAbertas(m).length}</i></button>`).join("")}</div>` : "";
     $("pd-help").hidden = vencido || faltam === 0 || ro;
 
     // sem resposta primeiro (por data); respondidas no fim, em cinza
