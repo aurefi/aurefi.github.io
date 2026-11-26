@@ -1,6 +1,9 @@
 /* Aurea Financial — página da live (live.html): popup de inscrição, agenda e horários */
 (function () {
   // ===== Configuração =====
+  // DATA_A_DEFINIR = true: a página vira lista de espera ("datas a serem divulgadas"): sem contagem, sem agenda,
+  // sem sorteio no formulário. Quando a nova data sair, troque para false, ajuste as datas abaixo e o texto do live.html.
+  const DATA_A_DEFINIR = true;
   const LIVE_INICIO = new Date("2026-11-25T19:15:00-06:00");   // 25/11, 7:15pm CT
   const LIVE_FIM = new Date("2026-11-25T20:00:00-06:00");      // fim previsto (35 a 45 min)
   const FIM_SORTEIO = new Date("2026-11-25T19:15:00-06:00");   // depois disso, o formulário não oferece mais o sorteio
@@ -16,8 +19,10 @@
   const AVISO_EMAIL_KEY = (typeof WEB3FORMS_KEY !== "undefined") ? WEB3FORMS_KEY : ""; // definida no main.js
 
   const agora = new Date();
-  const fase = agora < LIVE_INICIO ? "antes" : agora < LIVE_FIM ? "aovivo" : "depois";
-  const sorteioAberto = agora < FIM_SORTEIO;
+  const fase = DATA_A_DEFINIR ? "adefinir" : agora < LIVE_INICIO ? "antes" : agora < LIVE_FIM ? "aovivo" : "depois";
+  const sorteioAberto = !DATA_A_DEFINIR && agora < FIM_SORTEIO;
+  // a lista de espera usa uma marca própria: quem se inscreveu na live de 25/11 pode pedir o aviso da próxima
+  const OK_KEY = DATA_A_DEFINIR ? "aurea_live_espera_ok" : "aurea_live_ok";
   const store = {
     get: k => { try { return localStorage.getItem(k); } catch (e) { return null; } },
     set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} }
@@ -38,7 +43,9 @@
       $("lv-watch").hidden = fase === "antes";
     }
     const aviso = $("lv-notice");
-    if (fase === "aovivo") {
+    if (fase === "adefinir") {
+      if ($("lv-cal")) $("lv-cal").hidden = true;
+    } else if (fase === "aovivo") {
       $("lv-tag").textContent = "Ao vivo agora"; $("lv-tag").classList.add("ao-vivo");
       aviso.textContent = LINK_TRANSMISSAO ? "A live está acontecendo agora no YouTube." : "A live está acontecendo agora. Inscreva-se para receber o link.";
       aviso.hidden = false;
@@ -91,15 +98,17 @@
   });
 
   // Pergunta antes da live, pelo WhatsApp
-  const waPergunta = "https://wa.me/13259565160?text=" + encodeURIComponent("Olá! Tenho uma pergunta para a live de 25/11: ");
+  const waPergunta = "https://wa.me/13259565160?text=" + encodeURIComponent(fase === "adefinir" ? "Olá! Tenho uma pergunta para a próxima live: " : "Olá! Tenho uma pergunta para a live de 25/11: ");
   document.querySelectorAll("[data-wa-pergunta]").forEach(a => { a.href = waPergunta; a.target = "_blank"; a.rel = "noopener"; });
 
   // ===== Popup de inscrição =====
   const blocoSorteio = !sorteioAberto ? "" : jaNoSorteio
     ? `<p class="lv-already">Você já está concorrendo pelo sorteio de novembro neste navegador. Não precisa marcar de novo.</p>`
     : `<label class="s-check"><input type="checkbox" id="lv-sorteio"> <span>Quero concorrer aos 2 meses grátis de bookkeeping. Li e aceito o <a href="${REGULAMENTO}" target="_blank" rel="noopener">regulamento do sorteio</a>.</span></label>`;
-  const titulo = fase === "depois" ? "Receba a gravação" : "Inscreva-se na live";
-  const intro = fase === "depois"
+  const titulo = fase === "adefinir" ? "Seja avisado da próxima live" : fase === "depois" ? "Receba a gravação" : "Inscreva-se na live";
+  const intro = fase === "adefinir"
+    ? "Deixe seus dados e avisamos você por e-mail e WhatsApp quando a data da próxima live for divulgada."
+    : fase === "depois"
     ? "Deixe seus dados e mandamos o link da gravação por e-mail."
     : "Preencha seus dados para receber o link da live" + (sorteioAberto ? " e concorrer aos 2 meses grátis de bookkeeping." : ".");
 
@@ -112,9 +121,9 @@
         <span class="sorteio-tag">Live gratuita</span>
         <h3 id="live-title">${titulo}</h3>
         <p>${intro}</p>
-        <div class="sorteio-dates">
-          <span><b>Quarta, 25/11 · 7:15pm CT</b></span>
-          <span>8:15pm ET · 6:15pm MT · 5:15pm PT · ao vivo no YouTube</span>
+        <div class="sorteio-dates">${fase === "adefinir"
+          ? `<span><b>Data a ser divulgada</b></span><span>Ao vivo no YouTube</span>`
+          : `<span><b>Quarta, 25/11 · 7:15pm CT</b></span><span>8:15pm ET · 6:15pm MT · 5:15pm PT · ao vivo no YouTube</span>`}
         </div>
       </div>
 
@@ -138,7 +147,7 @@
         <input type="text" name="empresa_site" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
         ${blocoSorteio}
         <label class="s-check"><input type="checkbox" id="lv-mkt"> <span>Quero receber dicas e ofertas da Aurea Financial por e-mail e WhatsApp. Posso cancelar quando quiser.</span></label>
-        <button class="btn btn-gold" type="submit">${fase === "depois" ? "Quero a gravação" : "Confirmar inscrição"}</button>
+        <button class="btn btn-gold" type="submit">${fase === "adefinir" ? "Quero ser avisado" : fase === "depois" ? "Quero a gravação" : "Confirmar inscrição"}</button>
         <p class="form-status" id="lv-status" role="status"></p>
         <p class="form-note">O link da live e o da gravação chegam no e-mail informado. Veja os nossos <a href="terms.html" target="_blank" rel="noopener">Termos e Política de Privacidade</a>.</p>
       </form>
@@ -154,7 +163,7 @@
       </div>
     </div>
   </div>
-  <button type="button" class="lv-pill" id="lv-pill" data-open-live>${fase === "depois" ? "Quero a gravação" : "Quero me inscrever"}</button>`);
+  <button type="button" class="lv-pill" id="lv-pill" data-open-live>${fase === "adefinir" ? "Quero ser avisado" : fase === "depois" ? "Quero a gravação" : "Quero me inscrever"}</button>`);
 
   const modal = $("live-modal"), form = $("live-form"), status = $("lv-status"), pill = $("lv-pill");
 
@@ -208,7 +217,7 @@
   let ultimoFoco = null;
   function abrir() {
     ultimoFoco = document.activeElement;
-    if (store.get("aurea_live_ok")) mostrarOk(true);
+    if (store.get(OK_KEY)) mostrarOk(true);
     modal.hidden = false; document.body.classList.add("modal-open");
     requestAnimationFrame(() => modal.classList.add("open"));
     setTimeout(() => { const i = $("lv-nome"); if (i && !form.hidden) i.focus(); }, 60);
@@ -222,11 +231,14 @@
   function mostrarOk(jaInscrito) {
     form.hidden = true;
     $("live-ok").hidden = false;
-    $("live-ok-title").textContent = jaInscrito ? "Você já está inscrito!" : "Inscrição confirmada!";
-    $("live-ok-text").textContent = fase === "depois"
+    $("live-ok-title").textContent = fase === "adefinir" ? (jaInscrito ? "Você já está na lista!" : "Pronto, você está na lista!")
+      : jaInscrito ? "Você já está inscrito!" : "Inscrição confirmada!";
+    $("live-ok-text").textContent = fase === "adefinir"
+      ? "Avisamos você por e-mail e WhatsApp assim que a data da próxima live for divulgada."
+      : fase === "depois"
       ? "O link da gravação chega no seu e-mail."
       : "O link da live chega no seu e-mail antes de quarta, 25/11, às 7:15pm CT. Coloque na agenda para não esquecer.";
-    if (fase === "depois") document.querySelector(".lv-ok-actions").hidden = true;
+    if (fase === "depois" || fase === "adefinir") document.querySelector(".lv-ok-actions").hidden = true;
   }
   document.addEventListener("click", e => {
     if (e.target.closest("[data-open-live]")) { e.preventDefault(); abrir(); }
@@ -241,13 +253,13 @@
   let fechouNestaVisita = false;
   try { fechouNestaVisita = sessionStorage.getItem("aurea_live_fechado") === "1"; } catch (e) {}
   if (viaLink) setTimeout(abrir, 400);
-  else if (ABRIR_SOZINHO && !store.get("aurea_live_ok") && !fechouNestaVisita) setTimeout(() => { if (modal.hidden) abrir(); }, ESPERA_MS);
+  else if (ABRIR_SOZINHO && !store.get(OK_KEY) && !fechouNestaVisita) setTimeout(() => { if (modal.hidden) abrir(); }, ESPERA_MS);
 
   // Botão fixo de inscrição, depois que o hero sai da tela
   const hero = document.querySelector(".lv-hero");
   if ("IntersectionObserver" in window && hero) {
     new IntersectionObserver(([en]) => {
-      const mostrar = !en.isIntersecting && !store.get("aurea_live_ok");
+      const mostrar = !en.isIntersecting && !store.get(OK_KEY);
       pill.classList.toggle("show", mostrar);
       document.body.classList.toggle("lv-pill-on", mostrar);
     }).observe(hero);
@@ -270,7 +282,7 @@
     if (erro) { erro[0].setAttribute("aria-invalid", "true"); erro[0].focus(); status.textContent = erro[1]; return; }
 
     const btn = form.querySelector('button[type="submit"]'); btn.disabled = true; status.textContent = "Enviando...";
-    const dados = { nome, email, whatsapp, empresa: empresa || null, pergunta: pergunta || null, sorteio, marketing, origem: "site", fase,
+    const dados = { nome, email, whatsapp, empresa: empresa || null, pergunta: pergunta || null, sorteio, marketing, origem: "site", fase: fase === "adefinir" ? "antes" : fase,
                     utm_source: utm.utm_source, utm_medium: utm.utm_medium, utm_campaign: utm.utm_campaign };
     let salvo = false;
     try {
@@ -280,7 +292,7 @@
         body: JSON.stringify(dados)
       });
       if (res.status === 409) {
-        store.set("aurea_live_ok", "1"); mostrarOk(true); pill.classList.remove("show"); btn.disabled = false; return;
+        store.set(OK_KEY, "1"); mostrarOk(true); pill.classList.remove("show"); btn.disabled = false; return;
       }
       salvo = res.ok;
     } catch (err) { salvo = false; }
@@ -291,7 +303,7 @@
       try {
         const r = await fetch("https://api.web3forms.com/submit", {
           method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" },
-          body: JSON.stringify({ access_key: AVISO_EMAIL_KEY, subject: "Nova inscrição na live 25/11 (site)" + (salvo ? "" : " · NÃO SALVA NO SUPABASE"),
+          body: JSON.stringify({ access_key: AVISO_EMAIL_KEY, subject: (fase === "adefinir" ? "Quer ser avisado da próxima live (site)" : "Nova inscrição na live 25/11 (site)") + (salvo ? "" : " · NÃO SALVA NO SUPABASE"),
                                  from_name: "Aurea website", name: nome, email, whatsapp, empresa: empresa || "-", pergunta: pergunta || "-",
                                  sorteio: sorteio ? "sim" : "não", marketing: marketing ? "sim" : "não",
                                  origem: [utm.utm_source, utm.utm_medium, utm.utm_campaign].filter(Boolean).join(" / ") || "direto" })
@@ -305,10 +317,10 @@
       status.textContent = "Não foi possível enviar agora. Tente de novo em instantes ou mande \"LIVE\" no nosso WhatsApp.";
       return;
     }
-    store.set("aurea_live_ok", "1");
+    store.set(OK_KEY, "1");
     if (sorteio) store.set("aurea_sorteio_ok", "1");
     mostrarOk(false); pill.classList.remove("show"); document.body.classList.remove("lv-pill-on");
-    if (window.fbq) fbq("track", "Lead", { content_name: "Live 25/11/2026" });
+    if (window.fbq) fbq("track", "Lead", { content_name: fase === "adefinir" ? "Próxima live (lista de espera)" : "Live 25/11/2026" });
     if (window.gtag) gtag("event", "live_signup", { sorteio: sorteio ? "sim" : "nao", fase });
   });
 })();

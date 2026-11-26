@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Regulamento do Sorteio · Aurea Financial</title>
-<meta name="description" content="Regulamento oficial do sorteio de 2 meses de bookkeeping grátis da Aurea Financial.">
+<title>Sorteio encerrado · Aurea Financial</title>
+<meta name="description" content="O sorteio de 2 meses de bookkeeping grátis da Aurea Financial, de novembro de 2026, foi encerrado. Novos sorteios serão divulgados em breve.">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -21,6 +21,12 @@
   .legal a{color:var(--brown)}
   /* Campos que ainda precisam ser preenchidos: procure por class="todo" */
   .todo{background:#FFE58F;color:var(--ink);padding:0 4px;font-weight:700}
+  .sx-box{margin-top:28px;max-width:760px;background:var(--cream-2);border-left:4px solid var(--gold);padding:24px 28px}
+  .sx-box p{font-size:17px;line-height:1.6;margin:0 0 12px}
+  .sx-box a:not(.btn){color:var(--brown);font-weight:600}
+  .sx-ctas{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0 16px}
+  .sx-note{font-size:15px !important;color:#6b645a;margin:0 !important}
+  @media (max-width:600px){ .sx-box{padding:20px 18px} .sx-ctas .btn{flex:1 1 100%;justify-content:center} }
 </style>
 </head>
 <body data-page="sorteio">
@@ -29,9 +35,28 @@
 
 <main>
   <div class="wrap page-head">
-    <h1 class="eyebrow" data-i18n="eyebrow">Regulamento do sorteio</h1>
+    <h1 class="eyebrow" data-i18n="eyebrow">Sorteio encerrado</h1>
     <p class="title" data-i18n="title">2 meses de bookkeeping grátis</p>
-    <p style="margin-top:24px"><button type="button" class="btn btn-gold" data-open-sorteio>Quero participar</button></p>
+    <div class="sx-box">
+      <div data-show="pt">
+        <p><b>Este sorteio já foi realizado e as inscrições estão encerradas.</b> Ele aconteceu em novembro de 2026 e sorteou 2 meses de bookkeeping grátis da Aurea Financial para a empresa de um dos inscritos.</p>
+        <p><b>Novos sorteios serão divulgados em breve</b>, aqui no site, nas lives da Aurea e no Instagram <a href="https://www.instagram.com/aureafinancial/" target="_blank" rel="noopener">@aureafinancial</a>.</p>
+        <div class="sx-ctas">
+          <a class="btn btn-gold" href="live.html?inscricao">Quero ser avisado</a>
+          <a class="btn btn-line" href="https://www.instagram.com/aureafinancial/" target="_blank" rel="noopener">Seguir no Instagram</a>
+        </div>
+        <p class="sx-note">Abaixo está o regulamento do sorteio encerrado, mantido para consulta.</p>
+      </div>
+      <div data-show="en">
+        <p><b>This giveaway has ended and entries are closed.</b> It took place in November 2026 and awarded 2 months of free Aurea Financial bookkeeping to the business of one of the entrants.</p>
+        <p><b>New giveaways will be announced soon</b>, here on our website, during Aurea's live sessions and on Instagram at <a href="https://www.instagram.com/aureafinancial/" target="_blank" rel="noopener">@aureafinancial</a>.</p>
+        <div class="sx-ctas">
+          <a class="btn btn-gold" href="live.html?inscricao">Notify me</a>
+          <a class="btn btn-line" href="https://www.instagram.com/aureafinancial/" target="_blank" rel="noopener">Follow on Instagram</a>
+        </div>
+        <p class="sx-note">Below are the Official Rules of the ended giveaway, kept for reference.</p>
+      </div>
+    </div>
   </div>
 
   <div class="wrap legal">
@@ -216,8 +241,8 @@
 
 <script>
 window.PAGE_DICT = {
-  pt: { page_title:"Regulamento do Sorteio · Aurea Financial", eyebrow:"Regulamento do sorteio", title:"2 meses de bookkeeping grátis" },
-  en: { page_title:"Giveaway Official Rules · Aurea Financial", eyebrow:"Giveaway Official Rules", title:"2 months of free bookkeeping" }
+  pt: { page_title:"Sorteio encerrado · Aurea Financial", eyebrow:"Sorteio encerrado", title:"2 meses de bookkeeping grátis" },
+  en: { page_title:"Giveaway ended · Aurea Financial", eyebrow:"Giveaway ended", title:"2 months of free bookkeeping" }
 };
 </script>
 <script src="main.js"></script>
