@@ -1180,3 +1180,68 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     if (page === "account") renderTx();
   }, 150); });
 }
+
+
+/* ---------- Natal na Área do cliente ----------
+   Mesmo clima do site (bloco "Clima de Natal" do main.js/styles.css, que não mudamos).
+   Luzes: logo abaixo do título da página (Painel, Pendências...) e do nome do cliente, e ficam fixas ao rolar.
+   Meia: no computador, pendurada na engrenagem de Configurações; no celular, no botão PT/EN (some ao rolar).
+   De 01/12 a 30/12 no horário de Chicago, ou com ?natal=1 no endereço para ver antes. */
+(function () {
+  let m, d;
+  try {
+    const p = new Intl.DateTimeFormat("en-US", { timeZone: "America/Chicago", month: "numeric", day: "numeric" }).formatToParts(new Date());
+    m = +p.find(x => x.type === "month").value; d = +p.find(x => x.type === "day").value;
+  } catch (e) { const h = new Date(); m = h.getMonth() + 1; d = h.getDate(); }
+  if (!/[?&]natal=1\b/.test(location.search) && !(m === 12 && d <= 30)) return;
+  document.body.classList.add("natal");
+
+  const MEIA = '<svg viewBox="0 0 60 92" aria-hidden="true">'
+    + '<path d="M14 1c-5 0-5 9 0 16" fill="none" stroke="#B8924F" stroke-width="2.2" stroke-linecap="round"/>'
+    + '<rect x="20" y="3" width="17" height="16" rx="1.5" fill="#1F5A43"/><rect x="27" y="3" width="3.4" height="16" fill="#D9A441"/>'
+    + '<path d="M28.7 3c-3-5-8-4-6 0zM28.7 3c3-5 8-4 6 0z" fill="#D9A441"/>'
+    + '<rect x="35" y="8" width="13" height="11" rx="1.5" fill="#D9A441"/><rect x="40" y="8" width="3" height="11" fill="#A3232B"/>'
+    + '<rect x="35" y="12" width="13" height="2.6" fill="#A3232B"/>'
+    + '<path d="M12 30h34v26c0 7 3 11 8 14 6 4 4 15-6 14-8-1-13-5-19-10-7-4-10-8-10-15z" fill="#A3232B"/>'
+    + '<path d="M46 30v26c0 7 3 11 8 14" fill="none" stroke="#7d1a21" stroke-width="1.2"/>'
+    + '<path d="M45 80c4 3 9 2 10-1" fill="none" stroke="#F6ECE0" stroke-width="5" stroke-linecap="round"/>'
+    + '<path d="M22 42l3 3M30 50l3 3M20 60l3 3" stroke="#D9A441" stroke-width="1.6" stroke-linecap="round" opacity=".8"/>'
+    + '<rect x="8" y="16" width="42" height="15" rx="4" fill="#F6ECE0" stroke="#B8924F" stroke-width="1.4"/></svg>';
+  const meia = document.createElement("span");
+  meia.className = "meia natal-meia"; meia.setAttribute("aria-hidden", "true");
+  meia.style.setProperty("--r", "-5deg"); meia.innerHTML = MEIA;
+
+  const CORES = ["#D9A441", "#EBC46E"], PASSO = 46;
+  const fio = document.createElement("div");
+  fio.className = "xmas"; fio.setAttribute("aria-hidden", "true");
+  const mq = window.matchMedia("(max-width:900px)");
+
+  function montar() {
+    const cel = mq.matches;
+    // Luzes: no computador, embaixo da faixa do título (que já fica presa no topo);
+    // no celular, embaixo do título, que é o que fica preso no topo (a .app-top usa display:contents)
+    const host = document.querySelector(cel ? ".app-top h1" : ".app-top");
+    if (host) {
+      document.querySelectorAll(".tem-natal").forEach(e => e.classList.remove("tem-natal"));
+      host.classList.add("tem-natal"); host.appendChild(fio);
+      const n = Math.ceil(Math.max(host.offsetWidth, window.innerWidth) / PASSO) + 1;
+      let html = "";
+      for (let i = 0; i < n; i++) html += `<i style="left:${i * PASSO + PASSO / 2}px;--c:${CORES[i % 2]};animation-delay:${((i * 7) % 11) * 0.23}s"></i>`;
+      fio.innerHTML = html;
+    }
+    // Meia: pendurada no meio da parte de baixo do ícone de Configurações, ou do botão PT/EN no celular
+    const alvo = cel ? document.querySelector(".side-lang") : document.querySelector('.nav-btn[data-page="config"] svg');
+    const caixa = cel ? document.querySelector(".side-bottom") : document.querySelector('.nav-btn[data-page="config"]');
+    if (alvo && caixa) {
+      caixa.classList.add("tem-meia"); caixa.appendChild(meia);
+      const a = alvo.getBoundingClientRect(), c = caixa.getBoundingClientRect();
+      meia.style.left = (a.left - c.left + a.width / 2) + "px";
+      meia.style.top = (a.top - c.top + a.height - (cel ? 4 : 3)) + "px";
+    }
+  }
+  montar();
+  setTimeout(montar, 400);   // depois que o painel aparece e os textos ficam no lugar
+  let t; window.addEventListener("resize", () => { clearTimeout(t); t = setTimeout(montar, 150); });
+  (mq.addEventListener ? mq.addEventListener("change", montar) : mq.addListener(montar));
+  document.addEventListener("click", e => { if (e.target.closest(".nav-btn, .nav-more, [data-setlang]")) setTimeout(montar, 60); });
+})();

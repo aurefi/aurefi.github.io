@@ -37,6 +37,15 @@
 .pd-help,.pd-done{margin:0;font-size:14.5px;color:var(--muted)}
 .pd-done{color:#11694a;font-weight:600}
 .ns-out{background:none;border:0;padding:0;font:inherit;cursor:pointer;text-decoration:underline}
+/* ---- Natal na Área do cliente (01/12 a 30/12 ou ?natal=1). Reaproveita .xmas e .meia do styles.css ---- */
+.app-top.tem-natal{position:sticky;margin-bottom:38px}
+.tem-meia{position:relative}
+.natal-meia{width:22px;margin-left:-5.1px;z-index:3}
+@media (max-width:900px){
+  .app-top h1.tem-natal{margin-bottom:40px}
+  .side-bottom.tem-meia{overflow:visible}
+  .natal-meia{width:17px;margin-left:-4px}
+}
 .pd-more{margin-top:12px;padding:12px 14px;border-radius:10px;background:#FDF1E8;border:1px solid #F2C9AE}
 .pd-more p{margin:0 0 10px;font-weight:600;color:#9A3F14}
 .pd-more div{display:flex;flex-wrap:wrap;gap:8px}
@@ -656,6 +665,6 @@ window.PAGE_DICT = {
 <script src="main.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<script src="portal.js?v=20261126k"></script>
+<script src="portal.js?v=20261127a"></script>
 </body>
 </html>
