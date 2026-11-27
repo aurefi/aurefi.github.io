@@ -357,4 +357,23 @@ if (tWrap && Array.isArray(window.TESTIMONIALS) && window.TESTIMONIALS.length) {
   }
   montar();
   let t; window.addEventListener("resize", () => { clearTimeout(t); t = setTimeout(montar, 150); });
+
+  // Duas meias de Natal penduradas nas pontas do logo: no rabo do primeiro A e na perna do R.
+  // Posições em % da imagem do logo, então acompanham o logo quando ele encolhe ao rolar.
+  const brand = header.querySelector(".brand");
+  if (brand) {
+    const MEIA = '<svg viewBox="0 0 40 64" aria-hidden="true">'
+      + '<path d="M20 0v9" stroke="#B8924F" stroke-width="2"/>'
+      + '<path d="M9 18h20v22c0 6 2 9 6 12 5 4 3 12-5 11-6-1-10-4-15-8-5-3-7-7-7-13z" fill="#A3232B"/>'
+      + '<path d="M9 18h20v22c0 6 2 9 6 12" fill="none" stroke="#7d1a21" stroke-width="1"/>'
+      + '<path d="M28 54c3 2 6 1 7-1" fill="none" stroke="#F6ECE0" stroke-width="4" stroke-linecap="round"/>'
+      + '<rect x="6" y="9" width="26" height="11" rx="3" fill="#F6ECE0" stroke="#B8924F" stroke-width="1.2"/>'
+      + '<circle cx="20" cy="9" r="2.2" fill="#B8924F"/></svg>';
+    [["6.3%", "95.2%", "-6deg"], ["72.7%", "92.3%", "4deg"]].forEach(([x, y, r], i) => {
+      const m = document.createElement("span");
+      m.className = "meia"; m.setAttribute("aria-hidden", "true");
+      m.style.left = x; m.style.top = y; m.style.setProperty("--r", r); m.style.animationDelay = (i * 1.3) + "s";
+      m.innerHTML = MEIA; brand.appendChild(m);
+    });
+  }
 })();
