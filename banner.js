@@ -7,7 +7,8 @@
    - posicao / posicaoCelular: ponto da imagem que fica visível ao cortar (horizontal vertical).
    - vagas: nome do contador em vagas.json ("catchup" ou "cyber"). Mostra "Restam X vagas". Vazio: não mostra.
    - Preços em número nunca vão no carrossel.
-   - Ordem: a ordem da lista, mas um slide com "primeiroDesde" passa para a frente a partir dessa data. */
+   - Ordem: a ordem da lista, mas um slide com "primeiroDesde" passa para a frente a partir dessa data.
+     Um slide com semprePrimeiro: true fica sempre na frente (hoje: o do imposto de renda). */
 
 const CARROSSEL = {
   paginas: ["home"],
@@ -16,6 +17,24 @@ const CARROSSEL = {
 };
 
 const SLIDES = [
+  {
+    id: "impostos",
+    ativo: true,
+    semprePrimeiro: true,          // fica na frente de todos, inclusive da Black Friday e da Cyber Monday
+    imagem: "img/svc2.jpg", posicao: "50% 42%", posicaoCelular: "50% 30%",
+    fases: [{
+      desde: "",
+      contagem: "",
+      pt: { tag: "Imposto de renda · Declaração de 2026", titulo: "Imposto de 2026:", destaque: "agenda aberta.",
+            texto: "Declarações de pessoas físicas e pequenas empresas, em português, a partir de janeiro. Peça seu orçamento em poucos minutos, sem enviar documentos.",
+            botao: "Peça seu orçamento", link: "orcamento-impostos.html",
+            botao2: "Saiba mais", link2: "impostos.html" },
+      en: { tag: "Tax Preparation · 2026 tax year", titulo: "Your 2026 taxes:", destaque: "booking now open.",
+            texto: "Returns for individuals and small businesses, in English and Portuguese, starting in January. Get a quote in a few minutes, no documents needed.",
+            botao: "Get a quote", link: "orcamento-impostos.html",
+            botao2: "Learn more", link2: "impostos.html" }
+    }]
+  },
   {
     id: "startup",
     ativo: true,
@@ -104,7 +123,7 @@ const SLIDES = [
   let lista = SLIDES.filter(noAr);
   if (!lista.length) return;
   // quem tem "primeiroDesde" já vencido vai para a frente (o mais recente primeiro)
-  lista = lista.map((s, i) => ({ s, i, p: s.primeiroDesde && agora() >= D(s.primeiroDesde) ? D(s.primeiroDesde).getTime() : 0 }))
+  lista = lista.map((s, i) => ({ s, i, p: s.semprePrimeiro ? Infinity : s.primeiroDesde && agora() >= D(s.primeiroDesde) ? D(s.primeiroDesde).getTime() : 0 }))
                .sort((a, b) => (b.p - a.p) || (a.i - b.i)).map(x => x.s);
 
   const varios = lista.length > 1;
