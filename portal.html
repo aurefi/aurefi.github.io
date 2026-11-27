@@ -36,6 +36,7 @@
 .pd-bar i{display:block;height:100%;width:0;background:#1baf7a;border-radius:999px;transition:width .4s}
 .pd-help,.pd-done{margin:0;font-size:14.5px;color:var(--muted)}
 .pd-done{color:#11694a;font-weight:600}
+.ns-out{background:none;border:0;padding:0;font:inherit;cursor:pointer;text-decoration:underline}
 .pd-more{margin-top:12px;padding:12px 14px;border-radius:10px;background:#FDF1E8;border:1px solid #F2C9AE}
 .pd-more p{margin:0 0 10px;font-weight:600;color:#9A3F14}
 .pd-more div{display:flex;flex-wrap:wrap;gap:8px}
@@ -255,6 +256,20 @@
       </form>
       <p class="help"><span data-i18n="forgot">Esqueceu a senha ou ainda não tem acesso?</span> <a class="wa-link" href="https://wa.me/13259565160" target="_blank" rel="noopener" data-i18n="forgot_link">Fale com a Aurea no WhatsApp</a>.</p>
     </div>
+    <div id="v-novasenha" class="card-box" hidden>
+      <h2 data-i18n="ns_t">Crie a sua senha</h2>
+      <p class="sub" data-i18n="ns_d">Por segurança, troque a senha provisória que a Aurea enviou por uma senha só sua. É só desta vez.</p>
+      <form id="ns-form" novalidate>
+        <input type="email" id="ns-email" autocomplete="username" hidden>
+        <label for="ns-new" data-i18n="pw_new">Nova senha (mínimo de 10 caracteres)</label>
+        <input id="ns-new" type="password" autocomplete="new-password" minlength="10" required>
+        <label for="ns-conf" data-i18n="pw_conf">Repita a nova senha</label>
+        <input id="ns-conf" type="password" autocomplete="new-password" minlength="10" required>
+        <button class="btn btn-dark" type="submit" data-i18n="ns_btn">Salvar e entrar</button>
+        <p class="msg" id="ns-msg" role="status"></p>
+      </form>
+      <p class="help"><span data-i18n="ns_tip">Dica: use uma frase fácil de lembrar, com 10 caracteres ou mais. A Aurea nunca pede a sua senha.</span> <button type="button" class="wa-link ns-out" id="ns-out" data-i18n="ns_out">Sair</button></p>
+    </div>
   </div>
 
   <!-- ============ Painel (depois do login) ============ -->
@@ -421,7 +436,7 @@
           <div class="card-head"><h2><svg class="cfg-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span data-i18n="pw_t">Trocar senha</span></h2></div>
           <form id="pw-form" novalidate>
             <label for="p-new" data-i18n="pw_new">Nova senha (mínimo de 8 caracteres)</label>
-            <input id="p-new" type="password" autocomplete="new-password" minlength="8" required>
+            <input id="p-new" type="password" autocomplete="new-password" minlength="10" required>
             <label for="p-conf" data-i18n="pw_conf">Repita a nova senha</label>
             <input id="p-conf" type="password" autocomplete="new-password" minlength="8" required>
             <button class="btn btn-gold sm" type="submit" data-i18n="pw_save">Salvar nova senha</button>
@@ -566,12 +581,12 @@ window.PAGE_DICT = {
     n_docs1:"1 relatório", n_docs:"{n} relatórios", no_data:"Sem dados",
     adm_view:"Ver como cliente", adm_note:"Modo administrador: você está vendo a conta de {e} só para conferência. Nada pode ser alterado aqui.", adm_none:"Nenhuma pasta de cliente encontrada.",
     co_t:"Sua empresa", co_name:"Nome da empresa", co_logo:"Logo", co_none:"Sem logo", co_pick:"Escolher imagem", co_rm:"Remover logo", co_save:"Salvar", co_hint:"PNG, JPG ou WEBP, até 5 MB. O nome e a logo aparecem no canto superior direito do portal.", m_cook:"Dados da empresa salvos.", m_coerr:"Não foi possível salvar. Tente novamente.", m_cotype:"Use uma imagem PNG, JPG ou WEBP.", m_cobig:"A imagem passa de 5 MB. Escolha um arquivo menor.",
-    acc_t:"Dados de acesso", pw_t:"Trocar senha", pw_new:"Nova senha (mínimo de 8 caracteres)", pw_conf:"Repita a nova senha", pw_save:"Salvar nova senha",
+    acc_t:"Dados de acesso", pw_t:"Trocar senha", pw_new:"Nova senha (mínimo de 10 caracteres)", pw_conf:"Repita a nova senha", pw_save:"Salvar nova senha",
     help_q:"Dúvidas sobre os seus números?", help_wa:"Fale com a Aurea no WhatsApp",
     v_new:"Abrir em nova aba", v_dl:"Baixar",
     m_fill:"Preencha e-mail e senha.", m_bad:"E-mail ou senha incorretos.", m_wait:"Entrando...",
     m_err:"Não foi possível carregar os dados. Tente novamente em instantes.",
-    m_open:"Abrir", m_short:"A senha precisa ter pelo menos 8 caracteres.", m_diff:"As senhas não são iguais.",
+    m_open:"Abrir", m_short:"A senha precisa ter pelo menos 10 caracteres.", m_temp:"Escolha uma senha sua, diferente da senha provisória que a Aurea enviou.", ns_t:"Crie a sua senha", ns_d:"Por segurança, troque a senha provisória que a Aurea enviou por uma senha só sua. É só desta vez.", ns_btn:"Salvar e entrar", ns_tip:"Dica: use uma frase fácil de lembrar, com 10 caracteres ou mais. A Aurea nunca pede a sua senha.", ns_out:"Sair", m_diff:"As senhas não são iguais.",
     m_pwok:"Senha alterada com sucesso.", m_pwerr:"Não foi possível alterar a senha. Tente novamente.", noprev:"sem comparação",
     tx_t:"Transações por mês", tx_plan:"Seu plano", tx_in:"Dentro da faixa", tx_out:"Fora da faixa", tx_lim:"Limites da faixa",
     tx_upto:"Até {b} transações/mês", tx_range:"{a} a {b} transações/mês", tx_from:"{a} ou mais transações/mês",
@@ -618,12 +633,12 @@ window.PAGE_DICT = {
     n_docs1:"1 report", n_docs:"{n} reports", no_data:"No data",
     adm_view:"View as client", adm_note:"Admin mode: you are viewing {e}'s account for review only. Nothing can be changed here.", adm_none:"No client folders found.",
     co_t:"Your company", co_name:"Company name", co_logo:"Logo", co_none:"No logo", co_pick:"Choose image", co_rm:"Remove logo", co_save:"Save", co_hint:"PNG, JPG or WEBP, up to 5 MB. Your company name and logo appear in the top-right corner of the portal.", m_cook:"Company details saved.", m_coerr:"We couldn't save your changes. Please try again.", m_cotype:"Please use a PNG, JPG or WEBP image.", m_cobig:"The image is larger than 5 MB. Please choose a smaller file.",
-    acc_t:"Sign-in details", pw_t:"Change password", pw_new:"New password (at least 8 characters)", pw_conf:"Repeat the new password", pw_save:"Save new password",
+    acc_t:"Sign-in details", pw_t:"Change password", pw_new:"New password (at least 10 characters)", pw_conf:"Repeat the new password", pw_save:"Save new password",
     help_q:"Questions about your numbers?", help_wa:"Message Aurea on WhatsApp",
     v_new:"Open in new tab", v_dl:"Download",
     m_fill:"Please enter your email and password.", m_bad:"Incorrect email or password.", m_wait:"Signing in...",
     m_err:"We couldn't load your data. Please try again in a moment.",
-    m_open:"Open", m_short:"The password must have at least 8 characters.", m_diff:"The passwords don't match.",
+    m_open:"Open", m_short:"The password must have at least 10 characters.", m_temp:"Choose your own password, different from the temporary one Aurea sent you.", ns_t:"Create your password", ns_d:"For your security, replace the temporary password Aurea sent you with one that is only yours. You only need to do this once.", ns_btn:"Save and continue", ns_tip:"Tip: use a phrase that is easy to remember, 10 characters or more. Aurea will never ask for your password.", ns_out:"Sign out", m_diff:"The passwords don't match.",
     m_pwok:"Password changed successfully.", m_pwerr:"We couldn't change your password. Please try again.", noprev:"no comparison",
     tx_t:"Transactions per month", tx_plan:"Your plan", tx_in:"Within range", tx_out:"Outside range", tx_lim:"Plan range limits",
     tx_upto:"Up to {b} transactions/month", tx_range:"{a} to {b} transactions/month", tx_from:"{a} or more transactions/month",
@@ -641,6 +656,6 @@ window.PAGE_DICT = {
 <script src="main.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<script src="portal.js?v=20261126j"></script>
+<script src="portal.js?v=20261126k"></script>
 </body>
 </html>

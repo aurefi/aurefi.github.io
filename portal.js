@@ -22,7 +22,7 @@ const isSmall = () => window.matchMedia("(max-width: 700px)").matches;
 const swap = fn => (document.startViewTransition && !reduceMotion) ? document.startViewTransition(fn) : fn();
 function reveal(el) { el.hidden = false; if (reduceMotion) return; el.classList.remove("in"); void el.offsetWidth; el.classList.add("in"); }
 
-function showPre(v) { ["v-loading", "v-setup", "v-login"].forEach(id => $(id).hidden = id !== v); }
+function showPre(v) { ["v-loading", "v-setup", "v-login", "v-novasenha"].forEach(id => $(id).hidden = id !== v); }
 
 if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
   showPre("v-setup");
@@ -1023,6 +1023,11 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     document.body.classList.toggle("admin-view", admin);
     $("admin-bar").hidden = !admin; $("co-card").hidden = $("pw-card").hidden = admin; $("adm-note").hidden = !admin;
     if (admin) return iniciarAdmin();
+    // Primeiro acesso (ou senha provisória): o cliente cria a própria senha antes de entrar
+    if (!(session.user.user_metadata || {}).senha_definida) {
+      document.body.classList.remove("app-mode"); $("v-dash").hidden = true; $("pre-login").hidden = false;
+      $("ns-email").value = session.user.email; showPre("v-novasenha"); setTimeout(() => $("ns-new").focus(), 50); return;
+    }
     await abrirConta(session.user.email);
   }
   async function abrirConta(email) {
@@ -1137,12 +1142,27 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     btn.disabled = false;
   });
 
+  // Regras da senha nova: 10+ caracteres, igual nas duas caixas, e não no formato da provisória (Aurea-Nome-ano)
+  const senhaErro = (a, b) => a.length < 10 ? "m_short" : a !== b ? "m_diff" : /^aurea-[a-z0-9]+-\d{4}$/i.test(a.trim()) ? "m_temp" : null;
+  $("ns-form").addEventListener("submit", async e => {
+    e.preventDefault();
+    const a = $("ns-new").value, b = $("ns-conf").value, msg = $("ns-msg"), btn = e.target.querySelector("button[type=submit]"); msg.className = "msg";
+    const er = senhaErro(a, b); if (er) { msg.textContent = T(er); return; }
+    btn.disabled = true;
+    const { data: r, error } = await sb.auth.updateUser({ password: a, data: { senha_definida: true } });
+    btn.disabled = false;
+    if (error) { msg.textContent = /same|different/i.test(error.message || "") ? T("m_temp") : T("m_pwerr"); return; }
+    e.target.reset();
+    const { data: d } = await sb.auth.getSession();
+    render(d.session || (r && r.user ? { user: r.user } : null));
+  });
+  $("ns-out").addEventListener("click", () => sb.auth.signOut().then(() => render(null)));
+
   $("pw-form").addEventListener("submit", async e => {
     e.preventDefault();
     const a = $("p-new").value, b = $("p-conf").value, msg = $("pw-msg"); msg.className = "msg";
-    if (a.length < 8) { msg.textContent = T("m_short"); return; }
-    if (a !== b) { msg.textContent = T("m_diff"); return; }
-    const { error } = await sb.auth.updateUser({ password: a });
+    const er = senhaErro(a, b); if (er) { msg.textContent = T(er); return; }
+    const { error } = await sb.auth.updateUser({ password: a, data: { senha_definida: true } });
     if (error) { msg.textContent = T("m_pwerr"); return; }
     msg.classList.add("ok"); msg.textContent = T("m_pwok"); e.target.reset();
   });
