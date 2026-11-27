@@ -12,13 +12,23 @@ const META_PIXEL_ID = "";            // Meta Pixel (ex.: 1234567890123456)
 const CALENDLY_URL = "";             // link da sua agenda (ex.: https://calendly.com/aureafi/30min)
 
 // ===== Medição: Google (Ads + Analytics) e Meta Pixel =====
+// Só carrega depois que a pessoa aceita os cookies (aviso no rodapé da tela; escolha em localStorage "aurea_cookies").
+// Quem recusa, ou tem o sinal Global Privacy Control ligado no navegador, não é medido.
 const isThanks = document.body.dataset.page === "thanks";
+const COOKIES_KEY = "aurea_cookies";
+function escolhaCookies() {
+  try { const v = localStorage.getItem(COOKIES_KEY); if (v === "sim" || v === "nao") return v; } catch (e) {}
+  return navigator.globalPrivacyControl ? "nao" : null;
+}
+window.dataLayer = window.dataLayer || [];
+window.gtag = window.gtag || function(){ dataLayer.push(arguments); };   // eventos ficam na fila até a pessoa aceitar
+let medicaoCarregada = false;
+function carregarMedicao() {
+if (medicaoCarregada) return; medicaoCarregada = true;
 if (GOOGLE_TAG_ID || GA_ID) {
   const g = document.createElement("script");
   g.async = true; g.src = "https://www.googletagmanager.com/gtag/js?id=" + (GOOGLE_TAG_ID || GA_ID);
   document.head.append(g);
-  window.dataLayer = window.dataLayer || [];
-  window.gtag = function(){ dataLayer.push(arguments); };
   gtag("js", new Date());
   // Tráfego interno: abra o site uma vez com ?interno=1 em cada aparelho seu (?interno=0 desfaz)
   let interno = false;
@@ -60,6 +70,8 @@ if (META_PIXEL_ID) {
   fbq("init", META_PIXEL_ID); fbq("track", "PageView");
   if (isThanks) fbq("track", "Lead");
 }
+}
+if (escolhaCookies() === "sim") carregarMedicao();
 
 // ===== Textos comuns (cabeçalho, rodapé, formulário) =====
 const COMMON = {
@@ -67,6 +79,10 @@ const COMMON = {
     nav_about:"Sobre a Aurea", nav_bk:"Bookkeeping", nav_tax:"Imposto de renda", nav_all:"Todos os serviços", nav_services:"Serviços", nav_team:"Time", nav_contact:"Fale conosco", nav_portal:"Área do cliente",
     foot_team:"Time", foot_terms:"Termos e privacidade", foot_insta:"Instagram",
     copy:"© 2026 Aurea Financial LLC. Todos os direitos reservados.",
+    legal_line:"Aurea Financial LLC é uma empresa registrada no Texas, EUA. Não é um escritório de CPA.",
+    l_terms:"Termos de uso", l_privacy:"Privacidade", l_refund:"Cancelamento e reembolso", l_cookies:"Preferências de cookies",
+    ck_text:"Usamos cookies do Google Analytics para entender como o site é usado. Eles só são ativados se você aceitar.",
+    ck_more:"Saiba mais", ck_yes:"Aceitar", ck_no:"Recusar",
     wa_text:"Olá! Vim pelo site da Aurea e gostaria de saber mais sobre o bookkeeping.",
     form_title:"Agende uma ligação gratuita", form_sub:"Conte um pouco sobre a sua empresa. Respondemos em até 1 dia útil.",
     f_first:"Nome *", f_last:"Sobrenome", f_email:"E-mail *", f_phone:"Telefone *", f_msg:"Escreva sua mensagem *", f_send:"Enviar pelo WhatsApp",
@@ -76,6 +92,10 @@ const COMMON = {
     nav_about:"About Aurea", nav_bk:"Bookkeeping", nav_tax:"Tax Preparation", nav_all:"All services", nav_services:"Services", nav_team:"Team", nav_contact:"Get In Touch", nav_portal:"Client Portal",
     foot_team:"Team", foot_terms:"Terms & Privacy", foot_insta:"Instagram",
     copy:"© 2026 Aurea Financial LLC. All rights reserved.",
+    legal_line:"Aurea Financial LLC is a Texas limited liability company. Aurea is not a CPA firm.",
+    l_terms:"Terms of Use", l_privacy:"Privacy", l_refund:"Cancellation and refunds", l_cookies:"Cookie preferences",
+    ck_text:"We use Google Analytics cookies to understand how the site is used. They are only turned on if you accept.",
+    ck_more:"Learn more", ck_yes:"Accept", ck_no:"Decline",
     wa_text:"Hi! I found Aurea through the website and would like to learn more about bookkeeping.",
     form_title:"Schedule a free call", form_sub:"Tell us a little about your business. We reply within 1 business day.",
     f_first:"First name *", f_last:"Last name", f_email:"Email *", f_phone:"Phone *", f_msg:"Write a message *", f_send:"Submit",
@@ -137,8 +157,23 @@ document.getElementById("site-footer").outerHTML = `
       </div>
     </div>
     <p class="copy" data-i18n="copy">© 2026 Aurea Financial LLC. Todos os direitos reservados.</p>
+    <p class="legal-line"><span data-i18n="legal_line">Aurea Financial LLC é uma empresa registrada no Texas, EUA. Não é um escritório de CPA.</span></p>
+    <p class="legal-links">
+      <a href="terms.html#termos" data-i18n="l_terms">Termos de uso</a>
+      <a href="terms.html#privacidade" data-i18n="l_privacy">Privacidade</a>
+      <a href="terms.html#reembolso" data-i18n="l_refund">Cancelamento e reembolso</a>
+      <button type="button" class="ck-open" data-i18n="l_cookies">Preferências de cookies</button>
+    </p>
   </div>
 </footer>
+<div class="ck" id="ck" role="region" aria-label="Cookies" hidden>
+  <p><span data-i18n="ck_text">Usamos cookies do Google Analytics para entender como o site é usado. Eles só são ativados se você aceitar.</span>
+    <a href="terms.html#cookies" data-i18n="ck_more">Saiba mais</a></p>
+  <div class="ck-btns">
+    <button type="button" class="btn btn-line" data-ck="nao" data-i18n="ck_no">Recusar</button>
+    <button type="button" class="btn btn-dark" data-ck="sim" data-i18n="ck_yes">Aceitar</button>
+  </div>
+</div>
 <a class="wa wa-link" href="https://wa.me/${WA_NUMBER}" target="_blank" rel="noopener" aria-label="WhatsApp">${WA_ICON}</a>`;
 
 // ===== Formulário (o mesmo no popup, na página de contato e na home) =====
@@ -381,4 +416,29 @@ if (tWrap && Array.isArray(window.TESTIMONIALS) && window.TESTIMONIALS.length) {
       m.innerHTML = MEIA; brand.appendChild(m);
     });
   }
+})();
+
+/* ---------- Aviso de cookies ----------
+   Aparece até a pessoa escolher. "Aceitar" carrega o Google Analytics; "Recusar" não carrega nada.
+   O link "Preferências de cookies" no rodapé abre o aviso de novo. */
+(function () {
+  const ck = document.getElementById("ck");
+  if (!ck) return;
+  const abrir = () => { ck.hidden = false; };
+  if (!escolhaCookies()) abrir();
+  ck.addEventListener("click", e => {
+    const b = e.target.closest("[data-ck]"); if (!b) return;
+    const v = b.dataset.ck;
+    try { localStorage.setItem(COOKIES_KEY, v); } catch (err) {}
+    ck.hidden = true;
+    if (v === "sim") carregarMedicao();
+    else if (medicaoCarregada) {
+      // quem tinha aceitado e agora recusou: apaga os cookies do Analytics deste site
+      document.cookie.split(";").map(c => c.trim().split("=")[0]).filter(n => /^_ga/.test(n)).forEach(n => {
+        document.cookie = n + "=; Max-Age=0; path=/; domain=." + location.hostname.replace(/^www\./, "");
+        document.cookie = n + "=; Max-Age=0; path=/";
+      });
+    }
+  });
+  document.querySelectorAll(".ck-open").forEach(b => b.addEventListener("click", abrir));
 })();

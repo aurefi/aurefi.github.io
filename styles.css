@@ -200,6 +200,17 @@ footer{background:var(--cream-2);padding:56px 0 40px}
 .foot .center{text-align:center}
 .foot .center img{height:110px;margin:0 auto}
 .copy{text-align:center;color:var(--brown);font-size:14px;margin-top:28px;font-weight:500}
+.legal-line{text-align:center;color:#5f4a2a;font-size:13px;margin-top:6px}
+.legal-links{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 18px;margin-top:10px;font-size:13px}
+.legal-links a,.legal-links button{color:var(--brown);font:600 13px var(--sans);background:none;border:0;padding:4px 0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.legal-links a:hover,.legal-links button:hover{color:var(--ink)}
+/* aviso de cookies */
+.ck{position:fixed;left:16px;bottom:16px;z-index:120;max-width:440px;background:var(--cream-2);color:var(--ink);border:1px solid #d9ccb8;box-shadow:0 14px 40px rgba(19,31,28,.18);padding:18px 20px;font-size:14.5px;line-height:1.5}
+.ck p{margin:0}
+.ck a{color:var(--brown);font-weight:600}
+.ck-btns{display:flex;gap:10px;justify-content:flex-end;margin-top:14px}
+.ck-btns .btn{padding:10px 18px;font-size:13px}
+@media (max-width:600px){ .ck{left:10px;right:10px;bottom:10px;max-width:none} .ck-btns .btn{flex:1;justify-content:center} }
 
 /* ---------- WhatsApp float ---------- */
 .wa{position:fixed;right:20px;bottom:20px;width:58px;height:58px;border-radius:50%;background:#25D366;display:grid;place-items:center;box-shadow:0 8px 24px rgba(0,0,0,.25);z-index:60}

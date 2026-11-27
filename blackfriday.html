@@ -22,12 +22,12 @@
 <link rel="stylesheet" href="styles.css">
 <style>
   /* Só desta página (prefixo bf-). Identidade da tabela "Planos de Bookkeeping". */
-  :root{--bf-cream:#F5EEDC;--bf-cream2:#FBF6EA;--bf-green:#163A29;--bf-green2:#1F3A2B;--bf-gold:#C9A24E;--bf-gold2:#C99A2E;--bf-line:#E4D8BE;--bf-muted:#5B6158}
+  :root{--bf-cream:#F5EEDC;--bf-cream2:#FBF6EA;--bf-green:#163A29;--bf-green2:#1F3A2B;--bf-gold:#C9A24E;--bf-gold2:#C99A2E;--bf-gold-txt:#7C5A14;--bf-line:#E4D8BE;--bf-muted:#5B6158}
   body[data-page="blackfriday"] main{background:var(--bf-cream);color:var(--bf-green)}
   .bf-serif{font-family:"Playfair Display",Georgia,serif;font-weight:800;letter-spacing:-.01em}
   .bf-sec{padding:72px 0}
   .bf-sec h2{font-family:"Playfair Display",Georgia,serif;font-weight:800;font-size:clamp(1.9rem,4vw,2.8rem);line-height:1.1;color:var(--bf-green)}
-  .bf-sec .bf-kicker{font:800 13px var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--bf-gold2);margin-bottom:12px}
+  .bf-sec .bf-kicker{font:800 13px var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--bf-gold-txt);margin-bottom:12px}
   .bf-sec .bf-intro{margin-top:14px;font-size:18px;color:var(--bf-muted);max-width:720px}
 
   .bf-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;background:var(--bf-gold);color:var(--bf-green);border:2px solid var(--bf-gold);font:800 16px var(--sans);letter-spacing:.04em;padding:18px 30px;border-radius:6px;text-decoration:none;transition:background .2s,border-color .2s,transform .2s;box-shadow:0 10px 26px rgba(201,162,78,.35)}
@@ -54,7 +54,7 @@
   .bf-badge{display:inline-block;background:var(--bf-green);color:var(--bf-gold);font:800 13px var(--sans);letter-spacing:.18em;padding:9px 16px;border-radius:4px}
   .bf-title{margin:26px auto 0;font-family:"Oswald",Impact,sans-serif;font-weight:700;text-transform:uppercase;font-size:clamp(2.7rem,9vw,6.2rem);line-height:.98;letter-spacing:.005em;max-width:1000px}
   .bf-title .g{color:var(--bf-green)}
-  .bf-title .o{color:var(--bf-gold2)}
+  .bf-title .o{color:var(--bf-gold-txt)}
   .bf-sub{margin:22px auto 0;max-width:760px;font-family:"Playfair Display",Georgia,serif;font-weight:700;font-size:clamp(1.3rem,2.6vw,1.9rem);line-height:1.3;color:var(--bf-green)}
   .bf-support{margin:16px auto 0;max-width:640px;font-size:18px;color:var(--bf-muted)}
   .bf-hero .bf-btn{margin-top:30px}
@@ -69,7 +69,7 @@
   /* O que você leva */
   .bf-gets{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:34px;list-style:none;counter-reset:bf}
   .bf-gets li{background:var(--bf-cream2);border:1px solid var(--bf-line);border-top:4px solid var(--bf-gold);border-radius:8px;padding:24px 22px;counter-increment:bf}
-  .bf-gets li::before{content:counter(bf);display:block;font:700 34px/1 "Oswald",Impact,sans-serif;color:var(--bf-gold2);margin-bottom:12px}
+  .bf-gets li::before{content:counter(bf);display:block;font:700 34px/1 "Oswald",Impact,sans-serif;color:var(--bf-gold-txt);margin-bottom:12px}
   .bf-gets b{display:block;font-size:18px;line-height:1.3;margin-bottom:6px}
   .bf-gets p{font-size:15.5px;color:var(--bf-muted);line-height:1.55}
 
@@ -78,10 +78,10 @@
   .bf-table th{background:var(--bf-green);color:#fff;text-align:left;font-size:13px;letter-spacing:.08em;text-transform:uppercase;padding:14px 16px;font-weight:700}
   .bf-table td{padding:15px 16px;border-top:1px solid var(--bf-line);vertical-align:middle}
   .bf-table td:first-child{font-weight:800}
-  .bf-table .old{text-decoration:line-through;color:#8C8A80}
+  .bf-table .old{text-decoration:line-through;color:#625b51}
   .bf-table .new{font:700 22px/1 "Oswald",Impact,sans-serif;color:var(--bf-green)}
   .bf-table .save{font-weight:800;color:#2E7D4F}
-  .bf-table .free{font-weight:700;color:var(--bf-gold2)}
+  .bf-table .free{font-weight:700;color:var(--bf-gold-txt)}
   .bf-note{margin-top:12px;font-size:14.5px;color:var(--bf-muted)}
   .bf-incl{margin-top:22px;background:var(--bf-green);color:#EDE6D3;border-radius:10px;padding:20px 22px;font-size:16px;line-height:1.6}
   .bf-incl b{color:var(--bf-gold)}
@@ -354,8 +354,8 @@
       <p class="bf-kicker">Perguntas frequentes</p>
       <div class="faq">
         <details><summary>O que é catch-up?</summary><p>É colocar em dia os meses de 2026 em que a empresa ficou sem bookkeeping (janeiro a outubro). Novembro já entra como o primeiro mês do plano mensal.</p></details>
-        <details><summary>Preciso ficar quanto tempo?</summary><p>Para ter o preço de Black Friday no catch-up, a permanência mínima é de 6 meses no plano mensal.</p></details>
-        <details><summary>Abri a empresa há pouco tempo. Serve pra mim?</summary><p>Para empresas com até 6 meses de abertura e menos de 30 transações por mês existe o Startup Plan, que não entra no catch-up. <a href="https://wa.me/13259565160?text=Oi%2C%20quero%20saber%20do%20Startup%20Plan" data-pos="faq_startup" target="_blank" rel="noopener" style="color:var(--bf-gold2);font-weight:700">Chame no WhatsApp</a> para saber mais.</p></details>
+        <details><summary>Preciso ficar quanto tempo?</summary><p>Para ter o preço de Black Friday no catch-up, a permanência mínima é de 6 meses no plano mensal. Se você cancelar antes, é cobrada a diferença até o preço normal do catch-up. <a href="terms.html#reembolso" style="color:var(--bf-gold-txt);font-weight:700">Veja a política de cancelamento</a>.</p></details>
+        <details><summary>Abri a empresa há pouco tempo. Serve pra mim?</summary><p>Para empresas com até 6 meses de abertura e menos de 30 transações por mês existe o Startup Plan, que não entra no catch-up. <a href="https://wa.me/13259565160?text=Oi%2C%20quero%20saber%20do%20Startup%20Plan" data-pos="faq_startup" target="_blank" rel="noopener" style="color:var(--bf-gold-txt);font-weight:700">Chame no WhatsApp</a> para saber mais.</p></details>
         <details><summary>Vocês fazem o imposto?</summary><p>A Aurea faz o bookkeeping e entrega os livros prontos para o seu contador (CPA).</p></details>
         <details><summary>Quantas vagas são?</summary><p>10 no catch-up e 10 no plano anual da Cyber Monday. Cada um vale até 30/11 às 23h59 CT ou até as vagas acabarem. Setup grátis e o mês de extras não têm limite de vagas. Veja acima quantas ainda restam.</p></details>
       </div>
@@ -374,7 +374,7 @@
   <!-- Condições -->
   <section class="bf-terms bf-so-oferta">
     <div class="wrap">
-      <p>Preço do catch-up válido para quem assinar um plano mensal até 30/11/2026, 23:59 CT, com permanência mínima de 6 meses. Catch-up referente a janeiro–outubro de 2026; novembro é o primeiro mês do plano mensal. Setup grátis para contas abertas em 2026. 1 mês grátis de 2 extras nos planos Essential Light, Essential e Professional Light. Catch-up limitado a 10 vagas. Plano anual (12 pelo preço de 10): para o público, só em 30/11/2026; para quem recebeu o e-mail de acesso antecipado, de 20/11 a 30/11/2026, 23:59 CT. Soma com o catch-up. Limitado a 10 vagas. O catch-up não se aplica ao Startup Plan.</p>
+      <p>Preço do catch-up válido para quem assinar um plano mensal até 30/11/2026, 23:59 CT, com permanência mínima de 6 meses. O catch-up só é reembolsado se o plano for cancelado antes do início do segundo mês; se o plano for cancelado entre o segundo e o sexto mês, é cobrada a diferença até o preço normal do catch-up (50% da mensalidade por mês organizado). Catch-up referente a janeiro–outubro de 2026; novembro é o primeiro mês do plano mensal. Setup grátis para contas abertas em 2026. 1 mês grátis de 2 extras nos planos Essential Light, Essential e Professional Light. Catch-up limitado a 10 vagas. Plano anual (12 pelo preço de 10): permanência mínima de 6 meses; depois disso, pode ser cancelado com devolução do valor não usado, descontados os meses já usados pelo preço mensal. Para o público, só em 30/11/2026; para quem recebeu o e-mail de acesso antecipado, de 20/11 a 30/11/2026, 23:59 CT. Soma com o catch-up. Limitado a 10 vagas. O catch-up não se aplica ao Startup Plan.</p>
     </div>
   </section>
 </div>
@@ -528,8 +528,8 @@
       <p class="bf-kicker">Frequently asked questions</p>
       <div class="faq">
         <details><summary>What is a catch-up?</summary><p>It means bringing the 2026 months your business went without bookkeeping (January to October) up to date. November is the first month of your monthly plan.</p></details>
-        <details><summary>How long do I need to stay?</summary><p>To get the Black Friday catch-up price, the minimum commitment is 6 months on the monthly plan.</p></details>
-        <details><summary>I just opened my business. Is this for me?</summary><p>For businesses up to 6 months old with fewer than 30 transactions a month, there is the Startup Plan, which is not part of the catch-up offer. <a href="https://wa.me/13259565160?text=Hi%2C%20I%20would%20like%20to%20know%20about%20the%20Startup%20Plan" data-pos="faq_startup" target="_blank" rel="noopener" style="color:var(--bf-gold2);font-weight:700">Message us on WhatsApp</a> to learn more.</p></details>
+        <details><summary>How long do I need to stay?</summary><p>To get the Black Friday catch-up price, the minimum commitment is 6 months on the monthly plan. If you cancel earlier, the difference up to the regular catch-up price will be charged. <a href="terms.html#refunds" style="color:var(--bf-gold-txt);font-weight:700">See our cancellation policy</a>.</p></details>
+        <details><summary>I just opened my business. Is this for me?</summary><p>For businesses up to 6 months old with fewer than 30 transactions a month, there is the Startup Plan, which is not part of the catch-up offer. <a href="https://wa.me/13259565160?text=Hi%2C%20I%20would%20like%20to%20know%20about%20the%20Startup%20Plan" data-pos="faq_startup" target="_blank" rel="noopener" style="color:var(--bf-gold-txt);font-weight:700">Message us on WhatsApp</a> to learn more.</p></details>
         <details><summary>Do you file taxes?</summary><p>Aurea does the bookkeeping and hands your CPA books that are ready to go.</p></details>
         <details><summary>How many spots are there?</summary><p>10 for the catch-up and 10 for the Cyber Monday annual plan. Each is valid through November 30 at 11:59 p.m. CT or until its spots are taken. Free setup and the free month of add-ons have no spot limit. See above how many are left.</p></details>
       </div>
@@ -546,7 +546,7 @@
 
   <section class="bf-terms bf-so-oferta">
     <div class="wrap">
-      <p>Catch-up price valid for clients who sign up for a monthly plan by November 30, 2026, 11:59 p.m. CT, with a minimum commitment of 6 months. Catch-up covers January–October 2026; November is the first month of the monthly plan. Free setup for accounts opened in 2026. 1 free month of 2 add-ons on the Essential Light, Essential and Professional Light plans. Catch-up limited to 10 spots. Annual plan (12 for the price of 10): for the public, on November 30, 2026 only; for those who received the early-access email, from November 20 to November 30, 2026, 11:59 p.m. CT. Stacks with the catch-up. Limited to 10 spots. The catch-up offer does not apply to the Startup Plan.</p>
+      <p>Catch-up price valid for clients who sign up for a monthly plan by November 30, 2026, 11:59 p.m. CT, with a minimum commitment of 6 months. The catch-up is refundable only if the plan is canceled before the second month begins; if the plan is canceled between the second and sixth months, the difference up to the regular catch-up price (50% of the monthly fee for each month organized) will be charged. Catch-up covers January–October 2026; November is the first month of the monthly plan. Free setup for accounts opened in 2026. 1 free month of 2 add-ons on the Essential Light, Essential and Professional Light plans. Catch-up limited to 10 spots. Annual plan (12 for the price of 10): minimum commitment of 6 months; after that, it can be canceled with a refund of the unused amount, minus the months already used at the monthly price. For the public, on November 30, 2026 only; for those who received the early-access email, from November 20 to November 30, 2026, 11:59 p.m. CT. Stacks with the catch-up. Limited to 10 spots. The catch-up offer does not apply to the Startup Plan.</p>
     </div>
   </section>
 </div>

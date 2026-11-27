@@ -150,7 +150,7 @@ const SLIDES = [
       </div>`).join("")}
     </div>
     ${varios ? `<div class="wrap pb-dots" role="tablist">${lista.map((s, i) =>
-      `<button type="button" role="tab" data-ir="${i}" aria-selected="${i === 0}"><span></span></button>`).join("")}</div>` : ""}
+      `<button type="button" role="tab" data-ir="${i}" aria-selected="${i === 0}" aria-label="${i + 1} / ${lista.length}"><span></span></button>`).join("")}</div>` : ""}
   </section>`);
 
   const raiz = document.getElementById("promo-banner");
@@ -183,6 +183,7 @@ const SLIDES = [
       const s = lista[i], f = fase(s), t = f[lang] || f.pt;
       const q = k => el.querySelector(`[data-k="${k}"]`);
       q("tag").textContent = t.tag;
+      if (dots[i]) dots[i].setAttribute("aria-label", t.tag);   // nome da bolinha para leitores de tela
       q("titulo").textContent = t.titulo;
       q("destaque").textContent = t.destaque || "";
       q("texto").textContent = t.texto;
