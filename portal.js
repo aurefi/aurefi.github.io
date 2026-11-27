@@ -1241,6 +1241,11 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
   }
   montar();
   setTimeout(montar, 400);   // depois que o painel aparece e os textos ficam no lugar
+  // No celular o fio fica dentro do título; trocar de aba ou de idioma reescreve o título e apagaria o fio
+  const titulo = document.getElementById("app-title");
+  if (titulo && window.MutationObserver) new MutationObserver(() => {
+    if (mq.matches && fio.parentNode !== titulo) titulo.appendChild(fio);
+  }).observe(titulo, { childList: true });
   let t; window.addEventListener("resize", () => { clearTimeout(t); t = setTimeout(montar, 150); });
   (mq.addEventListener ? mq.addEventListener("change", montar) : mq.addListener(montar));
   document.addEventListener("click", e => { if (e.target.closest(".nav-btn, .nav-more, [data-setlang]")) setTimeout(montar, 60); });
