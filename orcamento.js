@@ -35,9 +35,10 @@
     q11b: { tipo: "single", pt: "Como você controla as finanças do negócio?", en: "How do you keep track of the business finances?", curto: "Controle do negócio",
             opcoes: [o("aurea", "Bookkeeping da Aurea", "Aurea bookkeeping"), o("qb", "QuickBooks ou planilha própria", "My own QuickBooks or spreadsheet"),
                      o("extratos", "Só os extratos do banco", "Just bank statements"), o("nenhum", "Não tenho controle", "I don't keep track")] },
-    q11c: { tipo: "single", pt: "Quantas transações por mês, mais ou menos?", en: "About how many transactions a month?", curto: "Transações por mês",
-            opcoes: [o("ate50", "Até 50", "Up to 50"), o("50a100", "De 50 a 100", "50 to 100"),
-                     o("mais100", "Mais de 100", "More than 100", { warn: true, nota: "oferecer o catch-up de bookkeeping" })] },
+    q11c: { tipo: "single", pt: "Quantas transações por mês tem esse negócio, mais ou menos?", en: "About how many transactions a month does this business have?", curto: "Transações por mês (por negócio)",
+            ajuda: { pt: "Entradas e saídas de dinheiro do negócio: vendas, pagamentos, compras.", en: "Money in and out of the business: sales, payments, purchases." },
+            opcoes: [o("ate8", "Até 8 por mês", "Up to 8 a month"), o("9a50", "De 9 a 50", "9 to 50", { warn: true, nota: "oferecer o catch-up de bookkeeping" }),
+                     o("mais50", "Mais de 50", "More than 50", { warn: true, nota: "oferecer o catch-up de bookkeeping" })] },
     q11d: { tipo: "pair", pt: "Sobre o seu negócio:", en: "About your business:", curto: "Carro e escritório em casa",
             itens: [{ k: "carro", pt: "Usa carro no trabalho?", en: "Do you use a vehicle for work?" },
                     { k: "escritorio", pt: "Tem escritório em casa?", en: "Do you have a home office?" }] }
@@ -140,13 +141,20 @@
       itens: [{ k: "w2", pt: "Tem funcionários na folha (W-2)?", en: "Do you have employees on payroll (W-2)?" },
               { k: "n1099", pt: "Paga prestadores com 1099?", en: "Do you pay contractors on a 1099?" }],
       nota: "oportunidade: serviço de 1099-NEC" },
+    { id: "q25a", sec: "c", show: a => E(a) && a.q25 && a.q25.w2 && a.q25.w2.tem === "sim", tipo: "single",
+      pt: "Quem faz a folha de pagamento (941/940)?", en: "Who runs payroll (Forms 941/940)?", curto: "Quem faz a folha (941/940)",
+      opcoes: [o("servico", "Serviço de folha (Gusto, ADP etc.)", "A payroll service (Gusto, ADP, etc.)"), o("contador", "Contador ou bookkeeper", "An accountant or bookkeeper"),
+               o("eu", "Eu mesmo", "I do it myself"), o("ninguem", "Ninguém", "No one", { warn: true, nota: "sob consulta: funcionários W-2 sem ninguém fazendo a folha" })] },
     { id: "q26", sec: "c", show: E, tipo: "single", pt: "A empresa comprou veículo ou equipamento caro em 2026?", en: "Did the business buy a vehicle or expensive equipment in 2026?", curto: "Veículo ou equipamento", opcoes: SN },
     { id: "q27", sec: "c", show: E, tipo: "single", pt: "É a primeira declaração da empresa?", en: "Is this the business's first tax return?", curto: "Primeira declaração da empresa", opcoes: SN },
 
     // ---- D. Prazo, documentos e autorização ----
-    { id: "q28", sec: "d", tipo: "single", pt: "Quando você consegue mandar os documentos?", en: "When can you send your documents?", curto: "Documentos até",
+    { id: "q28a", sec: "d", show: a => P(a) || !E(a), tipo: "single", pt: "Quando você consegue mandar os documentos pessoais?", en: "When can you send your personal documents?", curto: "Documentos pessoais até",
       opcoes: [o("jan", "Até 31 de janeiro", "By January 31"), o("fev", "Em fevereiro", "In February"), o("mar15", "Até 15 de março", "By March 15"),
                o("depois", "Depois de 15 de março", "After March 15", { warn: true, nota: "urgência" })] },
+    { id: "q28b", sec: "d", show: E, tipo: "single", pt: "Quando você consegue mandar os documentos da empresa?", en: "When can you send the business documents?", curto: "Documentos da empresa até",
+      opcoes: [o("antes15fev", "Antes de 15 de fevereiro", "Before February 15"), o("ate01mar", "Até 1º de março", "By March 1"),
+               o("depois01mar", "Depois de 1º de março", "After March 1", { warn: true, nota: "urgência" })] },
     { id: "q29", sec: "d", tipo: "single", pt: "Como estão os seus documentos?", en: "How organized are your documents?", curto: "Documentos",
       opcoes: [o("organizados", "Organizados", "Organized"), o("maisoumenos", "Mais ou menos", "Somewhat"), o("baguncados", "Bagunçados", "A mess")] },
     { id: "q30", sec: "d", tipo: "single", pt: "Você recebeu carta do IRS ou do estado, ou tem dívida de imposto?", en: "Have you received a letter from the IRS or the state, or do you owe back taxes?", curto: "Carta do IRS ou dívida",
@@ -340,12 +348,17 @@
     });
   }
 
+  // quem escolheu atendimento em espanhol (pergunta 3) também vê a confirmação em espanhol
+  const ES = { okTitulo: "Recibimos sus respuestas.", okTexto: "Pronto recibirá el presupuesto por correo electrónico. Si tenemos alguna duda, nos comunicaremos con usted antes.",
+               docs: "No envíe documentos por correo electrónico ni por WhatsApp. Si decide trabajar con nosotros, le enviaremos el enlace seguro del portal." };
+  let okEspanhol = false;
   function renderOk() {
     raiz.innerHTML = `<div class="orc-intro orc-ok" role="status">
       <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22"/><path d="M14 25l7 7 13-15"/></svg>
       <h1 tabindex="-1" id="orc-okt">${t("okTitulo")}</h1>
       <p class="lead">${t("okTexto")}</p>
       <p class="orc-docs">${t("docs")}</p>
+      ${okEspanhol ? `<div class="orc-es" lang="es"><p class="orc-es-t">${ES.okTitulo}</p><p>${ES.okTexto}</p><p class="orc-docs">${ES.docs}</p></div>` : ""}
       <a class="btn btn-line" href="index.html">${t("okInicio")}</a></div>`;
     $("orc-okt").focus({ preventScroll: true });
   }
@@ -520,6 +533,9 @@
       }
       if (q.id === "q25") { const v = c.q25; if ((v.n1099 || {}).tem === "sim") alertas.push("Paga prestadores com 1099 (oportunidade: serviço de 1099-NEC)"); }
     });
+    // respostas que se contradizem
+    if (c.q4 === "nao" && c.q23 === "aurea") alertas.push("Contradição: disse que NÃO é cliente de bookkeeping (pergunta 4), mas marcou \"Bookkeeping da Aurea\" na contabilidade da empresa (23)");
+    if (c.q4 === "nao" && (c.q11b === "aurea" || c.c11b === "aurea")) alertas.push("Contradição: disse que NÃO é cliente de bookkeeping (pergunta 4), mas marcou \"Bookkeeping da Aurea\" no controle do negócio (11b)");
     return { c, linhas, alertas };
   }
 
@@ -565,6 +581,7 @@
 
     btn.disabled = false; btn.textContent = t("enviar");
     if (!salvoSb && !avisado) { err.textContent = t("falha"); return; }
+    okEspanhol = c.q3 === "es";
     store.del(); fase = "ok"; A = {}; hist = []; render();
     window.scrollTo({ top: 0, behavior: "smooth" });
     if (window.fbq) fbq("track", "Lead", { content_name: "Orçamento imposto de renda" });
