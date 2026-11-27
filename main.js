@@ -80,6 +80,7 @@ const COMMON = {
     foot_team:"Time", foot_terms:"Termos e privacidade", foot_insta:"Instagram",
     copy:"© 2026 Aurea Financial LLC. Todos os direitos reservados.",
     legal_line:"Aurea Financial LLC é uma empresa registrada no Texas, EUA. Não é um escritório de CPA.",
+    legal_ra:"Endereço para notificações legais: 5511 Parkcrest Drive, Suite 103, Austin, TX 78731.",
     l_terms:"Termos de uso", l_privacy:"Privacidade", l_refund:"Cancelamento e reembolso", l_cookies:"Preferências de cookies",
     ck_text:"Usamos cookies do Google Analytics para entender como o site é usado. Eles só são ativados se você aceitar.",
     ck_more:"Saiba mais", ck_yes:"Aceitar", ck_no:"Recusar",
@@ -93,6 +94,7 @@ const COMMON = {
     foot_team:"Team", foot_terms:"Terms & Privacy", foot_insta:"Instagram",
     copy:"© 2026 Aurea Financial LLC. All rights reserved.",
     legal_line:"Aurea Financial LLC is a Texas limited liability company. Aurea is not a CPA firm.",
+    legal_ra:"Address for legal notices: 5511 Parkcrest Drive, Suite 103, Austin, TX 78731.",
     l_terms:"Terms of Use", l_privacy:"Privacy", l_refund:"Cancellation and refunds", l_cookies:"Cookie preferences",
     ck_text:"We use Google Analytics cookies to understand how the site is used. They are only turned on if you accept.",
     ck_more:"Learn more", ck_yes:"Accept", ck_no:"Decline",
@@ -157,7 +159,7 @@ document.getElementById("site-footer").outerHTML = `
       </div>
     </div>
     <p class="copy" data-i18n="copy">© 2026 Aurea Financial LLC. Todos os direitos reservados.</p>
-    <p class="legal-line"><span data-i18n="legal_line">Aurea Financial LLC é uma empresa registrada no Texas, EUA. Não é um escritório de CPA.</span></p>
+    <p class="legal-line"><span data-i18n="legal_line">Aurea Financial LLC é uma empresa registrada no Texas, EUA. Não é um escritório de CPA.</span><br><span data-i18n="legal_ra">Endereço para notificações legais: 5511 Parkcrest Drive, Suite 103, Austin, TX 78731.</span></p>
     <p class="legal-links">
       <a href="terms.html#termos" data-i18n="l_terms">Termos de uso</a>
       <a href="terms.html#privacidade" data-i18n="l_privacy">Privacidade</a>
