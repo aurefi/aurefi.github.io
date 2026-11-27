@@ -309,3 +309,20 @@ if (tWrap && Array.isArray(window.TESTIMONIALS) && window.TESTIMONIALS.length) {
   });
   tWrap.hidden = false;
 }
+
+/* ---------- Foto do calendário que muda com a estação (img com data-sazonal="calendario") ----------
+   Datas no horário de Chicago (CT), todo ano:
+   18/12 a 31/12 → natal (uma semana antes do Natal) · 01/01 a 19/03 → inverno
+   20/03 a 21/09 → primavera · 22/09 a 17/12 → outono (é a foto que já vem no HTML) */
+(function () {
+  const imgs = document.querySelectorAll('img[data-sazonal="calendario"]');
+  if (!imgs.length) return;
+  let m, d;
+  try {
+    const p = new Intl.DateTimeFormat("en-US", { timeZone: "America/Chicago", month: "numeric", day: "numeric" }).formatToParts(new Date());
+    m = +p.find(x => x.type === "month").value; d = +p.find(x => x.type === "day").value;
+  } catch (e) { const h = new Date(); m = h.getMonth() + 1; d = h.getDate(); }
+  const md = m * 100 + d;   // ex.: 18/12 → 1218
+  const estacao = md >= 1218 ? "natal" : md < 320 ? "inverno" : md < 922 ? "primavera" : "outono";
+  imgs.forEach(img => { img.src = "img/calendario-" + estacao + ".jpg"; });
+})();
