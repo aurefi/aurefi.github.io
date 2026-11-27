@@ -732,7 +732,7 @@ body.app-mode .sorteio-pill{display:none !important}
 .xmas i::before{content:"";position:absolute;left:1.5px;top:-4px;width:6px;height:5px;border-radius:1.5px;background:#3d4a42}
 @keyframes xmas-brilho{0%,100%{opacity:1;filter:brightness(1.1)}50%{opacity:.45;filter:brightness(.8)}}
 .brand{position:relative}
-.meia{position:absolute;width:8.5%;aspect-ratio:40/64;margin-left:-4.25%;transform-origin:50% 0;transform:rotate(var(--r));animation:meia-balanco 4s ease-in-out infinite;pointer-events:none;z-index:2}
+.meia{position:absolute;width:17%;aspect-ratio:60/92;margin-left:-3.97%;transform-origin:23.3% 0;transform:rotate(var(--r));animation:meia-balanco 4s ease-in-out infinite;pointer-events:none;z-index:2}
 .meia svg{display:block;width:100%;height:100%;filter:drop-shadow(0 2px 2px rgba(19,31,28,.25))}
 @keyframes meia-balanco{0%,100%{transform:rotate(var(--r))}50%{transform:rotate(calc(var(--r) * -1))}}
 @media (prefers-reduced-motion:reduce){ .xmas i,.meia{animation:none} }

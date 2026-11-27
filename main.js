@@ -362,13 +362,18 @@ if (tWrap && Array.isArray(window.TESTIMONIALS) && window.TESTIMONIALS.length) {
   // Posições em % da imagem do logo, então acompanham o logo quando ele encolhe ao rolar.
   const brand = header.querySelector(".brand");
   if (brand) {
-    const MEIA = '<svg viewBox="0 0 40 64" aria-hidden="true">'
-      + '<path d="M20 0v9" stroke="#B8924F" stroke-width="2"/>'
-      + '<path d="M9 18h20v22c0 6 2 9 6 12 5 4 3 12-5 11-6-1-10-4-15-8-5-3-7-7-7-13z" fill="#A3232B"/>'
-      + '<path d="M9 18h20v22c0 6 2 9 6 12" fill="none" stroke="#7d1a21" stroke-width="1"/>'
-      + '<path d="M28 54c3 2 6 1 7-1" fill="none" stroke="#F6ECE0" stroke-width="4" stroke-linecap="round"/>'
-      + '<rect x="6" y="9" width="26" height="11" rx="3" fill="#F6ECE0" stroke="#B8924F" stroke-width="1.2"/>'
-      + '<circle cx="20" cy="9" r="2.2" fill="#B8924F"/></svg>';
+    // meia com presentes saindo pela boca; o laço de pendurar fica no canto esquerdo da barra (x=14 de 60)
+    const MEIA = '<svg viewBox="0 0 60 92" aria-hidden="true">'
+      + '<path d="M14 1c-5 0-5 9 0 16" fill="none" stroke="#B8924F" stroke-width="2.2" stroke-linecap="round"/>'
+      + '<rect x="20" y="3" width="17" height="16" rx="1.5" fill="#1F5A43"/><rect x="27" y="3" width="3.4" height="16" fill="#D9A441"/>'
+      + '<path d="M28.7 3c-3-5-8-4-6 0zM28.7 3c3-5 8-4 6 0z" fill="#D9A441"/>'
+      + '<rect x="35" y="8" width="13" height="11" rx="1.5" fill="#D9A441"/><rect x="40" y="8" width="3" height="11" fill="#A3232B"/>'
+      + '<rect x="35" y="12" width="13" height="2.6" fill="#A3232B"/>'
+      + '<path d="M12 30h34v26c0 7 3 11 8 14 6 4 4 15-6 14-8-1-13-5-19-10-7-4-10-8-10-15z" fill="#A3232B"/>'
+      + '<path d="M46 30v26c0 7 3 11 8 14" fill="none" stroke="#7d1a21" stroke-width="1.2"/>'
+      + '<path d="M45 80c4 3 9 2 10-1" fill="none" stroke="#F6ECE0" stroke-width="5" stroke-linecap="round"/>'
+      + '<path d="M22 42l3 3M30 50l3 3M20 60l3 3" stroke="#D9A441" stroke-width="1.6" stroke-linecap="round" opacity=".8"/>'
+      + '<rect x="8" y="16" width="42" height="15" rx="4" fill="#F6ECE0" stroke="#B8924F" stroke-width="1.4"/></svg>';
     [["6.3%", "95.2%", "-6deg"], ["72.7%", "92.3%", "4deg"]].forEach(([x, y, r], i) => {
       const m = document.createElement("span");
       m.className = "meia"; m.setAttribute("aria-hidden", "true");
