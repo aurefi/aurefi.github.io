@@ -326,3 +326,35 @@ if (tWrap && Array.isArray(window.TESTIMONIALS) && window.TESTIMONIALS.length) {
   const estacao = md >= 1218 ? "natal" : md < 320 ? "inverno" : md < 922 ? "primavera" : "outono";
   imgs.forEach(img => { img.src = "img/calendario-" + estacao + ".jpg"; });
 })();
+
+/* ---------- Clima de Natal: luzes penduradas logo abaixo do menu ----------
+   Aparece de 01/12 a 30/12 (horário de Chicago), em todas as páginas que usam este cabeçalho.
+   Para ver antes da data: abra qualquer página com ?natal=1 no fim do endereço. */
+(function () {
+  const header = document.querySelector("body > header, header");
+  if (!header) return;
+  let m, d;
+  try {
+    const p = new Intl.DateTimeFormat("en-US", { timeZone: "America/Chicago", month: "numeric", day: "numeric" }).formatToParts(new Date());
+    m = +p.find(x => x.type === "month").value; d = +p.find(x => x.type === "day").value;
+  } catch (e) { const h = new Date(); m = h.getMonth() + 1; d = h.getDate(); }
+  const previa = /[?&]natal=1\b/.test(location.search);
+  if (!previa && !(m === 12 && d <= 30)) return;
+
+  const CORES = ["#D9A441", "#EBC46E"];   // dois tons de dourado, alternados
+  const PASSO = 46;                                               // distância entre as lâmpadas (px)
+  const fio = document.createElement("div");
+  fio.className = "xmas"; fio.setAttribute("aria-hidden", "true");
+  header.appendChild(fio);
+  function montar() {
+    const n = Math.ceil(window.innerWidth / PASSO) + 1;
+    let html = "";
+    for (let i = 0; i < n; i++) {
+      const cor = CORES[i % CORES.length];
+      html += `<i style="left:${i * PASSO + PASSO / 2}px;--c:${cor};animation-delay:${((i * 7) % 11) * 0.23}s"></i>`;
+    }
+    fio.innerHTML = html;
+  }
+  montar();
+  let t; window.addEventListener("resize", () => { clearTimeout(t); t = setTimeout(montar, 150); });
+})();
