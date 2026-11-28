@@ -666,6 +666,9 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
   const pdVencida = x => hojeISO() > x.prazo;
   const pdFechada = x => pdVencida(x) || !["pendente", "respondida"].includes(x.status);
   const pdRespondida = x => !!x.resposta && (!x.pede_recibo || !!x.recibo_path);
+  // "lancada" = a Aurea já lançou (por exemplo, com o que o cliente contou numa conversa): não falta mais nada
+  const pdLancada = x => x.status === "lancada" && !pdRespondida(x);
+  const pdResolvida = x => pdRespondida(x) || pdLancada(x);
   const pdMeses = () => [...new Set(duv.map(x => x.mes))].sort().reverse();
   const pdAbertas = m => duv.filter(x => (!m || x.mes === m) && !pdFechada(x) && !pdRespondida(x));
   const dataCurta = s => { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d).toLocaleDateString(locale(), { day: "2-digit", month: "short" }).replace(".", ""); };
@@ -769,8 +772,9 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     $("pd-months").innerHTML = meses.map(m => { const a = pdAbertas(m).length; return `<button type="button" data-pdmes="${m}" class="${m === pdMes ? "on" : ""}">${mTitle(m)}${a ? `<i>${a}</i>` : ""}</button>`; }).join("");
 
     const itens = duv.filter(x => x.mes === pdMes);
-    const total = itens.length, feitas = itens.filter(pdRespondida).length, faltam = total - feitas;
-    const abertas = itens.filter(x => !pdFechada(x) && !pdRespondida(x)), vencido = itens.every(pdFechada);
+    const total = itens.length, feitas = itens.filter(pdResolvida).length, faltam = total - feitas;
+    // mês encerrado só quando o prazo de todas passou (pergunta lançada pela Aurea não encerra o prazo)
+    const abertas = itens.filter(x => !pdFechada(x) && !pdRespondida(x)), vencido = itens.every(pdVencida);
     // prazo do topo: o mais próximo entre as que faltam; sem nenhuma faltando, o último do mês
     const prazo = (abertas.length ? abertas.map(x => x.prazo).sort()[0] : itens.map(x => x.prazo).sort().slice(-1)[0]);
     pdVariosPrazos = new Set(itens.filter(x => !pdFechada(x)).map(x => x.prazo)).size > 1;
@@ -786,13 +790,13 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
     $("pd-help").hidden = vencido || faltam === 0 || ro;
 
     // sem resposta primeiro (por data); respondidas no fim, em cinza
-    const ord = itens.slice().sort((a, b) => (pdRespondida(a) - pdRespondida(b)) || a.data_transacao.localeCompare(b.data_transacao));
+    const ord = itens.slice().sort((a, b) => (pdResolvida(a) - pdResolvida(b)) || a.data_transacao.localeCompare(b.data_transacao));
     $("pd-list").innerHTML = ord.map(x => pdCard(x, ro)).join("");
   }
 
   let pdVariosPrazos = false;
   function pdCard(x, ro) {
-    const fechada = pdFechada(x), resp = pdRespondida(x), editando = !!pdAberta[x.id] && !fechada && !ro;
+    const fechada = pdFechada(x), resp = pdResolvida(x), editando = !!pdAberta[x.id] && !fechada && !ro;
     const opcoes = (Array.isArray(x.opcoes) ? x.opcoes : []).filter(o => o !== x.palpite);
     const respTxt = x.resposta === "confirmado" ? T("pd_yes_ans").replace("{p}", x.palpite || "") : x.resposta === "outro" ? x.resposta_texto : x.resposta;
     let corpo = "";
@@ -807,7 +811,7 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) {
         + (nota ? `<div class="pd-note"><small>${T("pd_note_lbl")}</small>${escH(nota)}</div>` : "")
         + (x.resposta !== "outro" && !fechada && !ro ? `<button type="button" class="pd-noteb" data-pdnote="${x.id}">${T(nota ? "pd_note_edit" : "pd_note_add")}</button>` : "");
     } else if (fechada || ro) {
-      corpo = `<span class="pd-est">${T(fechada ? "pd_est" : "pd_noans")}</span>`;
+      corpo = `<span class="pd-est">${T(pdLancada(x) ? "pd_lanc" : fechada ? "pd_est" : "pd_noans")}</span>`;
     } else if (pdAberta[x.id] === "outro") {
       corpo = `<div class="pd-other"><textarea maxlength="500" id="pdt-${x.id}" placeholder="${T("pd_other_ph")}">${escH(x.resposta === "outro" ? x.resposta_texto : "")}</textarea>
         <div class="row"><button type="button" class="sv" data-pdsave="${x.id}">${T("pd_save")}</button><button type="button" class="cc" data-pdcancel="${x.id}">${T("pd_cancel")}</button></div></div>`;
